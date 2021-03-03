@@ -14,6 +14,7 @@ import {
   Typography
 } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import axios from 'axios';
 
 
 const useStyles = (theme) => ({
@@ -58,7 +59,16 @@ class Login extends Component {
   doLogin = (e) => {
     e.preventDefault()
     console.log("LOGIN");
-    e.target.reset()
+    if(this.state.isVerified){
+      let email = this.state.email
+      let password = this.state.password
+      axios.post('http://localhost:8080/api/login?email='+email+'&password='+password)
+      .then(res=>console.log(res))
+      .catch(e => alert(e.response.data))
+      e.target.reset()
+    }else{
+      alert("please verified captcha")
+    }
   }
   setValue = (e) => {
     this.setState({
