@@ -38,10 +38,119 @@ const useStyles = (theme) => ({
 class Register extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {}
+		this.state = {
+			fullname: "",
+			phone: "",
+			email: "",
+			password: "",
+
+			errorFullname: false,
+			errorPhone: false,
+			errorEmail: false,
+			errorPassword: false,
+			errorRepassword: false,
+		}
+	}
+	setValue = (e) => {
+		const { name, value } = e.target
+		this.setState({
+			[name]: value
+		})
+		switch (name) {
+			case 'fullname':
+				this.validationFullname(value)
+				break
+			case 'phone':
+				this.validationPhone(value)
+				break
+			case 'email':
+				this.validationEmail(value)
+				break;
+			case 'password':
+				this.validationPassword(value)
+				break
+			default:
+				this.validationRepassword(value)
+				break;
+		}
+	}
+	validationFullname = (fullname) => {
+		const patterFullname = new RegExp("^(?![ .]+$)[a-zA-Z .]*$")
+		let valid = patterFullname.test(fullname)
+		if (valid) {
+			this.setState({
+				errorFullname: false
+			})
+		} else {
+			this.setState({
+				errorFullname: true
+			})
+		}
+
+	}
+	validationPhone = (phone) => {
+		const patterPhone = new RegExp("[0-9]{9,12}")
+		let valid = patterPhone.test(phone)
+		if (valid) {
+			this.setState({
+				errorPhone: false
+			})
+		} else {
+			this.setState({
+				errorPhone: true,
+			})
+		}
+
+
+	}
+	validationEmail = (email) => {
+		const patternEmail = new RegExp("^[a-zA-Z0-9-_]+@[a-zA-Z0-9]+\\.[a-zA-Z]{2,}$")
+		let valid = patternEmail.test(email)
+		if (valid) {
+			this.setState({
+				errorEmail: false,
+			})
+		} else {
+			this.setState({
+				errorEmail: true,
+			})
+		}
+	}
+	validationPassword = (password) => {
+		const patternPassword = new RegExp("^(?=.*[A-Za-z])(?=.*[0-9])[A-Za-z0-9]{8,}$")
+		let valid = patternPassword.test(password)
+		if (valid) {
+			this.setState({
+				errorPassword: false,
+			})
+		} else {
+			this.setState({
+				errorPassword: true,
+			})
+		}
+
+	}
+	validationRepassword = (repassword) => {
+		const { password } = this.state
+		if (password===repassword){
+			this.setState({
+				errorRepassword: false,
+			})
+		} else {
+			this.setState({
+				errorRepassword: true,
+			})
+		}
+
+	}
+	doRegister = (e) => {
+		e.preventDefault()
+
+		console.log("Register");
 	}
 	render() {
 		const { classes } = this.props;
+		const { errorEmail, errorFullname, errorPassword, errorRepassword, errorPhone } = this.state
 		return (
 			<Container component="main" maxWidth="xs">
 				<CssBaseline />
@@ -54,27 +163,19 @@ class Register extends Component {
         </Typography>
 					<form className={classes.form} noValidate>
 						<Grid container spacing={2}>
-							<Grid item xs={12} sm={6}>
+							<Grid item xs={12}>
 								<TextField
 									autoComplete="fname"
-									name="firstName"
+									name="fullname"
 									variant="outlined"
 									required
 									fullWidth
-									id="firstName"
-									label="First Name"
+									id="fullname"
+									label="Name"
 									autoFocus
-								/>
-							</Grid>
-							<Grid item xs={12} sm={6}>
-								<TextField
-									variant="outlined"
-									required
-									fullWidth
-									id="lastName"
-									label="Last Name"
-									name="lastName"
-									autoComplete="lname"
+									onChange={e => this.setValue(e)}
+									error={errorFullname}
+									helperText={errorFullname ? "fullname cannot be number or special character" : ""}
 								/>
 							</Grid>
 							<Grid item xs={12}>
@@ -86,6 +187,9 @@ class Register extends Component {
 									label="phone"
 									name="phone"
 									autoComplete="phone"
+									onChange={e => this.setValue(e)}
+									error={errorPhone}
+									helperText={errorPhone ? "minimum 8 number and cannot be letter" : ""}
 								/>
 							</Grid>
 							<Grid item xs={12}>
@@ -97,6 +201,9 @@ class Register extends Component {
 									label="Email Address"
 									name="email"
 									autoComplete="email"
+									onChange={e => this.setValue(e)}
+									error={errorEmail}
+									helperText={errorEmail ? "incorret email format" : ""}
 								/>
 							</Grid>
 							<Grid item xs={12}>
@@ -109,6 +216,9 @@ class Register extends Component {
 									type="password"
 									id="password"
 									autoComplete="current-password"
+									onChange={e => this.setValue(e)}
+									error={errorPassword}
+									helperText={errorPassword ? "minimum 8 character, at least one number" : ""}
 								/>
 							</Grid>
 							<Grid item xs={12}>
@@ -116,11 +226,14 @@ class Register extends Component {
 									variant="outlined"
 									required
 									fullWidth
-									name="password"
-									label="Password"
+									name="repassword"
+									label="Reenter Password"
 									type="password"
-									id="password"
+									id="repassword"
 									autoComplete="current-password"
+									onChange={e => this.setValue(e)}
+									error={errorRepassword}
+									helperText={errorRepassword ? "password did not match" : ""}
 								/>
 							</Grid>
 
@@ -136,9 +249,9 @@ class Register extends Component {
           </Button>
 						<Grid container justify="flex-end">
 							<Grid item>
-								<Link href="#" variant="body2">
+								<Link href="#" variant="body2" onClick={() => this.props.history.push('/login')}>
 									Already have an account? Login
-              </Link>
+              	</Link>
 							</Grid>
 						</Grid>
 					</form>

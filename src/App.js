@@ -4,6 +4,7 @@ import Login from './page/login';
 import Signup from './page/register';
 import { BrowserRouter as Router, Route, Switch, useHistory } from "react-router-dom";
 import Register from './page/register';
+import Body from './body';
 
 
 
@@ -19,7 +20,7 @@ class App extends Component {
           <Route path="/" exact component={
             () => {
               let history = useHistory()
-              return <Menu history={history}></Menu>
+              return <Body history={history}></Body>
             }
           } />
           <Route path="/register" exact component={
@@ -36,12 +37,7 @@ class App extends Component {
             }
           } />
 
-          <Route path="/signup" exact component={
-            () => {
-              let history = useHistory()
-              return <Menu history={history}></Menu>
-            }
-          } />
+          
         </Switch>
       </Router>
     );
@@ -49,3 +45,8 @@ class App extends Component {
 }
 
 export default App;
+//page
+//--navbar
+//--body
+//----switch
+//----content dari body
