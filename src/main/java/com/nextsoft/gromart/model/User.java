@@ -50,9 +50,10 @@ public class User {
         this.updateDate = updateDate;
     }
 
-    public User(String userCode, String userName, String status) {
+    public User(String userCode, String userName, String status, String password) {
         this.userCode = userCode;
         this.userName = userName;
         this.status = status;
+        this.password = password;
     }
 }

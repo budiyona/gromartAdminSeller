@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins="http://localhost:3000")
 public class UserController {
 
     @Autowired
@@ -17,8 +18,8 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestParam String email, String password) {
-        User target = userService.findByEmail(email);
-        if (target != null) {
+        if (userService.isEmailExist(email)) {
+            User target= userService.login(email);
             if (target.getPassword().equals(password)) {
                 target.setPassword(null);
                 return new ResponseEntity<>(target, HttpStatus.OK);

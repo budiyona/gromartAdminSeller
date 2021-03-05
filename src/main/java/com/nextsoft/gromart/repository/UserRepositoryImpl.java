@@ -42,4 +42,23 @@ public class UserRepositoryImpl implements UserRepository {
         }
         return false;
     }
+
+    @Override
+    public User login(String email) {
+        String query="select * from user where email = ?";
+        try {
+            User target = jdbcTemplate.queryForObject(query,(resultSet, i) ->
+                            new User(
+                                    resultSet.getString("userCode"),
+                                    resultSet.getString("userName"),
+                                    resultSet.getString("status"),
+                                    resultSet.getString("password")
+                            ),
+                    email);
+            return target;
+
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

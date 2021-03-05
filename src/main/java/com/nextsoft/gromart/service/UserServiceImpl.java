@@ -15,4 +15,14 @@ public class UserServiceImpl implements UserService {
     public User findByEmail(String email) {
         return userRepository.finByEmail(email);
     }
+
+    @Override
+    public boolean isEmailExist(String email) {
+        return userRepository.isEmailExist(email);
+    }
+
+    @Override
+    public User login(String email) {
+        return userRepository.login(email);
+    }
 }
