@@ -15,6 +15,8 @@ import { withStyles } from "@material-ui/core/styles";
 
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { Copyright } from '../../component';
+import axios from 'axios';
+import moment from 'moment';
 const useStyles = (theme) => ({
 	paper: {
 		marginTop: theme.spacing(8),
@@ -132,7 +134,7 @@ class Register extends Component {
 	}
 	validationRepassword = (repassword) => {
 		const { password } = this.state
-		if (password===repassword){
+		if (password === repassword) {
 			this.setState({
 				errorRepassword: false,
 			})
@@ -145,8 +147,26 @@ class Register extends Component {
 	}
 	doRegister = (e) => {
 		e.preventDefault()
+		const { fullname, phone, email, password } = this.state
+		let date = moment(new Date()).format('YYYY-MM-DD HH:MM:SS')
+		let user = {
+			userName: fullname,
+			phone: phone,
+			email: email,
+			password: password,
+			createdDate: date,
+			updateDate: date
+		}
+		axios.post('http://localhost:8080/api/user', user)
+			.then(res => {res.status===200&&this.props.history.push('/login')})
+			.catch(e => {
+				if (e.response !== undefined) {
+					alert(e.response.data)
+				}
+			})
 
-		console.log("Register");
+
+		console.log("Register", date, user);
 	}
 	render() {
 		const { classes } = this.props;
@@ -161,7 +181,7 @@ class Register extends Component {
 					<Typography component="h1" variant="h5">
 						Register
         </Typography>
-					<form className={classes.form} noValidate>
+					<form className={classes.form} noValidate onSubmit={this.doRegister}>
 						<Grid container spacing={2}>
 							<Grid item xs={12}>
 								<TextField
@@ -175,7 +195,7 @@ class Register extends Component {
 									autoFocus
 									onChange={e => this.setValue(e)}
 									error={errorFullname}
-									helperText={errorFullname ? "fullname cannot be number or special character" : ""}
+									helperText={errorFullname ? "name cannot be number or special character" : ""}
 								/>
 							</Grid>
 							<Grid item xs={12}>
@@ -203,7 +223,7 @@ class Register extends Component {
 									autoComplete="email"
 									onChange={e => this.setValue(e)}
 									error={errorEmail}
-									helperText={errorEmail ? "incorret email format" : ""}
+									helperText={errorEmail ? "incorrect email format" : ""}
 								/>
 							</Grid>
 							<Grid item xs={12}>
