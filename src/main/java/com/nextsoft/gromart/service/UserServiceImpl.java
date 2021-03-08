@@ -12,8 +12,18 @@ public class UserServiceImpl implements UserService {
     UserRepository userRepository;
 
     @Override
-    public User findByEmail(String email) {
-        return userRepository.finByEmail(email);
+    public User findById(String id) {
+        return userRepository.findById(id);
+    }
+
+    @Override
+    public User save(User user) {
+        return userRepository.save(user);
+    }
+
+    @Override
+    public boolean isPhoneExist(String phone) {
+        return userRepository.isPhoneExist(phone);
     }
 
     @Override
@@ -24,5 +34,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public User login(String email) {
         return userRepository.login(email);
+    }
+
+    @Override
+    public boolean isExist(String id) {
+        return userRepository.isExist(id);
     }
 }
