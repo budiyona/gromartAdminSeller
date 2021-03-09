@@ -2,27 +2,25 @@ const initState = {
   isLogin: false,
   user: {
     userCode: "",
-    fullName: ""
-  }
+    fullName: "",
+  },
 };
 
 const auth = (state = initState, action) => {
   switch (action.type) {
-    case 'LOGIN':
-      console.log('LOGIN REDUCER');
-      console.log(action);
-      return({
+    case "LOGIN":
+      return {
         ...state,
         isLogin: true,
-        user: action.user
-      })
-    case 'LOGOUT':
-      console.log('LOGOUT');
-      return initState
+        user: action.payload,
+      };
+    case "LOGOUT":
+      console.log("LOGOUT");
+      return initState;
 
     default:
-      return state
+      return state;
   }
-}
+};
 
-export default auth
+export default auth;

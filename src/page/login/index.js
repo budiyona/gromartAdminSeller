@@ -73,11 +73,15 @@ class Login extends Component {
         .then((res) => {
           let payload = {
             userCode: res.data.userCode,
-            userName: res.data.userName,
+            fullName: res.data.userName,
           };
           this.props.doLogin(payload);
-          e.target.reset();
-          this.props.history.push("/");
+          // e.target.reset();
+          if (payload.userCode.includes("ADMIN")) {
+            this.props.history.push("/admin/home");
+          } else {
+            this.props.history.push("/seller/home");
+          }
         })
         .catch((e) => {
           if (e.response !== undefined) {
@@ -171,7 +175,7 @@ class Login extends Component {
   }
 }
 const mapStateToProps = (state) => {
-  const { isLogin, user } = state.auth;
+  const { isLogin } = state.auth;
   console.log("ini srarrererre", state);
   return {
     isLogin: isLogin,
