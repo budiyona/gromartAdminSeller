@@ -116,7 +116,7 @@ public class UserRepositoryImpl implements UserRepository {
         int count = jdbcTemplate.queryForObject(
                 "select count(*) from user where userCode like 'seller%' and " +
                         "date(createdDate)=curdate()", Integer.class);
-        String prefix = String.format("%03d", count+1);
+        String prefix = String.format("%02d", count+1);
         long millis=System.currentTimeMillis();
         Date date = new Date(millis);
         String id = "SELLER-"+date.toString()+"-"+prefix;
