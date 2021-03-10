@@ -71,9 +71,8 @@ class SellerHome extends Component {
             <Grid item container xs={12}>
               <Alert
                 className={classes.fullwidth}
-                iconMapping={{
-                  success: <ShoppingCartIcon fontSize="inherit" />,
-                }}
+                icon={<ShoppingCartIcon fontSize="inherit" />}
+                severity="info"
               >
                 Seller
               </Alert>

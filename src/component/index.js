@@ -3,5 +3,17 @@ import Menu from "./menu";
 import ProductCard from "./card-product";
 import SellerCard from "./card-seller";
 import PaginationControlled from "./pagination";
+import ProductDasboard from "./product-dasboard-admin";
+import CountCard from "./card-count";
+import DasboardTitle from "./title-dasboard";
 
-export { Copyright, Menu, PaginationControlled, ProductCard, SellerCard };
+export {
+  Copyright,
+  ProductDasboard,
+  Menu,
+  CountCard,
+  PaginationControlled,
+  ProductCard,
+  SellerCard,
+  DasboardTitle,
+};
