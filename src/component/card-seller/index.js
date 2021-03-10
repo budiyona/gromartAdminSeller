@@ -11,24 +11,14 @@ import { blue, green, red } from "@material-ui/core/colors";
 import DoneIcon from "@material-ui/icons/Done";
 import person from "../../static/person.jpg";
 
-const useStyles = (theme) => ({
+const useStyles = () => ({
   root: {
-    maxWidth: 245,
+    maxWidth: 248,
     fontSize: 1,
   },
   media: {
     height: 0,
     paddingTop: "56.25%", // 16:9
-  },
-  expand: {
-    transform: "rotate(0deg)",
-    marginLeft: "auto",
-    transition: theme.transitions.create("transform", {
-      duration: theme.transitions.duration.shortest,
-    }),
-  },
-  expandOpen: {
-    transform: "rotate(180deg)",
   },
   avatar: {
     backgroundColor: red[500],

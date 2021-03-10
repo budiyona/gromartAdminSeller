@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Copyright } from "../../component";
 import { withStyles } from "@material-ui/core/styles";
 import Recaptcha from "react-recaptcha";
+import { Redirect } from "react-router-dom";
 import {
   Avatar,
   Box,
@@ -100,7 +101,13 @@ class Login extends Component {
   render() {
     console.log(this.state);
     console.log("PROPS", this.props);
-    const { classes } = this.props;
+    const { classes, isLogin, user } = this.props;
+    if (isLogin) {
+      if (user.userCode.includes("ADMIN")) {
+        return <Redirect to="/admin/home" />;
+      }
+      return <Redirect to="/seller/home" />;
+    }
     return (
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -175,10 +182,11 @@ class Login extends Component {
   }
 }
 const mapStateToProps = (state) => {
-  const { isLogin } = state.auth;
+  const { isLogin, user } = state.auth;
   console.log("ini srarrererre", state);
   return {
     isLogin: isLogin,
+    user: user,
   };
 };
 

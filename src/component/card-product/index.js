@@ -9,7 +9,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import { blue, green, red } from "@material-ui/core/colors";
 import DoneIcon from "@material-ui/icons/Done";
-import person from "../../static/person.jpg";
+import product from "../../static/product.jpg";
 
 const useStyles = () => ({
   root: {
@@ -72,7 +72,7 @@ class ProductCard extends Component {
         />
         <CardMedia
           className={classes.media}
-          image={person}
+          image={product}
           title="Paella dish"
         />
         <CardActions disableSpacing>

@@ -17,6 +17,8 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import { Copyright } from "../../component";
 import axios from "axios";
 import moment from "moment";
+import { Redirect } from "react-router";
+import { connect } from "react-redux";
 const useStyles = (theme) => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -170,7 +172,7 @@ class Register extends Component {
     console.log("Register", date, user);
   };
   render() {
-    const { classes } = this.props;
+    const { classes, isLogin, user } = this.props;
     const {
       errorEmail,
       errorFullname,
@@ -178,6 +180,12 @@ class Register extends Component {
       errorRepassword,
       errorPhone,
     } = this.state;
+    if (isLogin) {
+      if (user.userCode.includes("ADMIN")) {
+        return <Redirect to="/admin/home" />;
+      }
+      return <Redirect to="/seller/home" />;
+    }
     return (
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -303,5 +311,12 @@ class Register extends Component {
     );
   }
 }
-
-export default withStyles(useStyles)(Register);
+const mapStateToProps = (state) => {
+  const { isLogin, user } = state.auth;
+  console.log("ini srarrererre", state);
+  return {
+    isLogin: isLogin,
+    user: user,
+  };
+};
+export default connect(mapStateToProps)(withStyles(useStyles)(Register));

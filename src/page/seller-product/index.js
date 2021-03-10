@@ -7,7 +7,7 @@ const useStyles = () => ({
     marginBottom: "12px",
   },
 });
-class AdminInfo extends Component {
+class SellerProduct extends Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -30,11 +30,33 @@ class AdminInfo extends Component {
           ></Menu>
         </Grid>
         <Grid container item xs={12} className={classes.margin}>
-          <h1>ADMIN DASBOARD</h1>
+          <Grid item xs={4}>
+            <ProductCard></ProductCard>
+          </Grid>
+          <Grid item xs={4}>
+            <ProductCard></ProductCard>
+          </Grid>
+          <Grid item xs={4}>
+            <ProductCard></ProductCard>
+          </Grid>
+        </Grid>
+        <Grid container item xs={12} className={classes.margin}>
+          <Grid item xs={4}>
+            <ProductCard></ProductCard>
+          </Grid>
+          <Grid item xs={4}>
+            <ProductCard></ProductCard>
+          </Grid>
+          <Grid item xs={4}>
+            <ProductCard></ProductCard>
+          </Grid>
+        </Grid>
+        <Grid container item xs={12}>
+          <PaginationControlled page={10}></PaginationControlled>
         </Grid>
       </Grid>
     );
   }
 }
 
-export default withStyles(useStyles)(AdminInfo);
+export default withStyles(useStyles)(SellerProduct);

@@ -6,7 +6,8 @@ import {
   useHistory,
 } from "react-router-dom";
 import { Container } from "@material-ui/core";
-import { AdminSeller, Login, Register } from "./page";
+import { AdminInfo, AdminProduct, AdminSeller, Login, Register, AdminHome } from "./page";
+import { connect } from "react-redux";
 
 class App extends Component {
   constructor(props) {
@@ -30,9 +31,6 @@ class App extends Component {
           seller: false,
           account: false,
         };
-        this.setState({
-          buttonAdminStat: newStat,
-        });
         break;
       case "product":
         newStat = {
@@ -41,9 +39,6 @@ class App extends Component {
           seller: false,
           account: false,
         };
-        this.setState({
-          buttonAdminStat: newStat,
-        });
         break;
       case "seller":
         newStat = {
@@ -52,9 +47,6 @@ class App extends Component {
           seller: true,
           account: false,
         };
-        this.setState({
-          buttonAdminStat: newStat,
-        });
         break;
       default:
         newStat = {
@@ -63,18 +55,34 @@ class App extends Component {
           seller: false,
           account: true,
         };
-        this.setState({
-          buttonAdminStat: newStat,
-        });
+
         break;
     }
+    this.setState({
+      buttonAdminStat: newStat,
+    });
   };
   render() {
     const { buttonAdminStat } = this.state;
+    let isAdmin = this.props.userCode.includes("ADMIN");
     let adminPage = (
       <Container maxWidth="md" spacing={3}>
         <Route
           path="/admin/home"
+          exact
+          component={() => {
+            let history = useHistory();
+            return (
+              <AdminHome
+                history={history}
+                buttonAdminStat={buttonAdminStat}
+                toogleMenu={this.toogleMenu}
+              />
+            );
+          }}
+        />
+        <Route
+          path="/admin/seller"
           exact
           component={() => {
             let history = useHistory();
@@ -88,27 +96,31 @@ class App extends Component {
           }}
         />
         <Route
-          path="/admin/seller"
-          exact
-          component={() => {
-            let history = useHistory();
-            return <></>;
-          }}
-        />
-        <Route
           path="/admin/product"
           exact
           component={() => {
             let history = useHistory();
-            return <></>;
+            return (
+              <AdminProduct
+                history={history}
+                buttonAdminStat={buttonAdminStat}
+                toogleMenu={this.toogleMenu}
+              />
+            );
           }}
         />
         <Route
-          path="/admin/info"
+          path="/admin/account"
           exact
           component={() => {
             let history = useHistory();
-            return <></>;
+            return (
+              <AdminInfo
+                history={history}
+                buttonAdminStat={buttonAdminStat}
+                toogleMenu={this.toogleMenu}
+              />
+            );
           }}
         />
       </Container>
@@ -138,7 +150,7 @@ class App extends Component {
           }}
         />
         <Route
-          path="/seller/info"
+          path="/seller/account"
           exact
           component={() => {
             let history = useHistory();
@@ -166,14 +178,19 @@ class App extends Component {
               return <Login history={history}></Login>;
             }}
           />
-          {adminPage}
+          {isAdmin ? adminPage : sellerPage}
         </Switch>
       </Router>
     );
   }
 }
-
-export default App;
+const mapStatToProps = (state) => {
+  const { user } = state.auth;
+  return {
+    userCode: user.userCode,
+  };
+};
+export default connect(mapStatToProps)(App);
 //page
 //--navbar
 //--body

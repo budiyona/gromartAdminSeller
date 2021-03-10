@@ -57,28 +57,32 @@ class Menu extends Component {
     this.props.history.push("/login");
   };
   toogleMenu = (buttonName) => {
-    const { toogleMenu } = this.props;
+    const { toogleMenu, userCode, history } = this.props;
+    let isAdmin = userCode.includes("ADMIN");
+    let url;
     switch (buttonName) {
       case "home":
         toogleMenu("home");
-        this.props.history.push("/hoooome");
+        isAdmin ? (url = "/admin/home") : (url = "/seller/home");
         break;
       case "product":
         toogleMenu("product");
-        this.props.history.push("/admin/home");
+        isAdmin ? (url = "/admin/product") : (url = "/seller/product");
         break;
       case "seller":
         toogleMenu("seller");
-        this.props.history.push("/two");
+        url = "/admin/seller";
         break;
       default:
         toogleMenu("account");
-        this.props.history.push("/admin/home");
+        isAdmin ? (url = "/admin/account") : (url = "/seller/account");
         break;
     }
+    history.push(url);
   };
   render() {
-    const { classes, buttonAdminStat } = this.props;
+    const { classes, buttonAdminStat, userCode } = this.props;
+    let isAdmin = userCode.includes("ADMIN");
 
     return (
       <>
@@ -109,16 +113,17 @@ class Menu extends Component {
             >
               <HomeIcon className={buttonAdminStat.home && classes.red} />
             </IconButton>
-
-            <IconButton
-              color="inherit"
-              disabled={buttonAdminStat.seller}
-              onClick={() => this.toogleMenu("seller")}
-            >
-              <SupervisorAccountIcon
-                className={buttonAdminStat.seller && classes.red}
-              />
-            </IconButton>
+            {isAdmin && (
+              <IconButton
+                color="inherit"
+                disabled={buttonAdminStat.seller}
+                onClick={() => this.toogleMenu("seller")}
+              >
+                <SupervisorAccountIcon
+                  className={buttonAdminStat.seller && classes.red}
+                />
+              </IconButton>
+            )}
             <IconButton
               color="inherit"
               disabled={buttonAdminStat.product}
@@ -150,8 +155,9 @@ class Menu extends Component {
   }
 }
 const mapStatToProps = (state) => {
+  const { user } = state.auth;
   return {
-    isLogin: state.auth.isLogin,
+    userCode: user.userCode,
   };
 };
 const mapDispatchToProps = (dispatch) => {

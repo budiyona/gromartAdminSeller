@@ -43,7 +43,7 @@ const useStyles = () => ({
     marginBottom: 12,
   },
 });
-class AdminHome extends Component {
+class SellerHome extends Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -243,4 +243,4 @@ class AdminHome extends Component {
   }
 }
 
-export default withStyles(useStyles)(AdminHome);
+export default withStyles(useStyles)(SellerHome);
