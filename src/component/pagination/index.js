@@ -27,6 +27,7 @@ export default function PaginationControlled(props) {
   const [page, setPage] = React.useState(1);
   const handleChange = (event, value) => {
     setPage(value);
+    props.onClick(value);
   };
 
   return (

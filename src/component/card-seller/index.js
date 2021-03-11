@@ -10,6 +10,9 @@ import Typography from "@material-ui/core/Typography";
 import { blue, green, red } from "@material-ui/core/colors";
 import DoneIcon from "@material-ui/icons/Done";
 import person from "../../static/person.jpg";
+import moment from "moment";
+import { Button, TextField } from "@material-ui/core";
+import { Edit } from "@material-ui/icons";
 
 const useStyles = () => ({
   root: {
@@ -37,57 +40,66 @@ const useStyles = () => ({
 class SellerCard extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      status: ["requested", "active", "inactive"],
-      statusNow: "requested",
-    };
+    this.state = {};
   }
-  status = () => {
-    const { status, statusNow } = this.state;
-    console.log("toogle status");
-    console.log(statusNow);
-    let newStatusIndex = status.findIndex((el) => statusNow === el);
-    if (newStatusIndex >= 2) {
-      newStatusIndex = 0;
-    } else {
-      newStatusIndex++;
-    }
-    this.setState({
-      statusNow: status[newStatusIndex],
-    });
-  };
+
   render() {
-    const { classes } = this.props;
-    const { statusNow } = this.state;
+    const {
+      classes,
+      onClick,
+      user,
+      setQty,
+      idx,
+      editQty,
+      history,
+    } = this.props;
     return (
       <Card className={classes.root}>
         <CardHeader
           avatar={
             <Avatar aria-label="recipe" className={classes.avatar}>
-              R
+              {user.userName[0]}
             </Avatar>
           }
-          title="Shrimp and Chorizo Paella"
-          subheader="September 14, 2016"
+          title={user.userName}
+          subheader={moment(user.createdDate).format("MMMM DD, YYYY")}
         />
         <CardMedia
+          style={{ cursor: "pointer" }}
           className={classes.media}
           image={person}
-          title="Paella dish"
+          onClick={() => history.push("/admin/product/" + user.userCode)}
         />
         <CardActions disableSpacing>
-          <IconButton onClick={this.status} aria-label="share">
+          <IconButton onClick={onClick} aria-label="share">
             <DoneIcon
               className={
-                statusNow === "active"
+                user.status === "active"
                   ? classes.green
-                  : statusNow === "inactive"
+                  : user.status === "inactive"
                   ? classes.red
                   : classes.blue
               }
             />
           </IconButton>
-          <Typography>{statusNow}</Typography>
+          <Typography variant="button">{user.status}</Typography>
+        </CardActions>
+        <CardActions disableSpacing>
+          <TextField
+            label="Product"
+            size="small"
+            value={user.prodQty}
+            name="prod"
+            onChange={(e) => setQty(e, idx)}
+          ></TextField>
+          <Button
+            variant="contained"
+            color="primary"
+            size="small"
+            onClick={editQty}
+          >
+            Edit
+          </Button>
         </CardActions>
       </Card>
     );

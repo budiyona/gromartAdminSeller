@@ -6,7 +6,15 @@ import {
   useHistory,
 } from "react-router-dom";
 import { Container } from "@material-ui/core";
-import { AdminInfo, AdminProduct, AdminSeller, Login, Register, AdminHome } from "./page";
+import {
+  AdminInfo,
+  AdminProduct,
+  AdminSeller,
+  Login,
+  Register,
+  AdminHome,
+  AdminSellerDetail,
+} from "./page";
 import { connect } from "react-redux";
 
 class App extends Component {
@@ -116,6 +124,20 @@ class App extends Component {
             let history = useHistory();
             return (
               <AdminInfo
+                history={history}
+                buttonAdminStat={buttonAdminStat}
+                toogleMenu={this.toogleMenu}
+              />
+            );
+          }}
+        />
+        <Route
+          path="/admin/product/:id"
+          exact
+          component={() => {
+            let history = useHistory();
+            return (
+              <AdminSellerDetail
                 history={history}
                 buttonAdminStat={buttonAdminStat}
                 toogleMenu={this.toogleMenu}
