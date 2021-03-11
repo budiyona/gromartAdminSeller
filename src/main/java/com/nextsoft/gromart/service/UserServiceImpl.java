@@ -5,6 +5,8 @@ import com.nextsoft.gromart.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service("UserService")
 public class UserServiceImpl implements UserService {
 
@@ -39,5 +41,25 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean isExist(String id) {
         return userRepository.isExist(id);
+    }
+
+    @Override
+    public int countSeller(String condition) {
+        return userRepository.countSeller(condition);
+    }
+
+    @Override
+    public List<User> getSeller(int offset) {
+        return userRepository.getSeller(offset);
+    }
+
+    @Override
+    public int updateStatus(String id, String status, String idAdmin) {
+        return userRepository.updateStatus(id, status, idAdmin);
+    }
+
+    @Override
+    public int updateProductQty(String id, int qty, String idAdmin) {
+        return userRepository.updateProductQty(id, qty, idAdmin);
     }
 }

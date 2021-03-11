@@ -7,5 +7,9 @@ import java.util.List;
 public interface ProductService {
     Product findById(String id);
     List<Product> findBySeller(String id);
-    Product findAllProduct();
+    List<Product> findAllProduct();
+    List<Product> getCheapestProduct();
+    List<Product> getMostExpensiveProduct();
+    int countProduct(String status);
+
 }

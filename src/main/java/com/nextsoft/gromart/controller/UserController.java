@@ -50,7 +50,7 @@ public class UserController {
                     userService.save(user);
                     return new ResponseEntity<>("Register Success", HttpStatus.OK);
                 }
-                return new ResponseEntity<>("Phone already Exist",HttpStatus.CONFLICT);
+                return new ResponseEntity<>("Phone already Exist", HttpStatus.CONFLICT);
             }
             return new ResponseEntity<>("Email already Exist", HttpStatus.CONFLICT);
         }
@@ -58,7 +58,46 @@ public class UserController {
 
     @GetMapping("/test")
     public ResponseEntity<?> testConnection() {
-
         return new ResponseEntity<>(userService.isEmailExist("email@gmail.com"), HttpStatus.OK);
+    }
+
+    @GetMapping("/user/count-seller")
+    public ResponseEntity<?> getNumberOfSeller(@RequestParam String status) {
+        switch (status) {
+            case "active":
+            case "inactive":
+            case "requested":
+                return new ResponseEntity<>(
+                        userService.countSeller("and status = '" + status + "'"),
+                        HttpStatus.OK);
+            case "all":
+                return new ResponseEntity<>(
+                        userService.countSeller(""),
+                        HttpStatus.OK);
+            default:
+                return new ResponseEntity<>("request not found",
+                        HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/user/seller")
+    public ResponseEntity<?> getSeller(@RequestParam int offset) {
+        return new ResponseEntity(userService.getSeller(offset), HttpStatus.OK);
+    }
+
+    @PutMapping("/user/status")
+    public ResponseEntity<?> updateStatus(@RequestParam String id, String status, String idAdmin) {
+        int result = userService.updateStatus(id, status, idAdmin);
+        if (result >= 1) {
+            return new ResponseEntity<>("Update Success id =" + id + " status = " + status, HttpStatus.OK);
+        }
+        return new ResponseEntity<>("update failed", HttpStatus.BAD_REQUEST);
+    }
+
+    @PutMapping("/user/product-qty")
+    public ResponseEntity<?> updateProductQty(@RequestParam String id, int qty, String idAdmin) {
+        int result = userService.updateProductQty(id, qty, idAdmin);
+
+        return new ResponseEntity<>("ok", HttpStatus.OK);
     }
 }

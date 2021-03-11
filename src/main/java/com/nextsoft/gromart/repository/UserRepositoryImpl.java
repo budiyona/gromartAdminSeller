@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
+import java.util.List;
 
 @Repository("UserRepository")
 public class UserRepositoryImpl implements UserRepository {
@@ -27,7 +28,8 @@ public class UserRepositoryImpl implements UserRepository {
                                     resultSet.getString("createdBy"),
                                     resultSet.getString("createdDate"),
                                     resultSet.getString("updateBy"),
-                                    resultSet.getString("updateDate")
+                                    resultSet.getString("updateDate"),
+                                    resultSet.getInt("prodQty")
                             ),
                     id);
             return target;
@@ -64,9 +66,9 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public boolean isEmailExist(String email) {
-        String query="select count(*) from user where email=?";
-        int count = jdbcTemplate.queryForObject(query,Integer.class,email);
-        if (count==1) {
+        String query = "select count(*) from user where email=?";
+        int count = jdbcTemplate.queryForObject(query, Integer.class, email);
+        if (count == 1) {
             return true;
         }
         return false;
@@ -74,9 +76,9 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public boolean isExist(String id) {
-        String query="select count(*) from user where userCode=?";
-        int count = jdbcTemplate.queryForObject(query,Integer.class,id);
-        if (count==1) {
+        String query = "select count(*) from user where userCode=?";
+        int count = jdbcTemplate.queryForObject(query, Integer.class, id);
+        if (count == 1) {
             return true;
         }
         return false;
@@ -85,9 +87,9 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public User save(User user) {
         user.setUserCode(genId());
-        String query="insert into user (" +
+        String query = "insert into user (" +
                 "userCode, userName, phone, email, password, status, createdBy, createdDate, updateBy)" +
-                " values (?,?,?,?,?,'requested',?,?)";
+                " values (?,?,?,?,?,'requested',?,?,?)";
 
         jdbcTemplate.update(query,
                 user.getUserCode(),
@@ -96,16 +98,17 @@ public class UserRepositoryImpl implements UserRepository {
                 user.getEmail(),
                 user.getPassword(),
                 user.getUserCode(),
+                user.getCreatedDate(),
                 user.getUserCode()
-                );
+        );
         return user;
     }
 
     @Override
     public boolean isPhoneExist(String phone) {
-        String query="select count(*) from user where phone=?";
-        int count = jdbcTemplate.queryForObject(query,Integer.class,phone);
-        if (count==1) {
+        String query = "select count(*) from user where phone=?";
+        int count = jdbcTemplate.queryForObject(query, Integer.class, phone);
+        if (count == 1) {
             return true;
         }
         return false;
@@ -116,10 +119,10 @@ public class UserRepositoryImpl implements UserRepository {
         int count = jdbcTemplate.queryForObject(
                 "select count(*) from user where userCode like 'seller%' and " +
                         "date(createdDate)=curdate()", Integer.class);
-        String prefix = String.format("%02d", count+1);
-        long millis=System.currentTimeMillis();
+        String prefix = String.format("%02d", count + 1);
+        long millis = System.currentTimeMillis();
         Date date = new Date(millis);
-        String id = "SELLER-"+date.toString()+"-"+prefix;
+        String id = "SELLER-" + date.toString() + "-" + prefix;
         return id;
     }
 
@@ -139,5 +142,47 @@ public class UserRepositoryImpl implements UserRepository {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    @Override
+    public int countSeller(String condition) {
+        return jdbcTemplate.queryForObject(
+                "select count(*) from user where userCode like 'seller%' " + condition,
+                Integer.class);
+    }
+
+    @Override
+    public List<User> getSeller(int offset) {
+        return jdbcTemplate.query(
+                "select * from user where userCode like 'seller%' order by status desc limit 6 offset ?",
+                (rs, i) -> new User(
+                        rs.getString("userCode"),
+                        rs.getString("userName"),
+                        rs.getString("phone"),
+                        rs.getString("email"),
+                        rs.getString("status"),
+                        rs.getString("createdBy"),
+                        rs.getString("createdDate"),
+                        rs.getString("updateBy"),
+                        rs.getString("updateDate"),
+                        rs.getInt("prodQty")
+                ), offset
+        );
+    }
+
+    @Override
+    public int updateStatus(String id, String status, String idAdmin) {
+        return jdbcTemplate.update(
+                "update user set status = ?, updateBy = ? where userCode = ?",
+                status, idAdmin, id
+        );
+    }
+
+    @Override
+    public int updateProductQty(String id, int qty, String idAdmin) {
+        return jdbcTemplate.update(
+                "update user set prodQty = ?, updateBy = ? where userCode = ?",
+                qty, idAdmin, id
+        );
     }
 }

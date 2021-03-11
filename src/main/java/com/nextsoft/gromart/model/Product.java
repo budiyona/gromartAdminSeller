@@ -2,7 +2,6 @@ package com.nextsoft.gromart.model;
 
 import lombok.*;
 
-import java.util.Date;
 
 @Getter
 @Setter
@@ -15,5 +14,5 @@ public class Product {
     private double price;
     private int stock;
     private String description;
-    private String userCode;
+    private User seller;
 }
