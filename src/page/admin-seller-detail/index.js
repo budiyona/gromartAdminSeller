@@ -1,4 +1,5 @@
 import { Grid, withStyles } from "@material-ui/core";
+import axios from "axios";
 import React, { Component } from "react";
 import { Menu, PaginationControlled, ProductCard } from "../../component";
 
@@ -10,11 +11,36 @@ const useStyles = () => ({
 class AdminSellerDetail extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      products: [
+        {
+          productCode: "",
+          productName: "",
+          price: 0,
+          stock: 0,
+          description: "",
+          seller: {
+            userCode: "",
+            userName: "",
+          },
+        },
+      ],
+    };
+  }
+  componentDidMount() {
+    console.log(this.props.id);
+    axios
+      .get("http://localhost:8080/api/product/seller?id=" + this.props.id)
+      .then((res) =>
+        this.setState({
+          products: res.data,
+        })
+      );
   }
   render() {
-    const { classes } = this.props;
-    const { buttonAdminStat, history, toogleMenu } = this.props;
+    const { buttonAdminStat, history, toogleMenu, classes } = this.props;
+    const { products } = this.state;
+    console.log(this.state.products);
     return (
       <Grid
         container
@@ -30,29 +56,12 @@ class AdminSellerDetail extends Component {
           ></Menu>
         </Grid>
         <Grid container item xs={12} className={classes.margin}>
-          <Grid item xs={4}>
-            <ProductCard></ProductCard>
-          </Grid>
-          <Grid item xs={4}>
-            <ProductCard></ProductCard>
-          </Grid>
-          <Grid item xs={4}>
-            <ProductCard></ProductCard>
-          </Grid>
-        </Grid>
-        <Grid container item xs={12} className={classes.margin}>
-          <Grid item xs={4}>
-            <ProductCard></ProductCard>
-          </Grid>
-          <Grid item xs={4}>
-            <ProductCard></ProductCard>
-          </Grid>
-          <Grid item xs={4}>
-            <ProductCard></ProductCard>
-          </Grid>
-        </Grid>
-        <Grid container item xs={12}>
-          <PaginationControlled page={10}></PaginationControlled>
+          {products &&
+            products.map((product, i) => (
+              <Grid item xs={4} key={i} className={classes.margin}>
+                <ProductCard product={product}></ProductCard>
+              </Grid>
+            ))}
         </Grid>
       </Grid>
     );

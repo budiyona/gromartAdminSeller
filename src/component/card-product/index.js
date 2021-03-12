@@ -9,7 +9,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import { blue, green, red } from "@material-ui/core/colors";
 import DoneIcon from "@material-ui/icons/Done";
-import product from "../../static/product.jpg";
+import productImg from "../../static/product.jpg";
 
 const useStyles = () => ({
   root: {
@@ -57,37 +57,17 @@ class ProductCard extends Component {
     });
   };
   render() {
-    const { classes } = this.props;
+    const { classes, product } = this.props;
     const { statusNow } = this.state;
     return (
       <Card className={classes.root}>
         <CardHeader
-          avatar={
-            <Avatar aria-label="recipe" className={classes.avatar}>
-              R
-            </Avatar>
-          }
-          title="Shrimp and Chorizo Paella"
-          subheader="September 14, 2016"
+          title={product.productName}
+          subheader={product.productCode}
         />
-        <CardMedia
-          className={classes.media}
-          image={product}
-          title="Paella dish"
-        />
+        <CardMedia className={classes.media} image={productImg} />
         <CardActions disableSpacing>
-          <IconButton onClick={this.status} aria-label="share">
-            <DoneIcon
-              className={
-                statusNow === "active"
-                  ? classes.green
-                  : statusNow === "inactive"
-                  ? classes.red
-                  : classes.blue
-              }
-            />
-          </IconButton>
-          <Typography>{statusNow}</Typography>
+          <Typography>Rp. {product.price},00</Typography>
         </CardActions>
       </Card>
     );

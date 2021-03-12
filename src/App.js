@@ -4,6 +4,7 @@ import {
   Route,
   Switch,
   useHistory,
+  useParams,
 } from "react-router-dom";
 import { Container } from "@material-ui/core";
 import {
@@ -136,9 +137,11 @@ class App extends Component {
           exact
           component={() => {
             let history = useHistory();
+            const { id } = useParams();
             return (
               <AdminSellerDetail
                 history={history}
+                id={id}
                 buttonAdminStat={buttonAdminStat}
                 toogleMenu={this.toogleMenu}
               />

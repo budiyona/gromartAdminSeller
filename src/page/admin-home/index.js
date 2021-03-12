@@ -189,11 +189,7 @@ class AdminHome extends Component {
             buttonAdminStat={buttonAdminStat}
           ></Menu>
         </Grid>
-        {/* <Grid item xs={12} className={classes.margin}>
-          <Typography variant="h6" component="h6">
-            ADMIN DASBOARD
-          </Typography>
-        </Grid> */}
+
         <Grid container item xs={12} spacing={3}>
           <Grid container item xs={8} spacing={3}>
             <Grid item xs={11} className={classes.label}>

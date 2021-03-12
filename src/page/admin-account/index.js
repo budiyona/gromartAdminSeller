@@ -3,6 +3,8 @@ import React, { Component } from "react";
 import { Menu, PaginationControlled, ProductCard } from "../../component";
 import axios from "axios";
 import moment from "moment";
+import { connect } from "react-redux";
+import { NewReleasesSharp } from "@material-ui/icons";
 const useStyles = (theme) => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -39,6 +41,10 @@ class AdminInfo extends Component {
       email: "",
       password: "",
 
+      oldPassword: "",
+      newPassword: "",
+      newPassword2: "",
+
       errorFullname: false,
       errorPhone: false,
       errorEmail: false,
@@ -46,8 +52,12 @@ class AdminInfo extends Component {
       errorRepassword: false,
     };
   }
+  componentDidMount() {
+    this.getUser();
+  }
   setValue = (e) => {
     const { name, value } = e.target;
+    console.log(name);
     this.setState({
       [name]: value,
     });
@@ -150,7 +160,7 @@ class AdminInfo extends Component {
       updateDate: date,
     };
     axios
-      .post("http://localhost:8080/api/user", user)
+      .put("http://localhost:8080/api/user", user)
       .then((res) => {
         res.status === 200 && this.props.history.push("/login");
       })
@@ -172,6 +182,14 @@ class AdminInfo extends Component {
       editPassword: !this.state.editPassword,
     });
   };
+  getUser = () => {
+    const { user } = this.props;
+    axios.get("http://localhost:8080/api/user/" + user.userCode).then((res) => {
+      const { userName, phone, email } = res.data;
+      this.setState({ fullname: userName, phone, email });
+    });
+  };
+
   render() {
     const { buttonAdminStat, history, toogleMenu, classes } = this.props;
     const {
@@ -182,7 +200,14 @@ class AdminInfo extends Component {
       errorPhone,
       edit,
       editPassword,
+      oldPassword,
+      newPassword,
+      newPassword2,
+      fullname,
+      phone,
+      email,
     } = this.state;
+    console.log(this.state);
     return (
       <Grid
         container
@@ -213,7 +238,7 @@ class AdminInfo extends Component {
               type="submit"
               size="small"
               variant="contained"
-              color={editPassword?'':"secondary"}
+              color={editPassword ? "" : "secondary"}
               className={classes.submit}
               onClick={this.toogleEditPassword}
             >
@@ -237,7 +262,7 @@ class AdminInfo extends Component {
                     fullWidth
                     id="fullname"
                     label="Name"
-                    autoFocus
+                    value={fullname}
                     onChange={(e) => this.setValue(e)}
                     error={errorFullname}
                     helperText={
@@ -255,6 +280,7 @@ class AdminInfo extends Component {
                     fullWidth
                     id="phone"
                     label="phone"
+                    value={phone}
                     name="phone"
                     autoComplete="phone"
                     onChange={(e) => this.setValue(e)}
@@ -270,6 +296,7 @@ class AdminInfo extends Component {
                     size="small"
                     required
                     fullWidth
+                    value={email}
                     id="email"
                     label="Email Address"
                     name="email"
@@ -327,12 +354,12 @@ class AdminInfo extends Component {
                   <TextField
                     size="small"
                     margin="normal"
-                    autoComplete="fname"
-                    name="fullname"
+                    name="oldPassword"
                     required
                     fullWidth
-                    id="fullname"
-                    label="Password"
+                    value={oldPassword}
+                    id="oldPassord"
+                    label="Old Password"
                     autoFocus
                     onChange={(e) => this.setValue(e)}
                     error={errorFullname}
@@ -343,18 +370,18 @@ class AdminInfo extends Component {
                     }
                   />
                 </Grid>
-               
+
                 <Grid item>
                   <TextField
                     margin="dense"
                     size="small"
                     required
                     fullWidth
-                    name="Newpassword"
+                    value={newPassword}
+                    name="newPassword"
                     label="New Password"
                     type="password"
                     id="Newpassword"
-                    autoComplete="current-password"
                     onChange={(e) => this.setValue(e)}
                     error={errorPassword}
                     helperText={
@@ -370,11 +397,11 @@ class AdminInfo extends Component {
                     size="small"
                     required
                     fullWidth
-                    name="NewPassword2"
+                    value={newPassword2}
+                    name="newPassword2"
                     label="Re Enter Password"
                     type="password"
                     id="NewPassword2"
-                    autoComplete="current-password"
                     onChange={(e) => this.setValue(e)}
                     error={errorPassword}
                     helperText={
@@ -407,5 +434,21 @@ class AdminInfo extends Component {
     );
   }
 }
+const mapStateToProps = (state) => {
+  const { isLogin, user } = state.auth;
+  return {
+    isLogin: isLogin,
+    user: user,
+  };
+};
 
-export default withStyles(useStyles)(AdminInfo);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    doLogin: (payload) => dispatch({ type: "LOGIN", payload }),
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(useStyles)(AdminInfo));
