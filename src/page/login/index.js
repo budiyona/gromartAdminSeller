@@ -11,6 +11,7 @@ import {
   CssBaseline,
   Grid,
   Link,
+  Paper,
   TextField,
   Typography,
 } from "@material-ui/core";
@@ -110,7 +111,6 @@ class Login extends Component {
     }
     return (
       <Container component="main" maxWidth="xs">
-        <CssBaseline />
         <div className={classes.paper}>
           <Avatar className={classes.avatar}>
             <LockOutlinedIcon />
@@ -144,12 +144,28 @@ class Login extends Component {
               id="password"
               autoComplete="current-password"
             />
-            <Recaptcha
+            <Grid
+              container
+              item
+              alignItems="center"
+              xs={12}
+              style={{ display: "flex" }}
+            >
+              <div style={{ margin: "auto" }}>
+                <Recaptcha
+                  sitekey="6Lfg3W0aAAAAAH_wKiduCg2ecTcyehEFQVpAf66N"
+                  render="explicit"
+                  onloadCallback={this.recaptchaLoaded}
+                  verifyCallback={this.verifyCallback}
+                />
+              </div>
+            </Grid>
+            {/* <Recaptcha
               sitekey="6Lfg3W0aAAAAAH_wKiduCg2ecTcyehEFQVpAf66N"
               render="explicit"
               onloadCallback={this.recaptchaLoaded}
               verifyCallback={this.verifyCallback}
-            />
+            /> */}
 
             <Button
               type="submit"

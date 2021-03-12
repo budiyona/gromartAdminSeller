@@ -1,40 +1,18 @@
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Button,
-  Card,
-  CardActionArea,
-  CardActions,
-  CardContent,
-  CardMedia,
-  Grid,
-  Link,
-  Paper,
-  Typography,
-  withStyles,
-} from "@material-ui/core";
+import { Grid, withStyles } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import React, { Component } from "react";
 import {
   CountCard,
   DasboardTitle,
   Menu,
-  PaginationControlled,
-  ProductCard,
   ProductDasboard,
 } from "../../component";
-import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
-import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import GradeIcon from "@material-ui/icons/Grade";
 import axios from "axios";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
+import InboxIcon from "@material-ui/icons/Inbox";
 
-const useStyles = (theme) => ({
-  margin: {
-    marginBottom: theme.spacing(2),
-  },
+const useStyles = () => ({
   fullwidth: {
     width: "100%",
   },
@@ -47,14 +25,6 @@ const useStyles = (theme) => ({
   },
   label: {
     height: "25px",
-  },
-  bullet: {
-    display: "inline-block",
-    margin: "0 2px",
-    transform: "scale(0.8)",
-  },
-  title: {
-    fontSize: 14,
   },
 });
 class AdminHome extends Component {
@@ -192,7 +162,7 @@ class AdminHome extends Component {
 
         <Grid container item xs={12} spacing={3}>
           <Grid container item xs={8} spacing={3}>
-            <Grid item xs={11} className={classes.label}>
+            <Grid container item xs={12} className={classes.label}>
               <DasboardTitle
                 fullwidth
                 color={"info"}
@@ -217,15 +187,21 @@ class AdminHome extends Component {
                 />
               </Grid>
             </Grid>
-            <Grid item xs={11} className={classes.label}>
+            <Grid item container xs={12} className={classes.label}>
               <DasboardTitle
                 fullwidth
                 color={"info"}
-                icon={<ShoppingCartIcon fontSize="inherit" />}
+                icon={<InboxIcon fontSize="inherit" />}
                 title={"Product"}
               />
             </Grid>
-            <Grid item container xs={12} spacing={3}>
+            <Grid
+              item
+              container
+              xs={12}
+              spacing={3}
+              className={classes.cardCount}
+            >
               <Grid item>
                 <CountCard
                   title={"Product Active"}
@@ -271,15 +247,6 @@ class AdminHome extends Component {
                     />
                   </Grid>
                 ))}
-            {/* <Grid item>
-              <ProductDasboard title={"Milo"} price={20000} />
-            </Grid>
-            <Grid item>
-              <ProductDasboard title={"nestsssssle"} price={10000} />
-            </Grid>
-            <Grid item>
-              <ProductDasboard title={"milkita"} price={20000} />
-            </Grid> */}
           </Grid>
         </Grid>
       </Grid>

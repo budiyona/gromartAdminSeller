@@ -26,39 +26,6 @@ class AdminSeller extends Component {
           updateDate: "",
           prodQty: 0,
         },
-        // {
-        //   userCode: "",
-        //   userName: "",
-        //   phone: "",
-        //   email: "",
-        //   status: "requested",
-        //   createdBy: "",
-        //   createdDate: "",
-        //   updateBy: "",
-        //   updateDate: "",
-        // },
-        // {
-        //   userCode: "",
-        //   userName: "",
-        //   phone: "",
-        //   email: "",
-        //   status: "requested",
-        //   createdBy: "",
-        //   createdDate: "",
-        //   updateBy: "",
-        //   updateDate: "",
-        // },
-        // {
-        //   userCode: "",
-        //   userName: "",
-        //   phone: "",
-        //   email: "",
-        //   status: "requested",
-        //   createdBy: "",
-        //   createdDate: "",
-        //   updateBy: "",
-        //   updateDate: "",
-        // },
       ],
       status: ["requested", "active", "inactive"],
       statusNow: "requested",
@@ -104,22 +71,28 @@ class AdminSeller extends Component {
     };
     let newListSeller = listSeller;
     newListSeller.splice(idx, 1, newUser);
-    axios
-      .put(
-        "http://localhost:8080/api/user/status?id=" +
-          newUser.userCode +
-          "&status=" +
-          status[newStatusIndex] +
-          "&idAdmin=" +
-          user.userCode
+    if (
+      window.confirm(
+        "are you sure to change " + newUser.userName + " product Qty"
       )
-      .then((res) => {
-        if (res.status) {
-          this.setState({
-            listSeller: newListSeller,
-          });
-        }
-      });
+    ) {
+      axios
+        .put(
+          "http://localhost:8080/api/user/status?id=" +
+            newUser.userCode +
+            "&status=" +
+            status[newStatusIndex] +
+            "&idAdmin=" +
+            user.userCode
+        )
+        .then((res) => {
+          if (res.status) {
+            this.setState({
+              listSeller: newListSeller,
+            });
+          }
+        });
+    }
   };
   setQty = (e, idx) => {
     console.log("setvalue", e.target.name, e.target.value, idx);

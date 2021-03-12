@@ -8,8 +8,9 @@ import AccountCircle from "@material-ui/icons/AccountCircle";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import LocalMallIcon from "@material-ui/icons/LocalMall";
 import { connect } from "react-redux";
-import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
+import InboxIcon from "@material-ui/icons/Inbox";
+import StoreIcon from "@material-ui/icons/Store";
 const useStyles = (theme) => ({
   logout: {
     "&:hover": {
@@ -95,14 +96,14 @@ class Menu extends Component {
           }}
         >
           <Toolbar>
-            <LocalMallIcon
+            <StoreIcon
               edge="start"
               className={classes.menuButton}
               color="inherit"
               aria-label="menu"
             >
               <MenuIcon />
-            </LocalMallIcon>
+            </StoreIcon>
             <Typography variant="h6" className={classes.title}>
               Gromart
             </Typography>
@@ -129,9 +130,7 @@ class Menu extends Component {
               disabled={buttonAdminStat.product}
               onClick={() => this.toogleMenu("product")}
             >
-              <ShoppingCartIcon
-                className={buttonAdminStat.product && classes.red}
-              />
+              <InboxIcon className={buttonAdminStat.product && classes.red} />
             </IconButton>
             <IconButton
               color="inherit"
