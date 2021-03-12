@@ -21,7 +21,19 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public List<Product> findBySeller(String id) {
-        return null;
+        return jdbcTemplate.query(
+                "select * from product p join user u on p.userCode = u.userCode where p.userCode=?",
+                (rs, i) -> new Product(
+                        rs.getString("productCode"),
+                        rs.getString("productName"),
+                        rs.getDouble("price"),
+                        rs.getInt("stock"),
+                        rs.getString("description"),
+                        new User(
+                                rs.getString("userCode"),
+                                rs.getString("userName")
+                        )
+                ), id);
     }
 
     @Override
@@ -35,10 +47,11 @@ public class ProductRepositoryImpl implements ProductRepository {
                         rs.getInt("stock"),
                         rs.getString("description"),
                         new User(
-                             rs.getString("userCode"),
-                             rs.getString("userName")
+                                rs.getString("userCode"),
+                                rs.getString("userName")
                         )
-                ));
+                )
+        );
     }
 
     @Override
@@ -56,8 +69,8 @@ public class ProductRepositoryImpl implements ProductRepository {
                                 rs.getString("userName")
                         )
                 ));
-        if(products.size()>3){
-            products = products.subList(0,3);
+        if (products.size() > 3) {
+            products = products.subList(0, 3);
         }
         return products;
     }
@@ -77,8 +90,8 @@ public class ProductRepositoryImpl implements ProductRepository {
                                 rs.getString("userName")
                         )
                 ));
-        if(products.size()>3){
-            products = products.subList(0,3);
+        if (products.size() > 3) {
+            products = products.subList(0, 3);
         }
         return products;
     }
@@ -87,6 +100,6 @@ public class ProductRepositoryImpl implements ProductRepository {
     public int countProduct(String status) {
         return jdbcTemplate.queryForObject(
                 "select count(*) from product where status = ?",
-                Integer.class,status);
+                Integer.class, status);
     }
 }

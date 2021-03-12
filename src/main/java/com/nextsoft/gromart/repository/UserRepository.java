@@ -17,4 +17,5 @@ public interface UserRepository {
     List<User> getSeller(int offset);
     int updateStatus(String id,String status, String idAdmin);
     int updateProductQty(String id, int qty, String idAdmin);
+    boolean isUserActive(String email);
 }

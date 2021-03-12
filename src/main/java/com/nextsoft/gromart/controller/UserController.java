@@ -29,7 +29,7 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestParam String email, String password) {
-        if (userService.isEmailExist(email)) {
+        if (userService.isEmailExist(email)&&userService.isUserActive(email)) {
             User target = userService.login(email);
             if (target.getPassword().equals(password)) {
                 target.setPassword(null);
@@ -37,7 +37,7 @@ public class UserController {
             }
             return new ResponseEntity<>("Username/Password incorrect", HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>("Account not Found", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>("Account not Found or Inactive, please contact support", HttpStatus.NOT_FOUND);
     }
 
     @PostMapping("/user")
@@ -99,5 +99,23 @@ public class UserController {
         int result = userService.updateProductQty(id, qty, idAdmin);
 
         return new ResponseEntity<>("ok", HttpStatus.OK);
+    }
+
+    @PutMapping("/user/{id}")
+    public ResponseEntity<?> updateUser(@RequestParam String id, @Valid @RequestBody User user, Errors error) {
+        if (error.hasErrors()) {
+            return new ResponseEntity<>(error.getFieldError().getDefaultMessage(), HttpStatus.BAD_REQUEST);
+        } else {
+            if (userService.isExist(user.getUserCode())) {
+                User dbUser = userService.findById(user.getUserCode());
+                if (!userService.isPhoneExist(user.getPhone()) || dbUser.getUserName().equals(user.getUserName())) {
+                    if (!userService.isPhoneExist(user.getPhone()) || dbUser.getPhone().equals(user.getPhone())) {
+                        userService.updateUser(user);
+                        return new ResponseEntity<>("Update Success", HttpStatus.OK);
+                    }
+                }
+            }
+            return new ResponseEntity<>("User Not Found", HttpStatus.NOT_FOUND);
+        }
     }
 }

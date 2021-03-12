@@ -34,4 +34,8 @@ public class ProductController {
     public ResponseEntity<?> getNumberOfSeller(@RequestParam String status) {
         return new ResponseEntity<>(productService.countProduct(status), HttpStatus.OK);
     }
+    @GetMapping("/product/seller")
+    public ResponseEntity<?> getProductBySeller(@RequestParam String id){
+        return new ResponseEntity<>(productService.findBySeller(id),HttpStatus.OK);
+    }
 }

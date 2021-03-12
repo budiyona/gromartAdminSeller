@@ -62,4 +62,14 @@ public class UserServiceImpl implements UserService {
     public int updateProductQty(String id, int qty, String idAdmin) {
         return userRepository.updateProductQty(id, qty, idAdmin);
     }
+
+    @Override
+    public int updateUser(User user) {
+        return 0;
+    }
+
+    @Override
+    public boolean isUserActive(String email) {
+        return userRepository.isUserActive(email);
+    }
 }

@@ -185,4 +185,15 @@ public class UserRepositoryImpl implements UserRepository {
                 qty, idAdmin, id
         );
     }
+
+    @Override
+    public boolean isUserActive(String email) {
+        int count = jdbcTemplate.queryForObject(
+                "select count(*) from user where email = ? and status = 'active'", Integer.class, email
+        );
+        if (count == 1) {
+            return true;
+        }
+        return false;
+    }
 }
