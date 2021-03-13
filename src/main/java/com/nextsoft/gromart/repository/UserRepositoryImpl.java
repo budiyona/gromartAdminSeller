@@ -87,9 +87,10 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public User save(User user) {
         user.setUserCode(genId());
+        user.setStatus("requested");
         String query = "insert into user (" +
-                "userCode, userName, phone, email, password, status, createdBy, createdDate, updateBy)" +
-                " values (?,?,?,?,?,'requested',?,?,?)";
+                "userCode, userName, phone, email, password, status, createdBy, updateBy)" +
+                " values (?,?,?,?,?,?,?,?)";
 
         jdbcTemplate.update(query,
                 user.getUserCode(),
@@ -97,8 +98,8 @@ public class UserRepositoryImpl implements UserRepository {
                 user.getPhone(),
                 user.getEmail(),
                 user.getPassword(),
+                user.getStatus(),
                 user.getUserCode(),
-                user.getCreatedDate(),
                 user.getUserCode()
         );
         return user;
@@ -165,7 +166,7 @@ public class UserRepositoryImpl implements UserRepository {
                         rs.getString("createdDate"),
                         rs.getString("updateBy"),
                         rs.getString("updateDate"),
-                        rs.getInt("prodQty")
+                        rs.getInt("productLimit")
                 ), offset
         );
     }
@@ -179,10 +180,10 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public int updateProductQty(String id, int qty, String idAdmin) {
+    public int updateProductQty(String id, int limitProduct, String idAdmin) {
         return jdbcTemplate.update(
                 "update user set prodQty = ?, updateBy = ? where userCode = ?",
-                qty, idAdmin, id
+                limitProduct, idAdmin, id
         );
     }
 

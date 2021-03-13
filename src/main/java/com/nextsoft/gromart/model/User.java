@@ -20,7 +20,7 @@ public class User {
     private String userName;
 
     @NotBlank(message = "phone cannot be empty")
-    @Pattern(regexp = "[0-9]{9,12}", message = "minimum 8 number and cannot be letter")
+    @Pattern(regexp = "[0-9]{9,12}", message = "phone number minimum 8 number, max 12 and cannot be letter")
     private String phone;
 
     @NotBlank(message = "email cannot be empty")
@@ -42,7 +42,7 @@ public class User {
     @NotBlank(message = "updateDate cannot be empty")
     private String updateDate;
 
-    private int prodQty;
+    private int productLimit;
 
     public User(String userCode, String userName, String status, String password) {
         this.userCode = userCode;
@@ -79,7 +79,7 @@ public class User {
                 String createdDate,
                 String updateBy,
                 String updateDate,
-                int prodQty) {
+                int productLimit) {
         this.userCode = userCode;
         this.userName = userName;
         this.phone = phone;
@@ -89,6 +89,6 @@ public class User {
         this.createdDate = createdDate;
         this.updateBy = updateBy;
         this.updateDate = updateDate;
-        this.prodQty = prodQty;
+        this.productLimit = productLimit;
     }
 }

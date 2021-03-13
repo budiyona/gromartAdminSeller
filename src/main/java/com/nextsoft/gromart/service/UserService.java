@@ -14,7 +14,7 @@ public interface UserService {
     int countSeller(String condition);
     List<User> getSeller(int offset);
     int updateStatus(String id,String status, String idAdmin);
-    int updateProductQty(String id, int qty, String idAdmin);
+    int updateProductQty(String id, int limitProduct, String idAdmin);
     int updateUser(User user);
     boolean isUserActive(String email);
 }

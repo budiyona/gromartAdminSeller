@@ -94,9 +94,9 @@ public class UserController {
         return new ResponseEntity<>("update failed", HttpStatus.BAD_REQUEST);
     }
 
-    @PutMapping("/user/product-qty")
-    public ResponseEntity<?> updateProductQty(@RequestParam String id, int qty, String idAdmin) {
-        int result = userService.updateProductQty(id, qty, idAdmin);
+    @PutMapping("/user/product-limit")
+    public ResponseEntity<?> updateProductQty(@RequestParam String id, int limitProduct, String idAdmin) {
+        int result = userService.updateProductQty(id, limitProduct, idAdmin);
 
         return new ResponseEntity<>("ok", HttpStatus.OK);
     }

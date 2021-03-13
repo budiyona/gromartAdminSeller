@@ -59,8 +59,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int updateProductQty(String id, int qty, String idAdmin) {
-        return userRepository.updateProductQty(id, qty, idAdmin);
+    public int updateProductQty(String id, int limitProduct, String idAdmin) {
+        return userRepository.updateProductQty(id, limitProduct, idAdmin);
     }
 
     @Override
