@@ -7,6 +7,7 @@ import {
   CssBaseline,
   Grid,
   Link,
+  Paper,
   TextField,
   Typography,
 } from "@material-ui/core";
@@ -19,12 +20,15 @@ import axios from "axios";
 import moment from "moment";
 import { Redirect } from "react-router";
 import { connect } from "react-redux";
+import { Alert } from "@material-ui/lab";
 const useStyles = (theme) => ({
   paper: {
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(1),
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
+    padding: theme.spacing(1, 3, 1, 3),
+    borderRadius: 20,
   },
   avatar: {
     margin: theme.spacing(1),
@@ -35,7 +39,7 @@ const useStyles = (theme) => ({
     marginTop: theme.spacing(3),
   },
   submit: {
-    margin: theme.spacing(3, 0, 2),
+    margin: theme.spacing(2, 0, 2),
   },
 });
 
@@ -53,6 +57,8 @@ class Register extends Component {
       errorEmail: false,
       errorPassword: false,
       errorRepassword: false,
+
+      errorMsg: "",
     };
   }
   setValue = (e) => {
@@ -88,6 +94,7 @@ class Register extends Component {
     } else {
       this.setState({
         errorFullname: true,
+        errorMsg: "name cannot be number or special character",
       });
     }
   };
@@ -101,6 +108,7 @@ class Register extends Component {
     } else {
       this.setState({
         errorPhone: true,
+        errorMsg: "minimum 8 number and cannot be letter",
       });
     }
   };
@@ -116,6 +124,7 @@ class Register extends Component {
     } else {
       this.setState({
         errorEmail: true,
+        errorMsg: "incorrect email format",
       });
     }
   };
@@ -131,6 +140,7 @@ class Register extends Component {
     } else {
       this.setState({
         errorPassword: true,
+        errorMsg: "minimum 8 character, at least one number",
       });
     }
   };
@@ -143,20 +153,18 @@ class Register extends Component {
     } else {
       this.setState({
         errorRepassword: true,
+        errorMsg: "password did not match",
       });
     }
   };
   doRegister = (e) => {
     e.preventDefault();
     const { fullname, phone, email, password } = this.state;
-    let date = moment(new Date()).format("YYYY-MM-DD HH:MM:SS");
     let user = {
       userName: fullname,
       phone: phone,
       email: email,
       password: password,
-      createdDate: date,
-      updateDate: date,
     };
     axios
       .post("http://localhost:8080/api/user", user)
@@ -168,8 +176,6 @@ class Register extends Component {
           alert(e.response.data);
         }
       });
-
-    console.log("Register", date, user);
   };
   render() {
     const { classes, isLogin, user } = this.props;
@@ -179,6 +185,7 @@ class Register extends Component {
       errorPassword,
       errorRepassword,
       errorPhone,
+      errorMsg,
     } = this.state;
     if (isLogin) {
       if (user.userCode.includes("ADMIN")) {
@@ -186,134 +193,142 @@ class Register extends Component {
       }
       return <Redirect to="/seller/home" />;
     }
+    let error = () => {
+      return (
+        errorEmail ||
+        errorFullname ||
+        errorPassword ||
+        errorRepassword ||
+        errorPhone
+      );
+    };
     return (
       <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <div className={classes.paper}>
-          <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Register
-          </Typography>
-          <form className={classes.form} noValidate onSubmit={this.doRegister}>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  autoComplete="fname"
-                  name="fullname"
-                  variant="outlined"
-                  required
-                  fullWidth
-                  id="fullname"
-                  label="Name"
-                  autoFocus
-                  onChange={(e) => this.setValue(e)}
-                  error={errorFullname}
-                  helperText={
-                    errorFullname
-                      ? "name cannot be number or special character"
-                      : ""
-                  }
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  id="phone"
-                  label="phone"
-                  name="phone"
-                  autoComplete="phone"
-                  onChange={(e) => this.setValue(e)}
-                  error={errorPhone}
-                  helperText={
-                    errorPhone ? "minimum 8 number and cannot be letter" : ""
-                  }
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                  onChange={(e) => this.setValue(e)}
-                  error={errorEmail}
-                  helperText={errorEmail ? "incorrect email format" : ""}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="current-password"
-                  onChange={(e) => this.setValue(e)}
-                  error={errorPassword}
-                  helperText={
-                    errorPassword
-                      ? "minimum 8 character, at least one number"
-                      : ""
-                  }
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  name="repassword"
-                  label="Reenter Password"
-                  type="password"
-                  id="repassword"
-                  autoComplete="current-password"
-                  onChange={(e) => this.setValue(e)}
-                  error={errorRepassword}
-                  helperText={errorRepassword ? "password did not match" : ""}
-                />
-              </Grid>
-            </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-            >
+        <Paper elevation={3}>
+          <div className={classes.paper}>
+            <Avatar className={classes.avatar}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h5" variant="h5">
               Register
-            </Button>
-            <Grid container justify="flex-end">
-              <Grid item>
-                <Link
-                  href="#"
-                  variant="body2"
-                  onClick={() => this.props.history.push("/login")}
-                >
-                  Already have an account? Login
-                </Link>
+            </Typography>
+
+            {error() ? (
+              <Box style={{ height: "10px" }} mt={2}>
+                <Typography variant="caption" color="error" align="center">
+                  {errorMsg}
+                </Typography>
+              </Box>
+            ) : (
+              <Box style={{ height: "10px" }} mt={2}></Box>
+            )}
+            <form
+              className={classes.form}
+              noValidate
+              onSubmit={this.doRegister}
+            >
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <TextField
+                    autoComplete="fname"
+                    size="small"
+                    name="fullname"
+                    required
+                    fullWidth
+                    id="fullname"
+                    label="Name"
+                    autoFocus
+                    onChange={(e) => this.setValue(e)}
+                    error={errorFullname}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    size="small"
+                    required
+                    fullWidth
+                    id="phone"
+                    label="phone"
+                    name="phone"
+                    autoComplete="phone"
+                    onChange={(e) => this.setValue(e)}
+                    error={errorPhone}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    size="small"
+                    required
+                    fullWidth
+                    id="email"
+                    label="Email Address"
+                    name="email"
+                    autoComplete="email"
+                    onChange={(e) => this.setValue(e)}
+                    error={errorEmail}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    size="small"
+                    required
+                    fullWidth
+                    name="password"
+                    label="Password"
+                    type="password"
+                    id="password"
+                    autoComplete="current-password"
+                    onChange={(e) => this.setValue(e)}
+                    error={errorPassword}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    size="small"
+                    required
+                    fullWidth
+                    name="repassword"
+                    label="Reenter Password"
+                    type="password"
+                    id="repassword"
+                    autoComplete="current-password"
+                    onChange={(e) => this.setValue(e)}
+                    error={errorRepassword}
+                  />
+                </Grid>
               </Grid>
-            </Grid>
-          </form>
-        </div>
-        <Box mt={5}>
-          <Copyright></Copyright>
-        </Box>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+              >
+                Register
+              </Button>
+              <Grid container justify="flex-end">
+                <Grid item>
+                  <Link
+                    href="#"
+                    variant="body2"
+                    onClick={() => this.props.history.push("/login")}
+                  >
+                    Already have an account? Login
+                  </Link>
+                </Grid>
+              </Grid>
+            </form>
+            <Box mt={2}>
+              <Copyright></Copyright>
+            </Box>
+          </div>
+        </Paper>
       </Container>
     );
   }
 }
 const mapStateToProps = (state) => {
   const { isLogin, user } = state.auth;
-  console.log("ini srarrererre", state);
   return {
     isLogin: isLogin,
     user: user,

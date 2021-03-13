@@ -11,12 +11,22 @@ import { blue, green, red } from "@material-ui/core/colors";
 import DoneIcon from "@material-ui/icons/Done";
 import person from "../../static/person.jpg";
 import moment from "moment";
-import { Button, TextField } from "@material-ui/core";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Grid,
+  TextField,
+} from "@material-ui/core";
 import { Edit } from "@material-ui/icons";
+import InboxIcon from "@material-ui/icons/Inbox";
 
 const useStyles = () => ({
   root: {
-    maxWidth: 248,
+    maxWidth: 245,
     fontSize: 1,
   },
   media: {
@@ -40,9 +50,15 @@ const useStyles = () => ({
 class SellerCard extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      modal: false,
+    };
   }
-
+  toggleModal = () => {
+    this.setState({
+      modal: !this.state.modal,
+    });
+  };
   render() {
     const {
       classes,
@@ -82,9 +98,82 @@ class SellerCard extends Component {
               }
             />
           </IconButton>
-          <Typography variant="button">{user.status}</Typography>
+          <Typography variant="subtitle2">{user.status}</Typography>
+          <IconButton onClick={this.toggleModal} aria-label="share">
+            <InboxIcon className={classes.blue} />
+          </IconButton>
+          <Typography variant="subtitle2">{user.prodQty} Limit</Typography>
         </CardActions>
-        <CardActions disableSpacing>
+        <Dialog
+          open={this.state.modal}
+          onClose={() => {
+            this.setState({ modal: false });
+          }}
+          aria-labelledby="form-dialog-title"
+          maxWidth="xs"
+        >
+          <DialogTitle id="form-dialog-title">Seller Limit</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Update Limit based on active product
+            </DialogContentText>
+            <Grid container xs={12} spacing={3}>
+              <Grid item xs={4}>
+                <TextField
+                  autoFocus
+                  size="small"
+                  margin="dense"
+                  id="name"
+                  label="Limit"
+                  type="text"
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <TextField
+                  disabled
+                  autoFocus
+                  size="small"
+                  margin="dense"
+                  id="name"
+                  label="Active"
+                  type="text"
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <TextField
+                  disabled
+                  autoFocus
+                  size="small"
+                  margin="dense"
+                  id="name"
+                  label="Inactive"
+                  type="text"
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </Grid>
+            </Grid>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.toggleModal} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={this.toggleModal} color="primary">
+              Save
+            </Button>
+          </DialogActions>
+        </Dialog>
+        {/* <CardActions disableSpacing>
           <TextField
             label="Product"
             size="small"
@@ -100,7 +189,7 @@ class SellerCard extends Component {
           >
             Edit
           </Button>
-        </CardActions>
+        </CardActions> */}
       </Card>
     );
   }
