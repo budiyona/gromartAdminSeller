@@ -6,6 +6,7 @@ import PaginationControlled from "./pagination";
 import ProductDasboard from "./product-dasboard-admin";
 import CountCard from "./card-count";
 import DasboardTitle from "./title-dasboard";
+import SearchField from "./search-field";
 
 export {
   Copyright,
@@ -16,4 +17,5 @@ export {
   ProductCard,
   SellerCard,
   DasboardTitle,
+  SearchField,
 };

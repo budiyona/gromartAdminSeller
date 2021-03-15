@@ -196,6 +196,14 @@ class App extends Component {
             }}
           />
           <Route
+            path="/"
+            exact
+            component={() => {
+              let history = useHistory();
+              return <Login history={history}></Login>;
+            }}
+          />
+          <Route
             path="/login"
             exact
             component={() => {
@@ -216,8 +224,3 @@ const mapStatToProps = (state) => {
   };
 };
 export default connect(mapStatToProps)(App);
-//page
-//--navbar
-//--body
-//----switch
-//----content dari body

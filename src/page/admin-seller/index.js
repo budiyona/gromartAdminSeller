@@ -1,8 +1,19 @@
-import { Grid, ThemeProvider, withStyles } from "@material-ui/core";
+import {
+  Button,
+  Grid,
+  TextField,
+  ThemeProvider,
+  withStyles,
+} from "@material-ui/core";
 import axios from "axios";
 import React, { Component } from "react";
-import { Menu, PaginationControlled, SellerCard } from "../../component";
-import moment from "moment";
+import {
+  Menu,
+  PaginationControlled,
+  SearchField,
+  SellerCard,
+} from "../../component";
+import ClearIcon from "@material-ui/icons/Clear";
 import { connect } from "react-redux";
 const useStyles = (theme) => ({
   margin: {
@@ -165,7 +176,10 @@ class AdminSeller extends Component {
             buttonAdminStat={buttonAdminStat}
           />
         </Grid>
-        <Grid container item xs={12} className={classes.margin}>
+
+        <SearchField></SearchField>
+
+        <Grid container item xs={12}>
           {listSeller.map((user, i) => {
             return (
               <Grid item xs={4} className={classes.margin} key={i}>

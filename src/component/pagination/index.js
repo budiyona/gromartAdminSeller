@@ -5,7 +5,7 @@ import Pagination from "@material-ui/lab/Pagination";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    marginTop: "2%",
+    marginTop: theme.spacing(1),
     width: "100%",
     display: "flex",
     flexDirection: "column",
