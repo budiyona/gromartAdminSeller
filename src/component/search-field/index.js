@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SearchField() {
+export default function SearchField(props) {
   const classes = useStyles();
   const [target, setTarget] = React.useState("");
   const [showClear, setClear] = React.useState(false);
@@ -39,6 +39,7 @@ export default function SearchField() {
     console.log("clear");
     setTarget("");
     setClear(false);
+    props.resetData();
   };
   return (
     <div className={classes.root}>
@@ -65,7 +66,12 @@ export default function SearchField() {
         </FormControl>
       </div>
       <div>
-        <Button variant="contained" className={classes.buttonRed} size="small">
+        <Button
+          variant="contained"
+          className={classes.buttonRed}
+          size="small"
+          onClick={() => props.onClick(target)}
+        >
           Search
         </Button>
       </div>

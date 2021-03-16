@@ -112,7 +112,7 @@ class AdminHome extends Component {
   };
   getProductActive = () => {
     axios
-      .get("http://localhost:8080/api/product/count-product?status=active")
+      .get("http://localhost:8080/api/product/count-by-status?status=active")
       .then((res) =>
         this.setState({
           productCard: {
@@ -124,7 +124,7 @@ class AdminHome extends Component {
   };
   getProductInactive = () => {
     axios
-      .get("http://localhost:8080/api/product/count-product?status=inactive")
+      .get("http://localhost:8080/api/product/count-by-status?status=inactive")
       .then((res) =>
         this.setState({
           productCard: {

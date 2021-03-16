@@ -50,20 +50,185 @@ class AdminProduct extends Component {
       ],
       productPage: 0,
       filterSwitch: false,
+      filterByStatus: false,
+      filterByCode: false,
+      filterByName: false,
+      filterByDate: false,
+      statusFilter: "",
+
+      searchField: "",
+      searchingStatus: false,
+
+      fromDate: "",
+      toDate: "",
+
+      querySearch: "",
     };
   }
   componentDidMount() {
-    this.getAllProduct();
+    this.getAllProduct(0);
   }
-  getAllProduct = () => {
-    axios.get("http://localhost:8080/api/product").then((res) => {
-      this.setState({ listProduct: res.data });
+  getAllProduct = (offset) => {
+    axios
+      .get("http://localhost:8080/api/product?offset=" + offset)
+      .then((res) => {
+        this.setState({
+          listProduct: res.data.product,
+          productPage: Math.ceil(res.data.qty / 6),
+        });
+        // console.log(res.data.product);
+      });
+  };
+  changePage = (page) => {
+    const { searchingStatus, querySearch } = this.state;
+    console.log("changePage");
+    let offset = (page - 1) * 6;
+    if (searchingStatus) {
+      this.getProductWithFilter(querySearch, offset);
+    } else {
+      this.getAllProduct(offset);
+    }
+  };
+  toogleFilter = (buttonName) => {
+    console.log(buttonName);
+    this.setState({
+      [buttonName]: !this.state[buttonName],
     });
   };
-  countProduct = () => {};
+  setFilterValue = (e) => {
+    console.log(e.target.value);
+    const { name, value } = e.target;
+    this.setState({
+      [name]: value,
+    });
+  };
+
+  doSearch = (target) => {
+    console.log("doSearch target", target);
+    const {
+      filterByStatus,
+      filterByCode,
+      filterByName,
+      filterByDate,
+      statusFilter,
+      fromDate,
+      toDate,
+    } = this.state;
+    let endpoint = "http://localhost:8080/api/product/filter?";
+    if (filterByStatus && filterByName && filterByCode && filterByDate) {
+      endpoint +=
+        "status=" +
+        statusFilter +
+        "&productCode=" +
+        target +
+        "&productName=" +
+        target +
+        "&fromDate=" +
+        fromDate +
+        "&toDate=" +
+        toDate;
+    } else if (filterByStatus && filterByName && filterByCode) {
+      endpoint +=
+        "status=" +
+        statusFilter +
+        "&productCode=" +
+        target +
+        "&productName=" +
+        target;
+    } else if (filterByStatus && filterByName && filterByDate) {
+      endpoint +=
+        "status=" +
+        statusFilter +
+        "&productName=" +
+        target +
+        "&fromDate=" +
+        fromDate +
+        "&toDate=" +
+        toDate;
+    } else if (filterByStatus && filterByCode && filterByDate) {
+      endpoint +=
+        "status=" +
+        statusFilter +
+        "&productCode=" +
+        target +
+        "&fromDate=" +
+        fromDate +
+        "&toDate=" +
+        toDate;
+    } else if (filterByName && filterByCode && filterByDate) {
+      endpoint +=
+        "productCode=" +
+        target +
+        "&productName=" +
+        target +
+        "&fromDate=" +
+        fromDate +
+        "&toDate=" +
+        toDate;
+    } else if (filterByStatus && filterByName) {
+      endpoint += "status=" + statusFilter + "&productName=" + target;
+    } else if (filterByStatus && filterByCode) {
+      endpoint += "status=" + statusFilter + "&productCode=" + target;
+    } else if (filterByStatus && filterByDate) {
+      endpoint +=
+        "status=" +
+        statusFilter +
+        "&fromDate=" +
+        fromDate +
+        "&toDate=" +
+        toDate;
+    } else if (filterByName && filterByCode) {
+      endpoint += "productCode=" + target + "&productName=" + target;
+    } else if (filterByName && filterByDate) {
+      endpoint +=
+        "productName=" + target + "&fromDate=" + fromDate + "&toDate=" + toDate;
+    } else if (filterByCode && filterByDate) {
+      endpoint +=
+        "productCode=" + target + "&fromDate=" + fromDate + "&toDate=" + toDate;
+    } else if (filterByStatus) {
+      endpoint += "status=" + statusFilter;
+    } else if (filterByName) {
+      endpoint += "productName=" + target;
+    } else if (filterByCode) {
+      endpoint += "productCode=" + target;
+    } else if (filterByDate) {
+      endpoint += "fromDate=" + fromDate + "&toDate=" + toDate;
+    } else {
+      endpoint += "&productName=" + target;
+    }
+
+    this.getProductWithFilter(endpoint, 0);
+  };
+  getProductWithFilter = (query, offset) => {
+    let queryOffset = "&offset=" + offset;
+    axios.get(query + queryOffset).then((res) => {
+      console.log(res.data);
+      this.setState({
+        listProduct: res.data.product,
+        productPage: Math.ceil(res.data.qty / 6),
+      });
+    });
+    this.setState({ searchingStatus: true, querySearch: query });
+  };
+  resetData = () => {
+    this.getAllProduct(0);
+    this.setState({
+      searchingStatus: false,
+    });
+  };
   render() {
+    // console.log(this.state);
     const { buttonAdminStat, history, toogleMenu, classes } = this.props;
-    const { listProduct, filterSwitch } = this.state;
+    const {
+      listProduct,
+      filterSwitch,
+      productPage,
+      filterByStatus,
+      filterByCode,
+      filterByName,
+      filterByDate,
+      statusFilter,
+    } = this.state;
     return (
       <Grid
         container
@@ -93,7 +258,10 @@ class AdminProduct extends Component {
             ></FilterListIcon>
           </Grid>
           <Grid item>
-            <SearchField></SearchField>
+            <SearchField
+              onClick={this.doSearch}
+              resetData={this.resetData}
+            ></SearchField>
           </Grid>
         </Grid>
         <Grid item xs={12} className={classes.margin}>
@@ -110,7 +278,8 @@ class AdminProduct extends Component {
                   <Button
                     variant="contained"
                     size="small"
-                    color={true && "primary"}
+                    color={filterByCode ? "primary" : "default"}
+                    onClick={() => this.toogleFilter("filterByCode")}
                   >
                     Product Code
                   </Button>
@@ -119,7 +288,8 @@ class AdminProduct extends Component {
                   <Button
                     variant="contained"
                     size="small"
-                    color={true && "primary"}
+                    color={filterByName ? "primary" : "default"}
+                    onClick={() => this.toogleFilter("filterByName")}
                   >
                     Product Name
                   </Button>
@@ -128,21 +298,27 @@ class AdminProduct extends Component {
                   <Button
                     variant="contained"
                     size="small"
-                    color={true && "primary"}
+                    color={filterByStatus ? "primary" : "default"}
+                    onClick={() => this.toogleFilter("filterByStatus")}
                   >
                     Status
                   </Button>
-                  <Select value="">
-                    <MenuItem value={10}>Ten</MenuItem>
-                    <MenuItem value={20}>Twenty</MenuItem>
-                    <MenuItem value={30}>Thirty</MenuItem>
+                  <Select
+                    value={statusFilter}
+                    name="statusFilter"
+                    disabled={!filterByStatus}
+                    onChange={(e) => this.setFilterValue(e)}
+                  >
+                    <MenuItem value="active">Active</MenuItem>
+                    <MenuItem value="inactive">InActive</MenuItem>
                   </Select>
                 </Grid>
                 <Grid container item direction="column" xs={4}>
                   <Button
                     variant="contained"
                     size="small"
-                    color={true && "primary"}
+                    color={filterByDate ? "primary" : "default"}
+                    onClick={() => this.toogleFilter("filterByDate")}
                   >
                     Date
                   </Button>
@@ -156,27 +332,40 @@ class AdminProduct extends Component {
                       margin: "auto",
                     }}
                   >
-                    <TextField type="date"></TextField>
+                    <TextField
+                      type="date"
+                      name="fromDate"
+                      disabled={!filterByDate}
+                      onChange={(e) => this.setFilterValue(e)}
+                    ></TextField>
                     <Box ml={2} mr={2}>
                       to
                     </Box>
-                    <TextField type="date"></TextField>
+                    <TextField
+                      type="date"
+                      name="toDate"
+                      disabled={!filterByDate}
+                      onChange={(e) => this.setFilterValue(e)}
+                    ></TextField>
                   </div>
                 </Grid>
               </Grid>
             </Paper>
           </Collapse>
         </Grid>
-        <Grid container item xs={12} className={classes.margin}>
+        <Grid container item xs={12} spacing={2}>
           {listProduct &&
             listProduct.map((prod, i) => (
-              <Grid item xs={4} key={i}>
+              <Grid item xs={4} key={i} className={classes.margin}>
                 <ProductCard product={prod}></ProductCard>
               </Grid>
             ))}
         </Grid>
         <Grid container item xs={12}>
-          <PaginationControlled page={10}></PaginationControlled>
+          <PaginationControlled
+            page={productPage}
+            onClick={this.changePage}
+          ></PaginationControlled>
         </Grid>
       </Grid>
     );

@@ -13,6 +13,7 @@ import person from "../../static/person.jpg";
 import moment from "moment";
 import {
   Button,
+  CardContent,
   Dialog,
   DialogActions,
   DialogContent,
@@ -86,6 +87,11 @@ class SellerCard extends Component {
           image={person}
           onClick={() => history.push("/admin/product/" + user.userCode)}
         />
+        <CardContent>
+          <Typography variant="body2" color="textSecondary" component="p">
+            {user.userCode}
+          </Typography>
+        </CardContent>
         <CardActions disableSpacing>
           <IconButton onClick={onClick} aria-label="share">
             <DoneIcon

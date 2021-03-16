@@ -1,6 +1,10 @@
 import {
   Button,
+  FormControl,
   Grid,
+  InputLabel,
+  MenuItem,
+  Select,
   TextField,
   ThemeProvider,
   withStyles,
@@ -18,6 +22,9 @@ import { connect } from "react-redux";
 const useStyles = (theme) => ({
   margin: {
     marginBottom: theme.spacing(2),
+  },
+  formControl: {
+    width: "100%",
   },
 });
 class AdminSeller extends Component {
@@ -41,6 +48,9 @@ class AdminSeller extends Component {
       status: ["requested", "active", "inactive"],
       statusNow: "requested",
       sellerPage: 0,
+
+      filterStatus: "all",
+      filterRole: "name",
     };
   }
   componentDidMount() {
@@ -158,9 +168,32 @@ class AdminSeller extends Component {
     let offset = (page - 1) * 6;
     this.getAllSeller(offset);
   };
+  doSearch = (target) => {
+    const { filterStatus, filterRole } = this.state;
+    let endpoint = "";
+    if (filterRole.length > 0 && filterStatus > 0) {
+    } else if (filterRole.length > 0) {
+    } else if (filterStatus.length > 0) {
+    } else {
+    }
+  };
+  getSellerWithFilter = (query, offset) => {};
+  setFilterValue = (e) => {
+    console.log(e.target.value);
+    const { name, value } = e.target;
+    this.setState({
+      [name]: value,
+    });
+  };
   render() {
     const { buttonAdminStat, classes, history, toogleMenu } = this.props;
-    const { listSeller, statusNow, sellerPage } = this.state;
+    const {
+      listSeller,
+      statusNow,
+      sellerPage,
+      filterStatus,
+      filterRole,
+    } = this.state;
 
     return (
       <Grid
@@ -177,7 +210,44 @@ class AdminSeller extends Component {
           />
         </Grid>
 
-        <SearchField></SearchField>
+        <Grid
+          container
+          item
+          xs={12}
+          justify="center"
+          className={classes.margin}
+          spacing={3}
+        >
+          <Grid item xs={3}>
+            <FormControl className={classes.formControl} size="small">
+              <Select
+                size="small"
+                value={filterStatus}
+                onChange={(e) => this.setFilterValue(e)}
+              >
+                <MenuItem value="all">All</MenuItem>
+                <MenuItem value="active">Active</MenuItem>
+                <MenuItem value="inactive">Inactive</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={3}>
+            <FormControl className={classes.formControl} size="small">
+              <Select
+                size="small"
+                value={filterRole}
+                onChange={(e) => this.setFilterValue(e)}
+              >
+                <MenuItem value="name">Name</MenuItem>
+                <MenuItem value="userCode">UserCode</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+
+          <Grid item xs={3}>
+            <SearchField></SearchField>
+          </Grid>
+        </Grid>
 
         <Grid container item xs={12}>
           {listSeller.map((user, i) => {
