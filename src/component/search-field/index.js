@@ -6,10 +6,22 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import FormControl from "@material-ui/core/FormControl";
 import ClearIcon from "@material-ui/icons/Clear";
 import { Button, Grid } from "@material-ui/core";
+import { red } from "@material-ui/core/colors";
 
 const useStyles = makeStyles((theme) => ({
+  root: {
+    display: "flex",
+  },
   margin: {
     marginBottom: theme.spacing(2),
+  },
+  buttonRed: {
+    backgroundColor: red[500],
+    color: "white",
+  },
+  searchField: {
+    width: "150px",
+    boxSizing: "border-box",
   },
 }));
 
@@ -29,15 +41,12 @@ export default function SearchField() {
     setClear(false);
   };
   return (
-    <Grid container item xs={12} className={classes.margin} alignItems="center">
-      <Grid item xs={4}></Grid>
-      <Grid item xs={4}></Grid>
-      <Grid item xs={3}>
+    <div className={classes.root}>
+      <div className={classes.searchField}>
         <FormControl>
           <Input
             fullWidth
             placeholder="search..."
-            inputProps={{ "aria-label": "description" }}
             onChange={handleChange()}
             value={target}
             endAdornment={
@@ -54,12 +63,12 @@ export default function SearchField() {
             }
           />
         </FormControl>
-      </Grid>
-      <Grid item xs={1}>
-        <Button variant="outlined" color="secondary" size="small">
+      </div>
+      <div>
+        <Button variant="contained" className={classes.buttonRed} size="small">
           Search
         </Button>
-      </Grid>
-    </Grid>
+      </div>
+    </div>
   );
 }

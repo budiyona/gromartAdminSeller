@@ -52,7 +52,7 @@ class AdminSeller extends Component {
       .get("http://localhost:8080/api//user/count-seller?status=" + status)
       .then((res) => {
         this.setState({
-          sellerCount: Math.ceil(res.data / 6),
+          sellerPage: Math.ceil(res.data / 6),
         });
       });
   };
@@ -160,7 +160,7 @@ class AdminSeller extends Component {
   };
   render() {
     const { buttonAdminStat, classes, history, toogleMenu } = this.props;
-    const { listSeller, statusNow, sellerCount } = this.state;
+    const { listSeller, statusNow, sellerPage } = this.state;
 
     return (
       <Grid
@@ -198,7 +198,7 @@ class AdminSeller extends Component {
         </Grid>
 
         <Grid container item xs={12}>
-          <PaginationControlled page={sellerCount} onClick={this.changePage} />
+          <PaginationControlled page={sellerPage} onClick={this.changePage} />
         </Grid>
       </Grid>
     );
