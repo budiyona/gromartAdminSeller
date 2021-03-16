@@ -3,6 +3,7 @@ package com.nextsoft.gromart.service;
 import com.nextsoft.gromart.model.User;
 
 import java.util.List;
+import java.util.Map;
 
 public interface UserService {
     User findById(String id);
@@ -17,4 +18,6 @@ public interface UserService {
     int updateProductQty(String id, int limitProduct, String idAdmin);
     int updateUser(User user);
     boolean isUserActive(String email);
+
+    Map<String, Object> filterUser(Map<String, Object> params);
 }

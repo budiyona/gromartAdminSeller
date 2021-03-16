@@ -5,7 +5,9 @@ import com.nextsoft.gromart.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service("UserService")
 public class UserServiceImpl implements UserService {
@@ -71,5 +73,56 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean isUserActive(String email) {
         return userRepository.isUserActive(email);
+    }
+
+    @Override
+    public Map<String, Object> filterUser(Map<String, Object> params) {
+        Map<String, Object> map = new HashMap<>();
+        String condition = "";
+        String limit = " limit 6 offset ";
+        if (params.containsKey("offset")) {
+            limit += params.get("offset");
+        } else {
+            limit = "";
+        }
+
+        if (params.containsKey("status") &&
+                params.containsKey("field")) {
+            if (params.get("field") == "userName") {
+                condition = "and status = '"
+                        + params.get("status")
+                        + "' and userName like '%"
+                        + params.get("target")
+                        + "%'";
+            } else {
+                condition = "and status = '"
+                        + params.get("status")
+                        + "' and userCode like '%"
+                        + params.get("target")
+                        + "%'";
+            }
+
+        } else if (params.containsKey("status")) {
+            condition = "and status = '"
+                    + params.get("status")
+                    + "'";
+
+        } else if (params.containsKey("field")) {
+            if (params.get("field") == "userName") {
+                condition = "and userName like '%"
+                        + params.get("target")
+                        + "%'";
+            } else {
+                condition = "and userCode like '%"
+                        + params.get("target")
+                        + "%'";
+            }
+
+        } else {
+            map.put("qty", -1);
+            map.put("product", null);
+            return map;
+        }
+        return userRepository.filterUser(condition, condition + limit);
     }
 }

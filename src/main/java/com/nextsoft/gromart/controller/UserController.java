@@ -9,6 +9,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -29,7 +30,7 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestParam String email, String password) {
-        if (userService.isEmailExist(email)&&userService.isUserActive(email)) {
+        if (userService.isEmailExist(email) && userService.isUserActive(email)) {
             User target = userService.login(email);
             if (target.getPassword().equals(password)) {
                 target.setPassword(null);
@@ -55,7 +56,6 @@ public class UserController {
             return new ResponseEntity<>("Email already Exist", HttpStatus.CONFLICT);
         }
     }
-
 
 
     @GetMapping("/user/count-seller")
@@ -116,4 +116,13 @@ public class UserController {
         }
     }
 
+    @GetMapping("/user/filter")
+    public ResponseEntity<?> filterUser(@RequestParam Map<String, Object> params) {
+        Map<String, Object> map = userService.filterUser(params);
+
+        if((int) map.get("qty")>=0){
+            return new ResponseEntity<>(map, HttpStatus.OK);
+        }
+        return new ResponseEntity<>("bac request", HttpStatus.BAD_REQUEST);
+    }
 }

@@ -1,12 +1,15 @@
 package com.nextsoft.gromart.repository;
 
+import com.nextsoft.gromart.model.Product;
 import com.nextsoft.gromart.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository("UserRepository")
 public class UserRepositoryImpl implements UserRepository {
@@ -196,5 +199,37 @@ public class UserRepositoryImpl implements UserRepository {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public Map<String, Object> filterUser(String conditionQty, String conditionObj) {
+        Map<String, Object> map = new HashMap<>();
+        try {
+
+            map.put("qty",
+                    jdbcTemplate.queryForObject(
+                            "select count(*) from user u where userCode like 'seller%' " + conditionQty,
+                            Integer.class)
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        map.put("product", jdbcTemplate.query(
+                "select * from user u where userCode like 'seller%' " + conditionObj,
+                (rs, i) -> new User(
+                        rs.getString("userCode"),
+                        rs.getString("userName"),
+                        rs.getString("phone"),
+                        rs.getString("email"),
+                        rs.getString("status"),
+                        rs.getString("createdBy"),
+                        rs.getString("createdDate"),
+                        rs.getString("updateBy"),
+                        rs.getString("updateDate"),
+                        rs.getInt("productLimit")
+                )
+
+        ));
+        return map;
     }
 }

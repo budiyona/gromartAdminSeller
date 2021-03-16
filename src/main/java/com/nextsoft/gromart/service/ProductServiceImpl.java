@@ -5,6 +5,7 @@ import com.nextsoft.gromart.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,8 +25,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> findAllProduct() {
-        return productRepository.findAllProduct();
+    public Map<String , Object> findAllProduct(String offset) {
+        return productRepository.findAllProduct(offset);
     }
 
     @Override
@@ -39,16 +40,24 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public int countProduct(Map<String, String> params) {
-        String filter = "";
+    public Map<String, Object> filterProduct(Map<String, String> params) {
+        Map<String, Object> map = new HashMap<>();
+        String condition = "";
+        String limit = " limit 6 offset ";
+        if (params.containsKey("offset")) {
+            limit += params.get("offset");
+        } else {
+            limit = "";
+        }
+
         if (params.containsKey("status") &&
                 params.containsKey("productCode") &&
                 params.containsKey("productName") &&
                 params.containsKey("fromDate") &&
                 params.containsKey("toDate")) {
-            filter = "where status = '"
+            condition = "where p.status = '"
                     + params.get("status")
-                    + "' and (date(createdDate) between '"
+                    + "' and (date(p.createdDate) between '"
                     + params.get("fromDate")
                     + "' and '"
                     + params.get("toDate")
@@ -62,7 +71,7 @@ public class ProductServiceImpl implements ProductService {
         } else if (params.containsKey("status") &&
                 params.containsKey("productCode") &&
                 params.containsKey("productName")) {
-            filter = "where status = '"
+            condition = "where p.status = '"
                     + params.get("status")
                     + "' and ( productCode like '%"
                     + params.get("productCode")
@@ -74,9 +83,9 @@ public class ProductServiceImpl implements ProductService {
                 params.containsKey("productCode") &&
                 params.containsKey("fromDate") &&
                 params.containsKey("toDate")) {
-            filter = "where status = '"
+            condition = "where p.status = '"
                     + params.get("status")
-                    + "' and (date(createdDate) between '"
+                    + "' and (date(p.createdDate) between '"
                     + params.get("fromDate")
                     + "' and '"
                     + params.get("toDate")
@@ -88,9 +97,9 @@ public class ProductServiceImpl implements ProductService {
                 params.containsKey("productName") &&
                 params.containsKey("fromDate") &&
                 params.containsKey("toDate")) {
-            filter = "where status = '"
+            condition = "where p.status = '"
                     + params.get("status")
-                    + "' and (date(createdDate) between '"
+                    + "' and (date(p.createdDate) between '"
                     + params.get("fromDate")
                     + "' and '"
                     + params.get("toDate")
@@ -102,7 +111,7 @@ public class ProductServiceImpl implements ProductService {
                 params.containsKey("productName") &&
                 params.containsKey("fromDate") &&
                 params.containsKey("toDate")) {
-            filter = "where (date(createdDate) between '"
+            condition = "where (date(p.createdDate) between '"
                     + params.get("fromDate")
                     + "' and '"
                     + params.get("toDate")
@@ -114,7 +123,7 @@ public class ProductServiceImpl implements ProductService {
 
         } else if (params.containsKey("status") &&
                 params.containsKey("productName")) {
-            filter = "where status = '"
+            condition = "where p.status = '"
                     + params.get("status")
                     + "' and productName like '%"
                     + params.get("productName")
@@ -122,7 +131,7 @@ public class ProductServiceImpl implements ProductService {
 
         } else if (params.containsKey("status") &&
                 params.containsKey("productCode")) {
-            filter = "where status = '"
+            condition = "where p.status = '"
                     + params.get("status")
                     + "' and productCode like '%"
                     + params.get("productCode")
@@ -130,16 +139,16 @@ public class ProductServiceImpl implements ProductService {
         } else if (params.containsKey("status") &&
                 params.containsKey("fromDate") &&
                 params.containsKey("toDate")) {
-            filter = "where status = '"
+            condition = "where p.status = '"
                     + params.get("status")
-                    + "' and (date(createdDate) between '"
+                    + "' and (date(p.createdDate) between '"
                     + params.get("fromDate")
                     + "' and '"
                     + params.get("toDate")
                     + "')";
         } else if (params.containsKey("productCode") &&
                 params.containsKey("productName")) {
-            filter = "where productCode like '%"
+            condition = "where productCode like '%"
                     + params.get("productName")
                     + "%' and productName like '%"
                     + params.get("productCode")
@@ -148,7 +157,7 @@ public class ProductServiceImpl implements ProductService {
         } else if (params.containsKey("productName") &&
                 params.containsKey("fromDate") &&
                 params.containsKey("toDate")) {
-            filter = "where (date(createdDate) between '"
+            condition = "where (date(p.createdDate) between '"
                     + params.get("fromDate")
                     + "' and '"
                     + params.get("toDate")
@@ -159,7 +168,7 @@ public class ProductServiceImpl implements ProductService {
         } else if (params.containsKey("productCode") &&
                 params.containsKey("fromDate") &&
                 params.containsKey("toDate")) {
-            filter = "where (date(createdDate) between '"
+            condition = "where (date(p.createdDate) between '"
                     + params.get("fromDate")
                     + "' and '"
                     + params.get("toDate")
@@ -168,29 +177,37 @@ public class ProductServiceImpl implements ProductService {
                     + "%' ";
 
         } else if (params.containsKey("status")) {
-            filter = "where status = '"
+            condition = "where p.status = '"
                     + params.get("status")
                     + "' ";
         } else if (params.containsKey("productCode")) {
-            filter = "where productCode like '%"
+            condition = "where productCode like '%"
                     + params.get("productCode")
                     + "%' ";
 
         } else if (params.containsKey("productName")) {
-            filter = "where productName like '%"
+            condition = "where productName like '%"
                     + params.get("productName")
                     + "%' ";
 
         } else if (params.containsKey("fromDate") &&
                 params.containsKey("toDate")) {
-            filter = "where (date(createdDate) between '"
+            condition = "where (date(p.createdDate) between '"
                     + params.get("fromDate")
                     + "' and '"
                     + params.get("toDate")
                     + "')";
         } else {
-            return -1;
+            map.put("qty", -1);
+            map.put("product", null);
+            return map;
         }
-        return productRepository.countProduct(filter);
+//        condition+=limit;
+        return productRepository.filterProduct(condition, condition + limit);
+    }
+
+    @Override
+    public int countProductByStatus(String status) {
+        return productRepository.countProductByStatus(status);
     }
 }

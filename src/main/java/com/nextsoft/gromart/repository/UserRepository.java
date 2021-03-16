@@ -3,6 +3,7 @@ package com.nextsoft.gromart.repository;
 import com.nextsoft.gromart.model.User;
 
 import java.util.List;
+import java.util.Map;
 
 public interface UserRepository {
 //    User finByEmail(String email);
@@ -18,4 +19,5 @@ public interface UserRepository {
     int updateStatus(String id,String status, String idAdmin);
     int updateProductQty(String id, int limitProduct, String idAdmin);
     boolean isUserActive(String email);
+    Map<String, Object> filterUser(String conditionQty, String conditionObj);
 }

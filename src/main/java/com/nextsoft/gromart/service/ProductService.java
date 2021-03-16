@@ -8,9 +8,10 @@ import java.util.Map;
 public interface ProductService {
     Product findById(String id);
     List<Product> findBySeller(String id);
-    List<Product> findAllProduct();
+    Map<String , Object> findAllProduct(String offset);
     List<Product> getCheapestProduct();
     List<Product> getMostExpensiveProduct();
-    int countProduct(Map<String, String> params);
+    Map<String , Object> filterProduct(Map<String, String> params);
+    int countProductByStatus(String status);
 
 }

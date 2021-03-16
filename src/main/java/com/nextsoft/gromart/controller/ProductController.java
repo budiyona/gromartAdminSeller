@@ -19,8 +19,8 @@ public class ProductController {
     ProductService productService;
 
     @GetMapping("/product")
-    public ResponseEntity<List<Product>> getAll() {
-        return new ResponseEntity<>(productService.findAllProduct(), HttpStatus.OK);
+    public ResponseEntity<?> getAll(@RequestParam String offset) {
+        return new ResponseEntity<>(productService.findAllProduct(offset), HttpStatus.OK);
     }
 
     @GetMapping("/product/cheapest")
@@ -33,13 +33,34 @@ public class ProductController {
         return new ResponseEntity<>(productService.getMostExpensiveProduct(), HttpStatus.OK);
     }
 
-    @GetMapping("/product/count-product")
-    public ResponseEntity<?> getNumberOfSeller(@RequestParam Map<String, String> params) {
-        int qty = productService.countProduct(params);
-        if (qty >= 0) {
-            return new ResponseEntity<>(qty, HttpStatus.OK);
+    @GetMapping("/product/filter")
+    public ResponseEntity<?> getNumberOfProduct(@RequestParam Map<String, String> params) {
+        Map<String, Object> map = productService.filterProduct(params);
+//        int qty= (int) map.get("qty");
+
+        if ((int) map.get("qty") >= 0) {
+            return new ResponseEntity<>(map, HttpStatus.OK);
         }
         return new ResponseEntity<>("bad request", HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping("/product/count-by-status")
+    public ResponseEntity<?> getNumberOfProductByStatus(@RequestParam String status) {
+        switch (status) {
+            case "active":
+            case "inactive":
+                return new ResponseEntity<>(
+                        productService.countProductByStatus(" where status = '" + status + "'"),
+                        HttpStatus.OK);
+
+            case "all":
+                return new ResponseEntity<>(
+                        productService.countProductByStatus(""),
+                        HttpStatus.OK);
+            default:
+                return new ResponseEntity<>("request not found",
+                        HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/product/seller")
