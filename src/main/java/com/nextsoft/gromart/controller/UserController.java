@@ -56,10 +56,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/test")
-    public ResponseEntity<?> testConnection() {
-        return new ResponseEntity<>(userService.isEmailExist("email@gmail.com"), HttpStatus.OK);
-    }
+
 
     @GetMapping("/user/count-seller")
     public ResponseEntity<?> getNumberOfSeller(@RequestParam String status) {
@@ -118,4 +115,5 @@ public class UserController {
             return new ResponseEntity<>("User Not Found", HttpStatus.NOT_FOUND);
         }
     }
+
 }

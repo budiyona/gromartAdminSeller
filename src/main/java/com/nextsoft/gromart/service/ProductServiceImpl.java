@@ -6,9 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service("ProductService")
-public class ProductServiceImpl implements ProductService{
+public class ProductServiceImpl implements ProductService {
     @Autowired
     ProductRepository productRepository;
 
@@ -23,7 +24,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public  List<Product> findAllProduct() {
+    public List<Product> findAllProduct() {
         return productRepository.findAllProduct();
     }
 
@@ -38,7 +39,158 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public int countProduct(String status) {
-        return productRepository.countProduct(status);
+    public int countProduct(Map<String, String> params) {
+        String filter = "";
+        if (params.containsKey("status") &&
+                params.containsKey("productCode") &&
+                params.containsKey("productName") &&
+                params.containsKey("fromDate") &&
+                params.containsKey("toDate")) {
+            filter = "where status = '"
+                    + params.get("status")
+                    + "' and (date(createdDate) between '"
+                    + params.get("fromDate")
+                    + "' and '"
+                    + params.get("toDate")
+                    + "') and ( productCode like '%"
+                    + params.get("productCode")
+                    + "%' or productName like '%"
+                    + params.get("productName")
+                    + "%' )";
+
+
+        } else if (params.containsKey("status") &&
+                params.containsKey("productCode") &&
+                params.containsKey("productName")) {
+            filter = "where status = '"
+                    + params.get("status")
+                    + "' and ( productCode like '%"
+                    + params.get("productCode")
+                    + "%' or productName like '%"
+                    + params.get("productName")
+                    + "%' )";
+
+        } else if (params.containsKey("status") &&
+                params.containsKey("productCode") &&
+                params.containsKey("fromDate") &&
+                params.containsKey("toDate")) {
+            filter = "where status = '"
+                    + params.get("status")
+                    + "' and (date(createdDate) between '"
+                    + params.get("fromDate")
+                    + "' and '"
+                    + params.get("toDate")
+                    + "') and productCode like '%"
+                    + params.get("productCode")
+                    + "%'";
+
+        } else if (params.containsKey("status") &&
+                params.containsKey("productName") &&
+                params.containsKey("fromDate") &&
+                params.containsKey("toDate")) {
+            filter = "where status = '"
+                    + params.get("status")
+                    + "' and (date(createdDate) between '"
+                    + params.get("fromDate")
+                    + "' and '"
+                    + params.get("toDate")
+                    + "') and ( productName like '%"
+                    + params.get("productName")
+                    + "%' )";
+
+        } else if (params.containsKey("productCode") &&
+                params.containsKey("productName") &&
+                params.containsKey("fromDate") &&
+                params.containsKey("toDate")) {
+            filter = "where (date(createdDate) between '"
+                    + params.get("fromDate")
+                    + "' and '"
+                    + params.get("toDate")
+                    + "') and ( productCode like '%"
+                    + params.get("productCode")
+                    + "%' or productName like '%"
+                    + params.get("productName")
+                    + "%' )";
+
+        } else if (params.containsKey("status") &&
+                params.containsKey("productName")) {
+            filter = "where status = '"
+                    + params.get("status")
+                    + "' and productName like '%"
+                    + params.get("productName")
+                    + "%' ";
+
+        } else if (params.containsKey("status") &&
+                params.containsKey("productCode")) {
+            filter = "where status = '"
+                    + params.get("status")
+                    + "' and productCode like '%"
+                    + params.get("productCode")
+                    + "%' ";
+        } else if (params.containsKey("status") &&
+                params.containsKey("fromDate") &&
+                params.containsKey("toDate")) {
+            filter = "where status = '"
+                    + params.get("status")
+                    + "' and (date(createdDate) between '"
+                    + params.get("fromDate")
+                    + "' and '"
+                    + params.get("toDate")
+                    + "')";
+        } else if (params.containsKey("productCode") &&
+                params.containsKey("productName")) {
+            filter = "where productCode like '%"
+                    + params.get("productName")
+                    + "%' and productName like '%"
+                    + params.get("productCode")
+                    + "%' ";
+
+        } else if (params.containsKey("productName") &&
+                params.containsKey("fromDate") &&
+                params.containsKey("toDate")) {
+            filter = "where (date(createdDate) between '"
+                    + params.get("fromDate")
+                    + "' and '"
+                    + params.get("toDate")
+                    + "') and productName like '%"
+                    + params.get("productName")
+                    + "%' ";
+
+        } else if (params.containsKey("productCode") &&
+                params.containsKey("fromDate") &&
+                params.containsKey("toDate")) {
+            filter = "where (date(createdDate) between '"
+                    + params.get("fromDate")
+                    + "' and '"
+                    + params.get("toDate")
+                    + "') and productCode like '%"
+                    + params.get("productCode")
+                    + "%' ";
+
+        } else if (params.containsKey("status")) {
+            filter = "where status = '"
+                    + params.get("status")
+                    + "' ";
+        } else if (params.containsKey("productCode")) {
+            filter = "where productCode like '%"
+                    + params.get("productCode")
+                    + "%' ";
+
+        } else if (params.containsKey("productName")) {
+            filter = "where productName like '%"
+                    + params.get("productName")
+                    + "%' ";
+
+        } else if (params.containsKey("fromDate") &&
+                params.containsKey("toDate")) {
+            filter = "where (date(createdDate) between '"
+                    + params.get("fromDate")
+                    + "' and '"
+                    + params.get("toDate")
+                    + "')";
+        } else {
+            return -1;
+        }
+        return productRepository.countProduct(filter);
     }
 }

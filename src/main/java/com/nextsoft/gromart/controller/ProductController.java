@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -23,19 +24,33 @@ public class ProductController {
     }
 
     @GetMapping("/product/cheapest")
-    public ResponseEntity<List<Product>> getCheapestProduct(){
+    public ResponseEntity<List<Product>> getCheapestProduct() {
         return new ResponseEntity<>(productService.getCheapestProduct(), HttpStatus.OK);
     }
+
     @GetMapping("/product/most-expensive")
-    public ResponseEntity<List<Product>> getMostExpensiveProduct(){
+    public ResponseEntity<List<Product>> getMostExpensiveProduct() {
         return new ResponseEntity<>(productService.getMostExpensiveProduct(), HttpStatus.OK);
     }
+
     @GetMapping("/product/count-product")
-    public ResponseEntity<?> getNumberOfSeller(@RequestParam String status) {
-        return new ResponseEntity<>(productService.countProduct(status), HttpStatus.OK);
+    public ResponseEntity<?> getNumberOfSeller(@RequestParam Map<String, String> params) {
+        int qty = productService.countProduct(params);
+        if (qty >= 0) {
+            return new ResponseEntity<>(qty, HttpStatus.OK);
+        }
+        return new ResponseEntity<>("bad request", HttpStatus.BAD_REQUEST);
     }
+
     @GetMapping("/product/seller")
-    public ResponseEntity<?> getProductBySeller(@RequestParam String id){
-        return new ResponseEntity<>(productService.findBySeller(id),HttpStatus.OK);
+    public ResponseEntity<?> getProductBySeller(@RequestParam String id) {
+        return new ResponseEntity<>(productService.findBySeller(id), HttpStatus.OK);
     }
+
+    @GetMapping("/test")
+    public ResponseEntity<?> testConnection() {
+        return new ResponseEntity<>(productService.findById("hello"), HttpStatus.OK);
+    }
+
+
 }

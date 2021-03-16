@@ -16,7 +16,11 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public Product findById(String id) {
-        return null;
+        int l=jdbcTemplate.queryForObject(
+                "select count(*) as qty from product ", (rs, i) -> rs.getInt("qty"));
+        Product p = new Product();
+        p.setPrice(l);
+        return p;
     }
 
     @Override
@@ -98,8 +102,9 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public int countProduct(String status) {
+
         return jdbcTemplate.queryForObject(
-                "select count(*) from product where status = ?",
-                Integer.class, status);
+                "select count(*) from product " + status,
+                Integer.class);
     }
 }
