@@ -32,7 +32,7 @@ public class UserRepositoryImpl implements UserRepository {
                                     resultSet.getString("createdDate"),
                                     resultSet.getString("updateBy"),
                                     resultSet.getString("updateDate"),
-                                    resultSet.getInt("prodQty")
+                                    resultSet.getInt("productLimit")
                             ),
                     id);
             return target;
@@ -185,7 +185,7 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public int updateProductQty(String id, int limitProduct, String idAdmin) {
         return jdbcTemplate.update(
-                "update user set prodQty = ?, updateBy = ? where userCode = ?",
+                "update user set productLimit = ?, updateBy = ? where userCode = ?",
                 limitProduct, idAdmin, id
         );
     }
@@ -208,14 +208,14 @@ public class UserRepositoryImpl implements UserRepository {
 
             map.put("qty",
                     jdbcTemplate.queryForObject(
-                            "select count(*) from user u where userCode like 'seller%' " + conditionQty,
+                            "select count(*) from (select * from user where userCode like 'seller%') u where " + conditionQty,
                             Integer.class)
             );
         } catch (Exception e) {
             e.printStackTrace();
         }
-        map.put("product", jdbcTemplate.query(
-                "select * from user u where userCode like 'seller%' " + conditionObj,
+        map.put("seller", jdbcTemplate.query(
+                "select * from (select * from user where userCode like 'seller%') u where " + conditionObj,
                 (rs, i) -> new User(
                         rs.getString("userCode"),
                         rs.getString("userName"),

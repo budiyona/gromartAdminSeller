@@ -3,6 +3,7 @@ package com.nextsoft.gromart.controller;
 import com.nextsoft.gromart.model.Product;
 import com.nextsoft.gromart.model.User;
 import com.nextsoft.gromart.service.ProductService;
+import com.nextsoft.gromart.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,9 @@ import java.util.Map;
 public class ProductController {
     @Autowired
     ProductService productService;
+
+    @Autowired
+    UserService userService;
 
     @GetMapping("/product")
     public ResponseEntity<?> getAll(@RequestParam String offset) {
@@ -63,15 +67,30 @@ public class ProductController {
         }
     }
 
+    //find product by seller id
     @GetMapping("/product/seller")
-    public ResponseEntity<?> getProductBySeller(@RequestParam String id) {
-        return new ResponseEntity<>(productService.findBySeller(id), HttpStatus.OK);
+    public ResponseEntity<?> getProductBySeller(@RequestParam String id, String offset) {
+        return new ResponseEntity<>(productService.findBySeller(id, offset), HttpStatus.OK);
+    }
+    //filter product on specific Seller
+    @GetMapping("/product/seller/filter")
+    public ResponseEntity<?> filterProductBasedOnSeller(@RequestParam String id, String target, int offset){
+        return new ResponseEntity<>(productService.filterProductOnSeller(id, target, offset),HttpStatus.OK);
     }
 
+    //test api status
     @GetMapping("/test")
     public ResponseEntity<?> testConnection() {
         return new ResponseEntity<>(productService.findById("hello"), HttpStatus.OK);
     }
 
+    @GetMapping("/product/seller-summary")
+    public ResponseEntity<?> getSellerSummary(@RequestParam String id) {
+        if (userService.isExist(id)) {
+            return new ResponseEntity<>(productService.getSellerSummary(id), HttpStatus.OK);
+
+        }
+        return new ResponseEntity<>("NOT FOUND", HttpStatus.NOT_FOUND);
+    }
 
 }

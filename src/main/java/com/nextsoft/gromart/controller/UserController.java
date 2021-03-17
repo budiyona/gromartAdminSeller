@@ -123,6 +123,6 @@ public class UserController {
         if((int) map.get("qty")>=0){
             return new ResponseEntity<>(map, HttpStatus.OK);
         }
-        return new ResponseEntity<>("bac request", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("bad request", HttpStatus.BAD_REQUEST);
     }
 }

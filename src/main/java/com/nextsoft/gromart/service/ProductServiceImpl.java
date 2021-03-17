@@ -20,8 +20,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> findBySeller(String id) {
-        return productRepository.findBySeller(id);
+    public  Map<String , Object> findBySeller(String id, String offset) {
+        return productRepository.findBySeller(id, offset);
     }
 
     @Override
@@ -209,5 +209,15 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public int countProductByStatus(String status) {
         return productRepository.countProductByStatus(status);
+    }
+
+    @Override
+    public Map<String, Integer> getSellerSummary(String id) {
+        return productRepository.getSellerSummary(id);
+    }
+
+    @Override
+    public Map<String, Object> filterProductOnSeller(String id, String target, int offset) {
+        return productRepository.filterProductOnSeller(id, target, offset);
     }
 }

@@ -5,6 +5,7 @@ import com.nextsoft.gromart.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,49 +81,35 @@ public class UserServiceImpl implements UserService {
         Map<String, Object> map = new HashMap<>();
         String condition = "";
         String limit = " limit 6 offset ";
+        ArrayList<String> arrayCondition = new ArrayList<>();
         if (params.containsKey("offset")) {
             limit += params.get("offset");
         } else {
             limit = "";
         }
 
-        if (params.containsKey("status") &&
-                params.containsKey("field")) {
-            if (params.get("field") == "userName") {
-                condition = "and status = '"
-                        + params.get("status")
-                        + "' and userName like '%"
-                        + params.get("target")
-                        + "%'";
-            } else {
-                condition = "and status = '"
-                        + params.get("status")
-                        + "' and userCode like '%"
-                        + params.get("target")
-                        + "%'";
+        if (params.containsKey("status")) {
+            switch ((String) params.get("status")){
+                case "active":
+                case "inactive":
+                    arrayCondition.add("status='" + params.get("status")+"'");
+                    break;
+                default:
+                    break;
             }
-
-        } else if (params.containsKey("status")) {
-            condition = "and status = '"
-                    + params.get("status")
-                    + "'";
-
-        } else if (params.containsKey("field")) {
-            if (params.get("field") == "userName") {
-                condition = "and userName like '%"
-                        + params.get("target")
-                        + "%'";
-            } else {
-                condition = "and userCode like '%"
-                        + params.get("target")
-                        + "%'";
-            }
-
-        } else {
-            map.put("qty", -1);
-            map.put("product", null);
-            return map;
         }
+
+        if (params.containsKey("field")) {
+            if (params.get("field").equals("userName")) {
+                arrayCondition.add("userName like '%" + params.get("target")+"%'");
+            } else {
+                arrayCondition.add("userCode like '%" + params.get("target")+"%'");
+            }
+        }
+
+        condition= String.join(" and ",arrayCondition);
+//        System.out.println(condition);
+//        System.out.println(params.get("field").equals("userName"));
         return userRepository.filterUser(condition, condition + limit);
     }
 }
