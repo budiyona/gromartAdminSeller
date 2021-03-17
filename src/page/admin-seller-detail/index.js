@@ -5,6 +5,7 @@ import {
   IconButton,
   Input,
   InputAdornment,
+  Typography,
   withStyles,
 } from "@material-ui/core";
 import axios from "axios";
@@ -46,18 +47,40 @@ class AdminSellerDetail extends Component {
       ],
       target: "",
       showClear: false,
+
+      userName: "",
+      email: "",
+
+      searchingStatus: false,
+      page: 0,
     };
   }
   componentDidMount() {
-    console.log(this.props.id);
+    this.getSellerProduct(0);
+    this.getSellerInfo();
+  }
+
+  getSellerProduct = (offset) => {
     axios
-      .get("http://localhost:8080/api/product/seller?id=" + this.props.id)
+      .get(
+        "http://localhost:8080/api/product/seller?id=" +
+          this.props.id +
+          "&offset=" +
+          offset
+      )
       .then((res) =>
         this.setState({
-          products: res.data,
+          products: res.data.product,
+          page: Math.ceil(res.data.qty / 6),
         })
       );
-  }
+  };
+  getSellerInfo = () => {
+    axios.get("http://localhost:8080/api/user/" + this.props.id).then((res) => {
+      const { userName, email } = res.data;
+      this.setState({ userName, email });
+    });
+  };
   setTarget = (e) => {
     console.log(e.target.value);
     const { target } = this.state;
@@ -72,12 +95,48 @@ class AdminSellerDetail extends Component {
     this.setState({
       target: "",
       showClear: false,
+      searchingStatus: false,
     });
+    this.getSellerProduct(0);
+  };
+  getProductWithFilter = (offset) => {
+    axios
+      .get(
+        "http://localhost:8080/api//product/seller/filter?" +
+          "id=" +
+          this.props.id +
+          "&target=" +
+          this.state.target +
+          "&offset=" +
+          offset
+      )
+      .then((res) => {
+        console.log(res.data);
+        this.setState({
+          products: res.data.product,
+          page: Math.ceil(res.data.qty / 6),
+        });
+      });
+
+    this.setState({ searchingStatus: true });
+  };
+  doSearch = () => {
+    this.getProductWithFilter(0);
+  };
+  changePage = (page) => {
+    console.log("changePage");
+    const { searchingStatus, querySearch } = this.state;
+    let offset = (page - 1) * 6;
+    if (searchingStatus) {
+      this.getProductWithFilter(offset);
+    } else {
+      this.getSellerProduct(offset);
+    }
   };
   render() {
     const { buttonAdminStat, history, toogleMenu, classes } = this.props;
-    const { products, target, showClear } = this.state;
-    console.log(this.state.showClear);
+    const { products, target, showClear, userName, email, page } = this.state;
+    console.log(this.state);
     return (
       <Grid
         container
@@ -93,7 +152,7 @@ class AdminSellerDetail extends Component {
           ></Menu>
         </Grid>
         <Grid container item xs={12} className={classes.margin}>
-          <Grid item xs={8}>
+          <Grid item xs={3}>
             <Button
               variant="contained"
               color="primary"
@@ -102,6 +161,11 @@ class AdminSellerDetail extends Component {
             >
               Back
             </Button>
+          </Grid>
+          <Grid item xs={5}>
+            <Typography>
+              user : {userName} ( {email} )
+            </Typography>
           </Grid>
           <Grid item xs={3}>
             <FormControl>
@@ -130,6 +194,7 @@ class AdminSellerDetail extends Component {
               variant="contained"
               className={classes.buttonRed}
               size="small"
+              onClick={this.doSearch}
             >
               Search
             </Button>
@@ -144,7 +209,7 @@ class AdminSellerDetail extends Component {
             ))}
         </Grid>
         <Grid container item xs={12}>
-          <PaginationControlled page={12} onClick={this.changePage} />
+          <PaginationControlled page={page} onClick={this.changePage} />
         </Grid>
       </Grid>
     );

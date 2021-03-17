@@ -115,89 +115,27 @@ class AdminProduct extends Component {
       toDate,
     } = this.state;
     let endpoint = "http://localhost:8080/api/product/filter?";
-    if (filterByStatus && filterByName && filterByCode && filterByDate) {
-      endpoint +=
-        "status=" +
-        statusFilter +
-        "&productCode=" +
-        target +
-        "&productName=" +
-        target +
-        "&fromDate=" +
-        fromDate +
-        "&toDate=" +
-        toDate;
-    } else if (filterByStatus && filterByName && filterByCode) {
-      endpoint +=
-        "status=" +
-        statusFilter +
-        "&productCode=" +
-        target +
-        "&productName=" +
-        target;
-    } else if (filterByStatus && filterByName && filterByDate) {
-      endpoint +=
-        "status=" +
-        statusFilter +
-        "&productName=" +
-        target +
-        "&fromDate=" +
-        fromDate +
-        "&toDate=" +
-        toDate;
-    } else if (filterByStatus && filterByCode && filterByDate) {
-      endpoint +=
-        "status=" +
-        statusFilter +
-        "&productCode=" +
-        target +
-        "&fromDate=" +
-        fromDate +
-        "&toDate=" +
-        toDate;
-    } else if (filterByName && filterByCode && filterByDate) {
-      endpoint +=
-        "productCode=" +
-        target +
-        "&productName=" +
-        target +
-        "&fromDate=" +
-        fromDate +
-        "&toDate=" +
-        toDate;
-    } else if (filterByStatus && filterByName) {
-      endpoint += "status=" + statusFilter + "&productName=" + target;
-    } else if (filterByStatus && filterByCode) {
-      endpoint += "status=" + statusFilter + "&productCode=" + target;
-    } else if (filterByStatus && filterByDate) {
-      endpoint +=
-        "status=" +
-        statusFilter +
-        "&fromDate=" +
-        fromDate +
-        "&toDate=" +
-        toDate;
-    } else if (filterByName && filterByCode) {
-      endpoint += "productCode=" + target + "&productName=" + target;
-    } else if (filterByName && filterByDate) {
-      endpoint +=
-        "productName=" + target + "&fromDate=" + fromDate + "&toDate=" + toDate;
-    } else if (filterByCode && filterByDate) {
-      endpoint +=
-        "productCode=" + target + "&fromDate=" + fromDate + "&toDate=" + toDate;
-    } else if (filterByStatus) {
-      endpoint += "status=" + statusFilter;
-    } else if (filterByName) {
-      endpoint += "productName=" + target;
-    } else if (filterByCode) {
-      endpoint += "productCode=" + target;
-    } else if (filterByDate) {
-      endpoint += "fromDate=" + fromDate + "&toDate=" + toDate;
-    } else {
-      endpoint += "&productName=" + target;
+    let arrayEndPoint = [];
+    if (filterByStatus) {
+      arrayEndPoint.push("status=" + statusFilter);
+    }
+    if (filterByName) {
+      arrayEndPoint.push("productName=" + target);
+    }
+    if (filterByCode) {
+      arrayEndPoint.push("productCode=" + target);
+    }
+    if (filterByDate) {
+      arrayEndPoint.push("fromDate=" + fromDate + "&toDate=" + toDate);
+    }
+    if (!filterByStatus && !filterByName && !filterByCode && !filterByDate) {
+      arrayEndPoint.push("productName=" + target);
     }
 
-    this.getProductWithFilter(endpoint, 0);
+    let finalEndPoint = endpoint + arrayEndPoint.join("&");
+
+    console.log(finalEndPoint);
+    this.getProductWithFilter(finalEndPoint, 0);
   };
   getProductWithFilter = (query, offset) => {
     let queryOffset = "&offset=" + offset;
@@ -214,6 +152,10 @@ class AdminProduct extends Component {
     this.getAllProduct(0);
     this.setState({
       searchingStatus: false,
+      filterByStatus: false,
+      filterByCode: false,
+      filterByName: false,
+      filterByDate: false,
     });
   };
   render() {

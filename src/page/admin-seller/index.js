@@ -42,7 +42,7 @@ class AdminSeller extends Component {
           createdDate: "",
           updateBy: "",
           updateDate: "",
-          prodQty: 0,
+          productLimit: 0,
         },
       ],
       status: ["requested", "active", "inactive"],
@@ -50,7 +50,10 @@ class AdminSeller extends Component {
       sellerPage: 0,
 
       filterStatus: "all",
-      filterRole: "name",
+      filterRole: "userName",
+
+      querySearch: "",
+      searchingStatus: false,
     };
   }
   componentDidMount() {
@@ -116,12 +119,12 @@ class AdminSeller extends Component {
     }
   };
   setQty = (e, idx) => {
-    console.log("setvalue", e.target.name, e.target.value, idx);
+    console.log("setvalueQTYYYYY", e.target.name, e.target.value, idx);
 
     const { listSeller } = this.state;
     const currSeller = listSeller[idx];
 
-    currSeller.prodQty = e.target.value;
+    currSeller.productLimit = e.target.value;
 
     let newListSeller = listSeller;
     newListSeller.splice(idx, 1, currSeller);
@@ -138,55 +141,84 @@ class AdminSeller extends Component {
     }
     return false;
   };
-  editQty = (idx) => {
+  editQty = (idx, curlimit) => {
     const { listSeller } = this.state;
     const { user } = this.props;
     let seller = listSeller[idx];
-    let choise = window.confirm(
-      "are you sure to change " + seller.userName + " product quantity"
-    );
-    if (choise) {
-      axios
-        .put(
-          "http://localhost:8080/api/user/product-qty?id=" +
-            seller.userCode +
-            "&qty=" +
-            seller.prodQty +
-            "&idAdmin=" +
-            user.userCode
-        )
-        .then((res) => {
-          if (res.status) {
-            alert("product has been change");
-          }
-        });
+
+    if (seller.productLimit >= curlimit) {
+      let choise = window.confirm(
+        "are you sure to change " + seller.userName + " product quantity"
+      );
+      if (choise) {
+        axios
+          .put(
+            "http://localhost:8080/api/user/product-limit?id=" +
+              seller.userCode +
+              "&limitProduct=" +
+              seller.productLimit +
+              "&idAdmin=" +
+              user.userCode
+          )
+          .then((res) => {
+            if (res.status) {
+              alert("product has been change");
+            }
+          });
+      }
+    } else {
+      alert("limit must be more than or equal with active");
     }
-    console.log(choise);
   };
   changePage = (page) => {
     console.log("changePage");
+    const { searchingStatus, querySearch } = this.state;
     let offset = (page - 1) * 6;
-    this.getAllSeller(offset);
+    if (searchingStatus) {
+      this.getSellerWithFilter(querySearch, offset);
+    } else {
+      this.getAllSeller(offset);
+    }
   };
   doSearch = (target) => {
     const { filterStatus, filterRole } = this.state;
-    let endpoint = "";
-    if (filterRole.length > 0 && filterStatus > 0) {
-    } else if (filterRole.length > 0) {
-    } else if (filterStatus.length > 0) {
-    } else {
-    }
+    let endpoint =
+      "http://localhost:8080/api/user/filter?status=" +
+      filterStatus +
+      "&field=" +
+      filterRole +
+      "&target=" +
+      target;
+    // console.log("endpointnksjdfndj", endpoint);
+    this.getSellerWithFilter(endpoint, 0);
   };
-  getSellerWithFilter = (query, offset) => {};
+  getSellerWithFilter = (query, offset) => {
+    let queryOffset = "&offset=" + offset;
+    axios.get(query + queryOffset).then((res) => {
+      console.log(res.data);
+      this.setState({
+        listSeller: res.data.seller,
+        sellerPage: Math.ceil(res.data.qty / 6),
+      });
+    });
+    this.setState({ searchingStatus: true, querySearch: query });
+  };
   setFilterValue = (e) => {
-    console.log(e.target.value);
     const { name, value } = e.target;
+    console.log(value, name);
     this.setState({
       [name]: value,
     });
   };
+  resetData = () => {
+    this.getAllSeller(0);
+    this.countSellerByStatus("all");
+    this.setState({
+      searchingStatus: false,
+    });
+  };
   render() {
-    const { buttonAdminStat, classes, history, toogleMenu } = this.props;
+    const { buttonAdminStat, classes, history, toogleMenu, user } = this.props;
     const {
       listSeller,
       statusNow,
@@ -223,6 +255,7 @@ class AdminSeller extends Component {
               <Select
                 size="small"
                 value={filterStatus}
+                name="filterStatus"
                 onChange={(e) => this.setFilterValue(e)}
               >
                 <MenuItem value="all">All</MenuItem>
@@ -235,17 +268,21 @@ class AdminSeller extends Component {
             <FormControl className={classes.formControl} size="small">
               <Select
                 size="small"
+                name="filterRole"
                 value={filterRole}
                 onChange={(e) => this.setFilterValue(e)}
               >
-                <MenuItem value="name">Name</MenuItem>
+                <MenuItem value="userName">Name</MenuItem>
                 <MenuItem value="userCode">UserCode</MenuItem>
               </Select>
             </FormControl>
           </Grid>
 
           <Grid item xs={3}>
-            <SearchField></SearchField>
+            <SearchField
+              onClick={this.doSearch}
+              resetData={this.resetData}
+            ></SearchField>
           </Grid>
         </Grid>
 
@@ -258,9 +295,9 @@ class AdminSeller extends Component {
                   user={user}
                   history={history}
                   onClick={() => this.toogleStatus(i)}
+                  onChange={this.setQty}
                   statusNow={statusNow}
-                  setQty={this.setQty}
-                  editQty={() => this.editQty(i)}
+                  editQty={this.editQty}
                 />
               </Grid>
             );

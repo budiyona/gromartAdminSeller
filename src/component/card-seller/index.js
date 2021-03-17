@@ -22,12 +22,12 @@ import {
   Grid,
   TextField,
 } from "@material-ui/core";
-import { Edit } from "@material-ui/icons";
 import InboxIcon from "@material-ui/icons/Inbox";
+import axios from "axios";
 
 const useStyles = () => ({
   root: {
-    maxWidth: 245,
+    maxWidth: 275,
     fontSize: 1,
   },
   media: {
@@ -53,23 +53,59 @@ class SellerCard extends Component {
     super(props);
     this.state = {
       modal: false,
+      summary: {
+        active: 0,
+        inactive: 0,
+        all: 0,
+        limit: 0,
+      },
+      currentLimit: 0,
     };
   }
   toggleModal = () => {
+    this.getSellerSumary(this.props.user.userCode);
     this.setState({
       modal: !this.state.modal,
     });
+  };
+
+  getSellerSumary = (id) => {
+    // console.log("iddd", id);
+    axios
+      .get("http://localhost:8080/api/product/seller-summary?id=" + id)
+      .then((res) => {
+        // console.log("dateget", res.data.limit);
+        this.setState({
+          summary: res.data,
+        });
+      });
+  };
+  changeLimit = (e) => {
+    const { name, value } = e.target;
+    // console.log(e.target);
+
+    this.setState({
+      [name]: value,
+    });
+  };
+
+  saveEdit = () => {
+    const { idx, editQty } = this.props;
+    const { summary } = this.state;
+    editQty(idx, summary.limit);
+    this.toggleModal();
   };
   render() {
     const {
       classes,
       onClick,
       user,
-      setQty,
-      idx,
-      editQty,
       history,
+      idx,
+      onChange,
+      editQty,
     } = this.props;
+    const { summary, modal, currentlimit } = this.state;
     return (
       <Card className={classes.root}>
         <CardHeader
@@ -108,10 +144,10 @@ class SellerCard extends Component {
           <IconButton onClick={this.toggleModal} aria-label="share">
             <InboxIcon className={classes.blue} />
           </IconButton>
-          <Typography variant="subtitle2">{user.prodQty} Limit</Typography>
+          <Typography variant="subtitle2">Limit</Typography>
         </CardActions>
         <Dialog
-          open={this.state.modal}
+          open={modal}
           onClose={() => {
             this.setState({ modal: false });
           }}
@@ -124,27 +160,28 @@ class SellerCard extends Component {
               Update Limit based on active product
             </DialogContentText>
             <Grid container xs={12} spacing={3}>
-              <Grid item xs={4}>
+              <Grid item xs={3}>
                 <TextField
-                  autoFocus
+                  value={currentlimit}
                   size="small"
                   margin="dense"
-                  id="name"
+                  name="currentlimit"
                   label="Limit"
-                  type="text"
+                  type="number"
                   fullWidth
+                  onChange={(e) => onChange(e, idx)}
                   InputLabelProps={{
                     shrink: true,
                   }}
                 />
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={2}>
                 <TextField
                   disabled
+                  value={summary.active}
                   autoFocus
                   size="small"
                   margin="dense"
-                  id="name"
                   label="Active"
                   type="text"
                   fullWidth
@@ -153,14 +190,29 @@ class SellerCard extends Component {
                   }}
                 />
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={3}>
                 <TextField
                   disabled
+                  value={summary.inactive}
                   autoFocus
                   size="small"
                   margin="dense"
-                  id="name"
                   label="Inactive"
+                  type="text"
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <TextField
+                  disabled
+                  value={summary.limit}
+                  autoFocus
+                  size="small"
+                  margin="dense"
+                  label="current limit"
                   type="text"
                   fullWidth
                   InputLabelProps={{
@@ -174,28 +226,11 @@ class SellerCard extends Component {
             <Button onClick={this.toggleModal} color="primary">
               Cancel
             </Button>
-            <Button onClick={this.toggleModal} color="primary">
+            <Button onClick={this.saveEdit} color="primary">
               Save
             </Button>
           </DialogActions>
         </Dialog>
-        {/* <CardActions disableSpacing>
-          <TextField
-            label="Product"
-            size="small"
-            value={user.prodQty}
-            name="prod"
-            onChange={(e) => setQty(e, idx)}
-          ></TextField>
-          <Button
-            variant="contained"
-            color="primary"
-            size="small"
-            onClick={editQty}
-          >
-            Edit
-          </Button>
-        </CardActions> */}
       </Card>
     );
   }
