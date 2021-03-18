@@ -1,57 +1,114 @@
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Button,
-  Card,
-  CardActionArea,
-  CardActions,
-  CardContent,
-  CardMedia,
-  Grid,
-  Link,
-  Paper,
-  Typography,
-  withStyles,
-} from "@material-ui/core";
+import { Grid, withStyles } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import React, { Component } from "react";
-import { Menu, PaginationControlled, ProductCard } from "../../component";
-import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
-import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import {
+  CountCard,
+  DasboardTitle,
+  Menu,
+  ProductDasboard,
+  ProductDasboardSeller,
+} from "../../component";
+import GradeIcon from "@material-ui/icons/Grade";
+import axios from "axios";
+import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
+import InboxIcon from "@material-ui/icons/Inbox";
+import { connect } from "react-redux";
 
 const useStyles = () => ({
-  margin: {
-    marginBottom: "12px",
-  },
   fullwidth: {
     width: "100%",
   },
-  root: {
-    minWidth: 255,
+  cardCount: {
+    minWidth: 250,
+    height: "120px",
   },
-  bullet: {
-    display: "inline-block",
-    margin: "0 2px",
-    transform: "scale(0.8)",
+  cardProduct: {
+    minWidth: 250,
   },
-  title: {
-    fontSize: 14,
-  },
-  pos: {
-    marginBottom: 12,
+  label: {
+    height: "25px",
   },
 });
 class SellerHome extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      expensiveProd: [
+        {
+          productCode: "",
+          productName: "",
+          price: 0,
+          stock: 0,
+          description: "",
+          seller: {
+            userCode: "",
+            userName: "",
+          },
+        },
+      ],
+      cheapestProd: [
+        {
+          productCode: "",
+          productName: "",
+          price: 0,
+          stock: 0,
+          description: "",
+          seller: {
+            userCode: "",
+            userName: "",
+          },
+        },
+      ],
+      isExpesive: false,
+      summary: {
+        active: 0,
+        inactive: 0,
+        all: 0,
+        limit: 0,
+      },
+    };
   }
+  getExpensiveProduct = () => {
+    axios
+      .get("http://localhost:8080/api/product/most-expensive")
+      .then((res) => this.setState({ expensiveProd: res.data }));
+  };
+  getCheapestProduct = () => {
+    axios
+      .get("http://localhost:8080/api/product/cheapest")
+      .then((res) => this.setState({ cheapestProd: res.data }));
+  };
+  componentDidMount = () => {
+    this.getSellerSumary();
+    this.getCheapestProduct();
+    this.getExpensiveProduct();
+  };
+  getSellerSumary = () => {
+    // console.log("iddd", id);
+    axios
+      .get(
+        "http://localhost:8080/api/product/seller-summary?id=" +
+          this.props.user.userCode
+      )
+      .then((res) => {
+        // console.log("dateget", res.data.limit);
+        this.setState({
+          summary: res.data,
+        });
+      });
+  };
+
   render() {
-    const { classes } = this.props;
-    const { buttonAdminStat, history, toogleMenu } = this.props;
-    const bull = <span className={classes.bullet}>•</span>;
+    console.log(this.state);
+    const {
+      sellerCard,
+      productCard,
+      expensiveProd,
+      cheapestProd,
+      isExpesive,
+      summary,
+    } = this.state;
+    const { buttonAdminStat, history, toogleMenu, classes } = this.props;
     return (
       <Grid container direction="row" justify="space-between">
         <Grid container item xs={12}>
@@ -61,185 +118,97 @@ class SellerHome extends Component {
             buttonAdminStat={buttonAdminStat}
           ></Menu>
         </Grid>
-        <Grid container item xs={12}>
-          <Typography variant="h6" component="h6">
-            ADMIN DASBOARD
-          </Typography>
-        </Grid>
-        <Grid container item xs={12} spacing={3}>
-          <Grid container item xs={8} spacing={3}>
-            <Grid item container xs={12}>
-              <Alert
-                className={classes.fullwidth}
-                icon={<ShoppingCartIcon fontSize="inherit" />}
-                severity="info"
-              >
-                Seller
-              </Alert>
-            </Grid>
-            <Grid item container xs={12} spacing={2}>
-              <Grid item>
-                <Paper className={classes.root} elevation={3}>
-                  <CardContent>
-                    <Typography
-                      className={classes.title}
-                      color="textSecondary"
-                      gutterBottom
-                    >
-                      Seller Active
-                    </Typography>
-                    <Typography variant="h4" component="h4">
-                      1{bull}Seller
-                    </Typography>
-                  </CardContent>
-                  <CardActions>
-                    <Button size="small">Learn More</Button>
-                  </CardActions>
-                </Paper>
-              </Grid>
 
-              <Grid item>
-                <Paper className={classes.root} elevation={3}>
-                  <CardContent>
-                    <Typography
-                      className={classes.title}
-                      color="textSecondary"
-                      gutterBottom
-                    >
-                      Seller Active
-                    </Typography>
-                    <Typography variant="h4" component="h4">
-                      1{bull}Seller
-                    </Typography>
-                  </CardContent>
-                  <CardActions>
-                    <Button size="small">Learn More</Button>
-                  </CardActions>
-                </Paper>
-              </Grid>
+        <Grid container item xs={12} spacing={3}>
+          <Grid
+            item
+            container
+            xs={12}
+            spacing={3}
+            className={classes.cardCount}
+            // direction="column"
+          >
+            <Grid item xs={3}>
+              <DasboardTitle
+                pointer
+                fullwidth
+                color="warning"
+                icon={<GradeIcon fontSize="inherit" />}
+                title={"All Product : " + summary.all}
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <DasboardTitle
+                pointer
+                fullwidth
+                color="warning"
+                icon={<GradeIcon fontSize="inherit" />}
+                title={"Product Active : " + summary.active}
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <DasboardTitle
+                pointer
+                fullwidth
+                color="warning"
+                icon={<GradeIcon fontSize="inherit" />}
+                title={"Product Inactive : " + summary.inactive}
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <DasboardTitle
+                pointer
+                fullwidth
+                color="warning"
+                icon={<GradeIcon fontSize="inherit" />}
+                title={"Limit : " + summary.limit}
+              />
             </Grid>
             <Grid item xs={12}>
-              <Alert
-                className={classes.fullwidth}
-                icon={<ShoppingCartIcon fontSize="inherit" />}
-                severity="info"
-              >
-                Product - (ACTIVE : 50) (INACTIVE : 20)
-              </Alert>
+              <DasboardTitle
+                pointer
+                fullwidth
+                color="warning"
+                icon={<GradeIcon fontSize="inherit" />}
+                title="Most Expensive Product"
+              />
             </Grid>
-            <Grid item container xs={12} spacing={2}>
-              <Grid item>
-                <Paper className={classes.root} elevation={3}>
-                  <CardContent>
-                    <Typography
-                      className={classes.title}
-                      color="textSecondary"
-                      gutterBottom
-                    >
-                      Seller Active
-                    </Typography>
-                    <Typography variant="h4" component="h4">
-                      1{bull}Seller
-                    </Typography>
-                  </CardContent>
-                  <CardActions>
-                    <Button size="small">Learn More</Button>
-                  </CardActions>
-                </Paper>
+
+            {expensiveProd.map((product, i) => (
+              <Grid item key={i} xs={4}>
+                <ProductDasboardSeller
+                  title={product.productName}
+                  price={product.price}
+                />
               </Grid>
-              <Grid item>
-                <Paper className={classes.root} elevation={3}>
-                  <CardContent>
-                    <Typography
-                      className={classes.title}
-                      color="textSecondary"
-                      gutterBottom
-                    >
-                      Seller Active
-                    </Typography>
-                    <Typography variant="h4" component="h4">
-                      1{bull}Seller
-                    </Typography>
-                  </CardContent>
-                  <CardActions>
-                    <Button size="small">Learn More</Button>
-                  </CardActions>
-                </Paper>
+            ))}
+            <Grid item xs={12}>
+              <DasboardTitle
+                pointer
+                fullwidth
+                color="warning"
+                icon={<GradeIcon fontSize="inherit" />}
+                title="Cheapest Product"
+              />
+            </Grid>
+            {cheapestProd.map((product, i) => (
+              <Grid item key={i} xs={4}>
+                <ProductDasboardSeller
+                  title={product.productName}
+                  price={product.price}
+                />
               </Grid>
-            </Grid>
-          </Grid>
-          <Grid container item xs={4} spacing={3}>
-            <Grid item>
-              <Alert
-                className={classes.fullwidth}
-                icon={<ShoppingCartIcon fontSize="inherit" />}
-                severity="info"
-              >
-                Product
-              </Alert>
-            </Grid>
-            <Grid item>
-              <Paper className={classes.root} elevation={3}>
-                <CardContent>
-                  <Typography
-                    className={classes.title}
-                    color="textSecondary"
-                    gutterBottom
-                  >
-                    Seller Active
-                  </Typography>
-                  <Typography variant="h4" component="h4">
-                    1{bull}Seller
-                  </Typography>
-                </CardContent>
-                <CardActions>
-                  <Button size="small">Learn More</Button>
-                </CardActions>
-              </Paper>
-            </Grid>
-            <Grid item>
-              <Paper className={classes.root} elevation={3}>
-                <CardContent>
-                  <Typography
-                    className={classes.title}
-                    color="textSecondary"
-                    gutterBottom
-                  >
-                    Seller Active
-                  </Typography>
-                  <Typography variant="h4" component="h4">
-                    1{bull}Seller
-                  </Typography>
-                </CardContent>
-                <CardActions>
-                  <Button size="small">Learn More</Button>
-                </CardActions>
-              </Paper>
-            </Grid>
-            <Grid item>
-              <Paper className={classes.root} elevation={3}>
-                <CardContent>
-                  <Typography
-                    className={classes.title}
-                    color="textSecondary"
-                    gutterBottom
-                  >
-                    Seller Active
-                  </Typography>
-                  <Typography variant="h4" component="h4">
-                    1{bull}Seller
-                  </Typography>
-                </CardContent>
-                <CardActions>
-                  <Button size="small">Learn More</Button>
-                </CardActions>
-              </Paper>
-            </Grid>
+            ))}
           </Grid>
         </Grid>
       </Grid>
     );
   }
 }
-
-export default withStyles(useStyles)(SellerHome);
+const mapStatToProps = (state) => {
+  const { user } = state.auth;
+  return {
+    user,
+  };
+};
+export default connect(mapStatToProps)(withStyles(useStyles)(SellerHome));

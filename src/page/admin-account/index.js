@@ -1,4 +1,15 @@
-import { Button, Grid, Link, TextField, withStyles } from "@material-ui/core";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Grid,
+  Link,
+  TextField,
+  withStyles,
+} from "@material-ui/core";
 import React, { Component } from "react";
 import { Menu, PaginationControlled, ProductCard } from "../../component";
 import axios from "axios";
@@ -50,6 +61,8 @@ class AdminInfo extends Component {
       errorEmail: false,
       errorPassword: false,
       errorRepassword: false,
+
+      modal: false,
     };
   }
   componentDidMount() {
@@ -71,11 +84,13 @@ class AdminInfo extends Component {
       case "email":
         this.validationEmail(value);
         break;
-      case "password":
+      case "newPassword":
         this.validationPassword(value);
         break;
-      default:
+      case "newPpassword2":
         this.validationRepassword(value);
+        break;
+      default:
         break;
     }
   };
@@ -136,8 +151,8 @@ class AdminInfo extends Component {
     }
   };
   validationRepassword = (repassword) => {
-    const { password } = this.state;
-    if (password === repassword) {
+    const { newPassword } = this.state;
+    if (newPassword === repassword) {
       this.setState({
         errorRepassword: false,
       });
@@ -147,22 +162,21 @@ class AdminInfo extends Component {
       });
     }
   };
-  doEditProfile = (e) => {
-    e.preventDefault();
+  doEditProfile = () => {
     const { fullname, phone, email, password } = this.state;
-    let date = moment(new Date()).format("YYYY-MM-DD HH:MM:SS");
-    let user = {
+    const { user, id } = this.props;
+    // let date = moment(new Date()).format("YYYY-MM-DD HH:MM:SS");
+    let userUpdate = {
       userName: fullname,
       phone: phone,
       email: email,
       password: password,
-      createdDate: date,
-      updateDate: date,
     };
     axios
-      .put("http://localhost:8080/api/user", user)
+      .put("http://localhost:8080/api/user/" + user.userCode, userUpdate)
       .then((res) => {
-        res.status === 200 && this.props.history.push("/login");
+        // res.status === 200 && this.props.history.push("/login");
+        res.status === 200 && alert("Update Success");
       })
       .catch((e) => {
         if (e.response !== undefined) {
@@ -170,7 +184,9 @@ class AdminInfo extends Component {
         }
       });
 
-    console.log("Register", date, user);
+    this.setState({
+      modal: false,
+    });
   };
   toogleEdit = () => {
     this.setState({
@@ -189,7 +205,46 @@ class AdminInfo extends Component {
       this.setState({ fullname: userName, phone, email });
     });
   };
-
+  toggleModal = () => {
+    this.setState({
+      modal: !this.state.modal,
+    });
+  };
+  openModal = (e) => {
+    e.preventDefault();
+    this.toggleModal();
+  };
+  changePassword = (e) => {
+    e.preventDefault();
+    const { oldPassword, newPassword, newPassword2 } = this.state;
+    const { user } = this.props;
+    if (oldPassword.length <= 0) {
+      alert("old password cannot be empty");
+    }
+    if (window.confirm("are you sure to change the password")) {
+      console.log("doChange Password");
+      axios
+        .put(
+          "http://localhost:8080/api//user/change-password?id=" +
+            user.userCode +
+            "&oldPassword=" +
+            oldPassword +
+            "&newPassword=" +
+            newPassword +
+            "&newPassword2=" +
+            newPassword2
+        )
+        .then((res) => {
+          res.status === 200 && alert("Update Success");
+        })
+        .catch((e) => {
+          if (e.response !== undefined) {
+            alert(e.response.data);
+          }
+        });
+    }
+    // console.log(oldPassword, newPassword, newPassword2);
+  };
   render() {
     const { buttonAdminStat, history, toogleMenu, classes } = this.props;
     const {
@@ -206,6 +261,7 @@ class AdminInfo extends Component {
       fullname,
       phone,
       email,
+      modal,
     } = this.state;
     console.log(this.state);
     return (
@@ -247,10 +303,11 @@ class AdminInfo extends Component {
           </Grid>
           {!editPassword ? (
             <Grid container item xs={6} className={classes.margin}>
+              {/* onSubmit={this.doEditProfile} */}
               <form
                 className={classes.form}
                 noValidate
-                onSubmit={this.doEditProfile}
+                onSubmit={this.openModal}
               >
                 <Grid item>
                   <TextField
@@ -306,26 +363,6 @@ class AdminInfo extends Component {
                     helperText={errorEmail ? "incorrect email format" : ""}
                   />
                 </Grid>
-                <Grid item>
-                  <TextField
-                    margin="dense"
-                    size="small"
-                    required
-                    fullWidth
-                    name="password"
-                    label="Password"
-                    type="password"
-                    id="password"
-                    autoComplete="current-password"
-                    onChange={(e) => this.setValue(e)}
-                    error={errorPassword}
-                    helperText={
-                      errorPassword
-                        ? "minimum 8 character, at least one number"
-                        : ""
-                    }
-                  />
-                </Grid>
 
                 {edit && (
                   <Grid item>
@@ -342,13 +379,45 @@ class AdminInfo extends Component {
                   </Grid>
                 )}
               </form>
+              <Dialog
+                open={modal}
+                onClose={() => {
+                  this.setState({ modal: false });
+                }}
+                aria-labelledby="form-dialog-title"
+              >
+                <DialogTitle id="form-dialog-title">
+                  Confirm Password
+                </DialogTitle>
+                <DialogContent>
+                  <DialogContentText>
+                    enter your password to change the profile
+                  </DialogContentText>
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    name="password"
+                    type="password"
+                    onChange={(e) => this.setValue(e)}
+                    fullWidth
+                  />
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={this.toggleModal} color="primary">
+                    Cancel
+                  </Button>
+                  <Button onClick={this.doEditProfile} color="primary">
+                    Confirm
+                  </Button>
+                </DialogActions>
+              </Dialog>
             </Grid>
           ) : (
             <Grid container item xs={6} className={classes.margin}>
               <form
                 className={classes.form}
                 noValidate
-                onSubmit={this.doEditProfile}
+                onSubmit={this.changePassword}
               >
                 <Grid item>
                   <TextField
@@ -360,14 +429,9 @@ class AdminInfo extends Component {
                     value={oldPassword}
                     id="oldPassord"
                     label="Old Password"
+                    type="password"
                     autoFocus
                     onChange={(e) => this.setValue(e)}
-                    error={errorFullname}
-                    helperText={
-                      errorFullname
-                        ? "name cannot be number or special character"
-                        : ""
-                    }
                   />
                 </Grid>
 
@@ -403,12 +467,8 @@ class AdminInfo extends Component {
                     type="password"
                     id="NewPassword2"
                     onChange={(e) => this.setValue(e)}
-                    error={errorPassword}
-                    helperText={
-                      errorPassword
-                        ? "minimum 8 character, at least one number"
-                        : ""
-                    }
+                    error={errorRepassword}
+                    helperText={errorRepassword ? "password did not match" : ""}
                   />
                 </Grid>
 
@@ -445,6 +505,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     doLogin: (payload) => dispatch({ type: "LOGIN", payload }),
+    doLogout: () => dispatch({ type: "LOGOUT" }),
   };
 };
 

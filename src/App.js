@@ -15,6 +15,10 @@ import {
   Register,
   AdminHome,
   AdminSellerDetail,
+  SellerAccount,
+  SellerProduct,
+  SellerHome,
+  SellerReport,
 } from "./page";
 import { connect } from "react-redux";
 
@@ -158,7 +162,7 @@ class App extends Component {
           component={() => {
             let history = useHistory();
             return (
-              <AdminSeller
+              <SellerHome
                 history={history}
                 buttonAdminStat={buttonAdminStat}
                 toogleMenu={this.toogleMenu}
@@ -171,7 +175,13 @@ class App extends Component {
           exact
           component={() => {
             let history = useHistory();
-            return <></>;
+            return (
+              <SellerProduct
+                history={history}
+                buttonAdminStat={buttonAdminStat}
+                toogleMenu={this.toogleMenu}
+              />
+            );
           }}
         />
         <Route
@@ -179,7 +189,27 @@ class App extends Component {
           exact
           component={() => {
             let history = useHistory();
-            return <></>;
+            return (
+              <SellerAccount
+                history={history}
+                buttonAdminStat={buttonAdminStat}
+                toogleMenu={this.toogleMenu}
+              />
+            );
+          }}
+        />
+        <Route
+          path="/seller/report"
+          exact
+          component={() => {
+            let history = useHistory();
+            return (
+              <SellerReport
+                history={history}
+                buttonAdminStat={buttonAdminStat}
+                toogleMenu={this.toogleMenu}
+              />
+            );
           }}
         />
       </Container>
