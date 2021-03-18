@@ -20,4 +20,5 @@ public interface UserService {
     boolean isUserActive(String email);
 
     Map<String, Object> filterUser(Map<String, Object> params);
+    int changePassword(String id, String newPassword);
 }

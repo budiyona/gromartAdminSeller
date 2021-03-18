@@ -20,4 +20,6 @@ public interface UserRepository {
     int updateProductQty(String id, int limitProduct, String idAdmin);
     boolean isUserActive(String email);
     Map<String, Object> filterUser(String conditionQty, String conditionObj);
+    int updateUser(User user);
+    int changePassword(String id,String newPassword);
 }

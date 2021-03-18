@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public int updateUser(User user) {
-        return 0;
+        return userRepository.updateUser(user);
     }
 
     @Override
@@ -111,5 +111,10 @@ public class UserServiceImpl implements UserService {
 //        System.out.println(condition);
 //        System.out.println(params.get("field").equals("userName"));
         return userRepository.filterUser(condition, condition + limit);
+    }
+
+    @Override
+    public int changePassword(String id, String newPassword) {
+        return userRepository.changePassword(id, newPassword);
     }
 }

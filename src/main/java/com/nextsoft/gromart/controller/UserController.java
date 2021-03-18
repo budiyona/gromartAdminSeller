@@ -23,6 +23,7 @@ public class UserController {
     public ResponseEntity<?> getUserById(@PathVariable String id) {
         if (userService.isExist(id)) {
             User target = userService.findById(id);
+            target.setPassword(null);
             return new ResponseEntity<>(target, HttpStatus.OK);
         }
         return new ResponseEntity<>("Email not Found", HttpStatus.NOT_FOUND);
@@ -99,17 +100,33 @@ public class UserController {
     }
 
     @PutMapping("/user/{id}")
-    public ResponseEntity<?> updateUser(@RequestParam String id, @Valid @RequestBody User user, Errors error) {
+    public ResponseEntity<?> updateUser(@PathVariable String id, @Valid @RequestBody User user, Errors error) {
+//        System.out.println("idddddddddddddddddddddddddd"+id);
+//        return new ResponseEntity<>("User Not Found", HttpStatus.OK);
         if (error.hasErrors()) {
             return new ResponseEntity<>(error.getFieldError().getDefaultMessage(), HttpStatus.BAD_REQUEST);
         } else {
-            if (userService.isExist(user.getUserCode())) {
-                User dbUser = userService.findById(user.getUserCode());
-                if (!userService.isPhoneExist(user.getPhone()) || dbUser.getUserName().equals(user.getUserName())) {
+            if (userService.isExist(id)) {
+                User dbUser = userService.findById(id);
+//                System.out.println(!userService.isPhoneExist(user.getPhone()));
+//                System.out.println(!userService.isPhoneExist(user.getPhone()));
+//                System.out.println(dbUser.getUserName().equals(user.getUserName()));
+//                System.out.println(dbUser.getPhone().equals(user.getPhone()));
+//
+                if (!userService.isEmailExist(user.getEmail()) || dbUser.getEmail().equals(user.getEmail())) {
                     if (!userService.isPhoneExist(user.getPhone()) || dbUser.getPhone().equals(user.getPhone())) {
-                        userService.updateUser(user);
-                        return new ResponseEntity<>("Update Success", HttpStatus.OK);
+                        if (dbUser.getPassword().equals(user.getPassword())) {
+                            user.setUserCode(id);
+                            userService.updateUser(user);
+                            return new ResponseEntity<>("Update Success", HttpStatus.OK);
+                        } else {
+                            return new ResponseEntity<>("Incorrect Password", HttpStatus.FORBIDDEN);
+                        }
+                    } else {
+                        return new ResponseEntity<>("Email Already Exist", HttpStatus.CONFLICT);
                     }
+                } else {
+                    return new ResponseEntity<>("Phone Already Exist", HttpStatus.CONFLICT);
                 }
             }
             return new ResponseEntity<>("User Not Found", HttpStatus.NOT_FOUND);
@@ -120,9 +137,35 @@ public class UserController {
     public ResponseEntity<?> filterUser(@RequestParam Map<String, Object> params) {
         Map<String, Object> map = userService.filterUser(params);
 
-        if((int) map.get("qty")>=0){
+        if ((int) map.get("qty") >= 0) {
             return new ResponseEntity<>(map, HttpStatus.OK);
         }
         return new ResponseEntity<>("bad request", HttpStatus.BAD_REQUEST);
+    }
+
+    @PutMapping("/user/change-password")
+    public ResponseEntity<?> changeUserPassword(@RequestParam String id,
+                                                String oldPassword,
+                                                String newPassword,
+                                                String newPassword2) {
+        if (userService.isExist(id)) {
+            boolean cekPassword = userService.findById(id).getPassword().equals(oldPassword);
+            if (cekPassword) {
+                if (newPassword.equals(newPassword2)) {
+                    int changePassword = userService.changePassword(id, newPassword);
+                    if(changePassword==1){
+                        return new ResponseEntity<>("Success Change Password", HttpStatus.OK);
+                    }else {
+                        return new ResponseEntity<>("password has not changed", HttpStatus.OK);
+                    }
+
+                } else {
+                    return new ResponseEntity<>("new Password verification did not match", HttpStatus.BAD_REQUEST);
+                }
+            } else {
+                return new ResponseEntity<>("Incorrect Password", HttpStatus.FORBIDDEN);
+            }
+        }
+        return new ResponseEntity<>("Account Not Found", HttpStatus.NOT_FOUND);
     }
 }

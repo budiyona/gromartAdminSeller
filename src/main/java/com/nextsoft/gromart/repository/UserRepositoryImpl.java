@@ -232,4 +232,18 @@ public class UserRepositoryImpl implements UserRepository {
         ));
         return map;
     }
+
+    @Override
+    public int updateUser(User user) {
+        System.out.println(user);
+        return jdbcTemplate.update(
+                "update user set userName = ?, phone = ?, email =?, updateDate= now() where userCode = ?",
+                user.getUserName(), user.getPhone(), user.getEmail(), user.getUserCode());
+    }
+
+    @Override
+    public int changePassword(String id, String newPassword) {
+        return jdbcTemplate.update(
+                "update user set password = ? where userCode = ?",newPassword,id);
+    }
 }

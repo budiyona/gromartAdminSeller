@@ -33,13 +33,8 @@ public class User {
 
     private String status;
     private String createdBy;
-
-    @NotBlank(message = "createdDate cannot be empty")
     private String createdDate;
-
     private String updateBy;
-
-    @NotBlank(message = "updateDate cannot be empty")
     private String updateDate;
 
     private int productLimit;
