@@ -10,6 +10,7 @@ import Typography from "@material-ui/core/Typography";
 import { blue, green, red } from "@material-ui/core/colors";
 import DoneIcon from "@material-ui/icons/Done";
 import productImg from "../../static/product.jpg";
+import { connect } from "react-redux";
 
 const useStyles = () => ({
   root: {
@@ -57,13 +58,18 @@ class ProductCard extends Component {
     });
   };
   render() {
-    const { classes, product } = this.props;
+    const { classes, product, user, history } = this.props;
     const { statusNow } = this.state;
     return (
       <Card className={classes.root}>
         <CardHeader
           title={product.productName}
           subheader={product.productCode}
+          onClick={
+            user.userCode.includes("ADMIN")
+              ? () => {}
+              : () => history.push("/seller/product/update")
+          }
         />
         <CardMedia className={classes.media} image={productImg} />
         <CardActions disableSpacing>
@@ -73,5 +79,10 @@ class ProductCard extends Component {
     );
   }
 }
-
-export default withStyles(useStyles)(ProductCard);
+const mapStateToProps = (state) => {
+  const { user } = state.auth;
+  return {
+    user,
+  };
+};
+export default connect(mapStateToProps)(withStyles(useStyles)(ProductCard));

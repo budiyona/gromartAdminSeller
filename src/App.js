@@ -19,6 +19,7 @@ import {
   SellerProduct,
   SellerHome,
   SellerReport,
+  CreateProduct,
 } from "./page";
 import { connect } from "react-redux";
 
@@ -206,6 +207,25 @@ class App extends Component {
             return (
               <SellerReport
                 history={history}
+                buttonAdminStat={buttonAdminStat}
+                toogleMenu={this.toogleMenu}
+              />
+            );
+          }}
+        />
+        <Route
+          path="/seller/product/:toDo"
+          exact
+          component={() => {
+            let history = useHistory();
+            const { toDo } = useParams();
+
+            return (
+              <CreateProduct
+                history={history}
+                toDo={
+                  toDo === "create" ? "create" : toDo === "update" && "update"
+                }
                 buttonAdminStat={buttonAdminStat}
                 toogleMenu={this.toogleMenu}
               />

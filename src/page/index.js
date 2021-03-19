@@ -9,6 +9,7 @@ import SellerAccount from "./seller-account";
 import SellerProduct from "./seller-product";
 import SellerHome from "./seller-home";
 import SellerReport from "./seller-report";
+import CreateProduct from "./selller-product-create";
 
 export {
   AdminProduct,
@@ -22,4 +23,5 @@ export {
   SellerProduct,
   SellerHome,
   SellerReport,
+  CreateProduct,
 };

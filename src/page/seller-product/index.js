@@ -155,7 +155,7 @@ class SellerProduct extends Component {
           ></Menu>
         </Grid>
         <Grid container item xs={12} className={classes.margin}>
-          <Grid item xs={2}>
+          <Grid item xs={3}>
             <Button
               variant="contained"
               color="primary"
@@ -166,22 +166,13 @@ class SellerProduct extends Component {
             </Button>
           </Grid>
 
-          <Grid item xs={4}>
+          <Grid item xs={6}>
             <Typography>
               user : {userName} ( {email} )
             </Typography>
           </Grid>
+
           <Grid item xs={2}>
-            <Button
-              variant="contained"
-              color="primary"
-              size="small"
-              onClick={() => history.push("/admin/seller")}
-            >
-              Report
-            </Button>
-          </Grid>
-          <Grid item xs={3}>
             <FormControl>
               <Input
                 fullWidth
@@ -203,7 +194,7 @@ class SellerProduct extends Component {
               />
             </FormControl>
           </Grid>
-          <Grid item xs={1}>
+          <Grid item>
             <Button
               variant="contained"
               className={classes.buttonRed}
@@ -214,11 +205,41 @@ class SellerProduct extends Component {
             </Button>
           </Grid>
         </Grid>
+        <Grid
+          container
+          item
+          xs={12}
+          justify="flex-end"
+          spacing={2}
+          className={classes.margin}
+        >
+          <Grid item>
+            <Button
+              variant="contained"
+              color="primary"
+              size="small"
+              onClick={() => history.push("/admin/seller")}
+            >
+              Report
+            </Button>
+          </Grid>
+          <Grid item>
+            <Button
+              variant="contained"
+              color="primary"
+              size="small"
+              onClick={() => history.push("/seller/product/create")}
+            >
+              Add
+            </Button>
+          </Grid>
+        </Grid>
+
         <Grid container item xs={12}>
           {products &&
             products.map((product, i) => (
               <Grid item xs={4} key={i} className={classes.margin}>
-                <ProductCard product={product}></ProductCard>
+                <ProductCard history={history} product={product}></ProductCard>
               </Grid>
             ))}
         </Grid>

@@ -289,7 +289,13 @@ class AdminSeller extends Component {
         <Grid container item xs={12}>
           {listSeller.map((user, i) => {
             return (
-              <Grid item xs={4} className={classes.margin} key={i}>
+              <Grid
+                item
+                xs={4}
+                className={classes.margin}
+                key={i}
+                align="center"
+              >
                 <SellerCard
                   idx={i}
                   user={user}

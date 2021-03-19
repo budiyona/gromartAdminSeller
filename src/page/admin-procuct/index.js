@@ -298,7 +298,13 @@ class AdminProduct extends Component {
         <Grid container item xs={12} spacing={2}>
           {listProduct &&
             listProduct.map((prod, i) => (
-              <Grid item xs={4} key={i} className={classes.margin}>
+              <Grid
+                item
+                xs={4}
+                key={i}
+                className={classes.margin}
+                align="center"
+              >
                 <ProductCard product={prod}></ProductCard>
               </Grid>
             ))}
