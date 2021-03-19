@@ -72,10 +72,11 @@ public class ProductController {
     public ResponseEntity<?> getProductBySeller(@RequestParam String id, String offset) {
         return new ResponseEntity<>(productService.findBySeller(id, offset), HttpStatus.OK);
     }
+
     //filter product on specific Seller
     @GetMapping("/product/seller/filter")
-    public ResponseEntity<?> filterProductBasedOnSeller(@RequestParam String id, String target, int offset){
-        return new ResponseEntity<>(productService.filterProductOnSeller(id, target, offset),HttpStatus.OK);
+    public ResponseEntity<?> filterProductBasedOnSeller(@RequestParam String id, String target, int offset) {
+        return new ResponseEntity<>(productService.filterProductOnSeller(id, target, offset), HttpStatus.OK);
     }
 
     //test api status
@@ -91,6 +92,27 @@ public class ProductController {
 
         }
         return new ResponseEntity<>("NOT FOUND", HttpStatus.NOT_FOUND);
+    }
+
+    @PostMapping("/product")
+    public ResponseEntity<?> createProduct(@RequestParam String id, @RequestBody Product product) {
+        if (!productService.isProductNameExist(id, product.getProductName())) {
+
+            return new ResponseEntity<>(
+                    productService.createProduct(product, id)
+                            + "Product Added Successfully", HttpStatus.OK);
+        }
+        return new ResponseEntity<>(" Product Name Already Exist", HttpStatus.CONFLICT);
+    }
+
+    @PutMapping("/product")
+    public ResponseEntity<?> updateProduct(@RequestParam String id, @RequestBody Product product) {
+        if (!productService.isProductNameExist(id, product.getProductName())) {
+            return new ResponseEntity<>(
+                    productService.createProduct(product, id)
+                            + "Product Added Successfully", HttpStatus.OK);
+        }
+        return new ResponseEntity<>(" Product Name Already Exist", HttpStatus.CONFLICT);
     }
 
 }

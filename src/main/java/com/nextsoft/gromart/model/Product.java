@@ -15,9 +15,15 @@ public class Product {
     private int stock;
     private String description;
     private String createdDate;
+    private String status;
     private User seller;
 
-    public Product(String productCode, String productName, double price, int stock, String description, String createdDate) {
+    public Product(String productCode,
+                   String productName,
+                   double price,
+                   int stock,
+                   String description,
+                   String createdDate) {
         this.productCode = productCode;
         this.productName = productName;
         this.price = price;

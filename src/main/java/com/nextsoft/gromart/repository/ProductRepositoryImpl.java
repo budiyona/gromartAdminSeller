@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,7 +37,7 @@ public class ProductRepositoryImpl implements ProductRepository {
                 "select count(*) from product p join user u on p.userCode = u.userCode where p.userCode=?",
                 Integer.class, id));
         map.put("product", jdbcTemplate.query(
-                "select * from product p join user u on p.userCode = u.userCode where p.userCode=? limit 6 offset "+offset,
+                "select * from product p join user u on p.userCode = u.userCode where p.userCode=? limit 6 offset " + offset,
                 (rs, i) -> new Product(
                         rs.getString("productCode"),
                         rs.getString("productName"),
@@ -44,6 +45,7 @@ public class ProductRepositoryImpl implements ProductRepository {
                         rs.getInt("stock"),
                         rs.getString("description"),
                         rs.getString("createdDate"),
+                        rs.getString("status"),
                         new User(
                                 rs.getString("userCode"),
                                 rs.getString("userName")
@@ -68,6 +70,7 @@ public class ProductRepositoryImpl implements ProductRepository {
                         rs.getInt("stock"),
                         rs.getString("description"),
                         rs.getString("createdDate"),
+                        rs.getString("status"),
                         new User(
                                 rs.getString("userCode"),
                                 rs.getString("userName")
@@ -88,6 +91,7 @@ public class ProductRepositoryImpl implements ProductRepository {
                         rs.getInt("stock"),
                         rs.getString("description"),
                         rs.getString("createdDate"),
+                        rs.getString("status"),
                         new User(
                                 rs.getString("userCode"),
                                 rs.getString("userName")
@@ -110,6 +114,7 @@ public class ProductRepositoryImpl implements ProductRepository {
                         rs.getInt("stock"),
                         rs.getString("description"),
                         rs.getString("createdDate"),
+                        rs.getString("status"),
                         new User(
                                 rs.getString("userCode"),
                                 rs.getString("userName")
@@ -143,6 +148,7 @@ public class ProductRepositoryImpl implements ProductRepository {
                         rs.getInt("stock"),
                         rs.getString("description"),
                         rs.getString("createdDate"),
+                        rs.getString("status"),
                         new User(
                                 rs.getString("userCode"),
                                 rs.getString("userName")
@@ -206,5 +212,55 @@ public class ProductRepositoryImpl implements ProductRepository {
                 )
         ));
         return map;
+    }
+
+    @Override
+    public int createProduct(Product product, String idSeller) {
+        System.out.println("CREATEEEEEEEEEEEEEEEEEEEEEEEEE");
+        //SELLER-2021-03-05-01
+        String[] arrStr = idSeller.split("-");
+        String sellerCode = "S" + arrStr[1].substring(2) + arrStr[2] + arrStr[3] + arrStr[4] + "-";
+
+        long millis = System.currentTimeMillis();
+        Date date = new Date(millis);
+        String[] arrStrProductCode = date.toString().split("-");
+        arrStrProductCode[0]=arrStrProductCode[0].substring(2);
+        String productCode = String.join("",arrStrProductCode);
+
+        try {
+            int count = jdbcTemplate.queryForObject(
+                    "select count(*) from product p where userCode = ? and date(createdDate) = date(now())",
+                    Integer.class,
+                    idSeller);
+            String prefix = String.format("%02d", count + 1);
+
+            product.setProductCode(sellerCode + productCode+prefix);
+            System.out.println(prefix);
+        } catch (Exception e) {
+            System.out.println("errrot" + e.getMessage());
+        }
+
+        return jdbcTemplate.update("insert into product " +
+                        "(productCode, productName, price, stock, description, userCode, status, createdDate)" +
+                        " values (?,?,?,?,?,?,?, now())",
+                product.getProductCode(),
+                product.getProductName(),
+                product.getPrice(),
+                product.getStock(),
+                product.getDescription(),
+                idSeller,
+                product.getStatus()
+        );
+    }
+
+    @Override
+    public boolean isProductNameExist(String idSeller, String productName) {
+        int count = jdbcTemplate.queryForObject(
+                "select count(*) from product p where userCode = ? and productName = ?",
+                Integer.class, idSeller, productName);
+        if(count==1){
+            return true;
+        }
+        return false;
     }
 }

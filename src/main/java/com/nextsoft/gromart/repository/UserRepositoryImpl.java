@@ -243,6 +243,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public int changePassword(String id, String newPassword) {
+
         return jdbcTemplate.update(
                 "update user set password = ? where userCode = ?",newPassword,id);
     }

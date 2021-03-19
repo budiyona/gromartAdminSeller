@@ -220,4 +220,14 @@ public class ProductServiceImpl implements ProductService {
     public Map<String, Object> filterProductOnSeller(String id, String target, int offset) {
         return productRepository.filterProductOnSeller(id, target, offset);
     }
+
+    @Override
+    public int createProduct(Product product, String idSeller) {
+        return productRepository.createProduct(product, idSeller);
+    }
+
+    @Override
+    public boolean isProductNameExist(String idSeller, String productName) {
+        return productRepository.isProductNameExist(idSeller, productName);
+    }
 }
