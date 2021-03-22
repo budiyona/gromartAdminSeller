@@ -31,4 +31,20 @@ public class Product {
         this.description = description;
         this.createdDate = createdDate;
     }
+
+    public Product(String productCode,
+                   String productName,
+                   double price,
+                   int stock,
+                   String description,
+                   String createdDate,
+                   String status) {
+        this.productCode = productCode;
+        this.productName = productName;
+        this.price = price;
+        this.stock = stock;
+        this.description = description;
+        this.createdDate = createdDate;
+        this.status = status;
+    }
 }

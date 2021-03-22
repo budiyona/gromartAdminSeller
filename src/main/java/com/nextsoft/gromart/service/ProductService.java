@@ -18,4 +18,7 @@ public interface ProductService {
 
     int createProduct(Product product, String idSeller);
     boolean isProductNameExist(String idSeller, String productName);
+    boolean isProductExist(String productId);
+    int updateProduct(Product product);
+    Map<String, Object> productReport(String id, Map<String,String> paramsFilter);
 }

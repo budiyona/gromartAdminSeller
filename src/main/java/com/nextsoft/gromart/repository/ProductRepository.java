@@ -18,4 +18,6 @@ public interface ProductRepository {
     Map<String, Object> filterProductOnSeller(String id, String target, int offset);
     int createProduct(Product product, String idSeller);
     boolean isProductNameExist(String idSeller, String productName);
+    boolean isProductExist(String productId);
+    int updateProduct(Product product);
 }

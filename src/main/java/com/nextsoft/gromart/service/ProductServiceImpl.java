@@ -5,6 +5,7 @@ import com.nextsoft.gromart.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,12 +21,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public  Map<String , Object> findBySeller(String id, String offset) {
+    public Map<String, Object> findBySeller(String id, String offset) {
         return productRepository.findBySeller(id, offset);
     }
 
     @Override
-    public Map<String , Object> findAllProduct(String offset) {
+    public Map<String, Object> findAllProduct(String offset) {
         return productRepository.findAllProduct(offset);
     }
 
@@ -229,5 +230,63 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public boolean isProductNameExist(String idSeller, String productName) {
         return productRepository.isProductNameExist(idSeller, productName);
+    }
+
+    @Override
+    public boolean isProductExist(String productId) {
+        return productRepository.isProductExist(productId);
+    }
+
+    @Override
+    public int updateProduct(Product product) {
+        return productRepository.updateProduct(product);
+    }
+
+    @Override
+    public Map<String, Object> productReport(String id, Map<String, String> paramsFilter) {
+        //status, productName, productCode, fromDate, toDate, offset
+        Map<String, Object> map = new HashMap<>();
+        String condition = "where p.userCode = '" + id + "'";
+//        String limit = " limit 6 offset ";
+        ArrayList<String> arrayCondition = new ArrayList<>();
+//        if (paramsFilter.containsKey("offset")) {
+//            limit += paramsFilter.get("offset");
+//        } else {
+//            limit = "";
+//        }
+
+        if (paramsFilter.containsKey("status")) {
+            switch ((String) paramsFilter.get("status")) {
+                case "active":
+                case "inactive":
+                    arrayCondition.add("p.status='" + paramsFilter.get("status") + "'");
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        if (paramsFilter.containsKey("productName")) {
+             arrayCondition.add("productName like '%" + paramsFilter.get("productName") + "%'");
+        }
+        if (paramsFilter.containsKey("productCode")) {
+                arrayCondition.add("productCode like '%" + paramsFilter.get("productCode") + "%'");
+
+        }
+        if (paramsFilter.containsKey("fromDate") && paramsFilter.containsKey("toDate")) {
+            arrayCondition.add("date(p.createdDate) between '" + paramsFilter.get("fromDate") + "'" +
+                    " and '" + paramsFilter.get("toDate") + "'");
+
+        }
+        if (arrayCondition.size() >= 1) {
+            condition += " and  " + String.join(" and ", arrayCondition);
+
+        } else {
+            condition += String.join(" and ", arrayCondition);
+        }
+//        System.out.println(condition);
+//        System.out.println(params.get("field").equals("userName"));
+        return productRepository.filterProduct(condition, condition);
+
     }
 }

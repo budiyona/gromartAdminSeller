@@ -107,12 +107,42 @@ public class ProductController {
 
     @PutMapping("/product")
     public ResponseEntity<?> updateProduct(@RequestParam String id, @RequestBody Product product) {
-        if (!productService.isProductNameExist(id, product.getProductName())) {
-            return new ResponseEntity<>(
-                    productService.createProduct(product, id)
-                            + "Product Added Successfully", HttpStatus.OK);
+        if (productService.isProductExist(product.getProductCode())) {
+            Product target = productService.findById(product.getProductCode());
+            Map<String, Integer> map =productService.getSellerSummary(id);
+            int active = map.get("active");
+            int limit = map.get("limit");
+            if (!productService.isProductNameExist(id, product.getProductName()) ||
+                    target.getProductName().equals(product.getProductName())) {
+                if(product.getStatus().equals("active")){
+                    if(active+1<=limit){
+                        return new ResponseEntity<>(
+                                productService.updateProduct(product)
+                                        + " Product Successfully Updated", HttpStatus.OK);
+                    }
+                    return new ResponseEntity<>(
+                            "product active must be less than "+limit, HttpStatus.BAD_REQUEST);
+                }
+                return new ResponseEntity<>(
+                        productService.updateProduct(product)
+                                + " Product Successfully Updated", HttpStatus.OK);
+            }
+            return new ResponseEntity<>(" Product Name Already Exist", HttpStatus.CONFLICT);
         }
-        return new ResponseEntity<>(" Product Name Already Exist", HttpStatus.CONFLICT);
+        return new ResponseEntity<>(" Product Does not Exist", HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping("/product/{id}")
+    public ResponseEntity<?> findProductById(@PathVariable String id){
+        if(productService.isProductExist(id)){
+        return new ResponseEntity<>(productService.findById(id), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(" Product Does not Exist", HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping("/product/report/{id}")
+    public ResponseEntity<?> reportProductSeller(@PathVariable String id, @RequestParam Map<String, String> paramsFilter){
+        return new ResponseEntity<>(productService.productReport(id, paramsFilter),HttpStatus.OK);
     }
 
 }

@@ -21,12 +21,26 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public Product findById(String id) {
-//        int l = jdbcTemplate.queryForObject(
-//                "select count(*) as qty from product ", (rs, i) -> rs.getInt("qty"));
-//        Product p = new Product();
-//        p.setPrice(l);
-//        return p;
-        return null;
+        Product product = new Product();
+        try {
+            product = jdbcTemplate.queryForObject(
+                    "select * from product where productCode = ?",
+                    (rs, rowNum) -> new Product(
+                            rs.getString("productCode"),
+                            rs.getString("productName"),
+                            rs.getDouble("price"),
+                            rs.getInt("stock"),
+                            rs.getString("description"),
+                            rs.getString("createdDate"),
+                            rs.getString("status")
+
+                    ), id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return product;
+
     }
 
     @Override
@@ -216,7 +230,6 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public int createProduct(Product product, String idSeller) {
-        System.out.println("CREATEEEEEEEEEEEEEEEEEEEEEEEEE");
         //SELLER-2021-03-05-01
         String[] arrStr = idSeller.split("-");
         String sellerCode = "S" + arrStr[1].substring(2) + arrStr[2] + arrStr[3] + arrStr[4] + "-";
@@ -224,8 +237,8 @@ public class ProductRepositoryImpl implements ProductRepository {
         long millis = System.currentTimeMillis();
         Date date = new Date(millis);
         String[] arrStrProductCode = date.toString().split("-");
-        arrStrProductCode[0]=arrStrProductCode[0].substring(2);
-        String productCode = String.join("",arrStrProductCode);
+        arrStrProductCode[0] = arrStrProductCode[0].substring(2);
+        String productCode = String.join("", arrStrProductCode);
 
         try {
             int count = jdbcTemplate.queryForObject(
@@ -234,7 +247,7 @@ public class ProductRepositoryImpl implements ProductRepository {
                     idSeller);
             String prefix = String.format("%02d", count + 1);
 
-            product.setProductCode(sellerCode + productCode+prefix);
+            product.setProductCode(sellerCode + productCode + prefix);
             System.out.println(prefix);
         } catch (Exception e) {
             System.out.println("errrot" + e.getMessage());
@@ -258,9 +271,38 @@ public class ProductRepositoryImpl implements ProductRepository {
         int count = jdbcTemplate.queryForObject(
                 "select count(*) from product p where userCode = ? and productName = ?",
                 Integer.class, idSeller, productName);
-        if(count==1){
+        if (count == 1) {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean isProductExist(String productId) {
+        int count = jdbcTemplate.queryForObject(
+                "select count(*) from product p where productCode = ?",
+                Integer.class, productId);
+        if (count == 1) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public int updateProduct(Product product) {
+        return jdbcTemplate.update(
+                "update product set " +
+                        "productName = ?," +
+                        "price =?, stock =?, " +
+                        "description =? ," +
+                        "status = ? " +
+                        "where productCode =?",
+                product.getProductName(),
+                product.getPrice(),
+                product.getStock(),
+                product.getDescription(),
+                product.getStatus(),
+                product.getProductCode()
+        );
     }
 }
