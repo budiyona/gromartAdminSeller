@@ -218,7 +218,7 @@ class SellerProduct extends Component {
               variant="contained"
               color="primary"
               size="small"
-              onClick={() => history.push("/admin/seller")}
+              onClick={() => history.push("/seller/report")}
             >
               Report
             </Button>

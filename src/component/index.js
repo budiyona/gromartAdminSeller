@@ -8,6 +8,7 @@ import ProductDasboardSeller from "./product-dasboard-seller";
 import CountCard from "./card-count";
 import DasboardTitle from "./title-dasboard";
 import SearchField from "./search-field";
+import TableProduct from "./table-product";
 
 export {
   Copyright,
@@ -20,4 +21,5 @@ export {
   DasboardTitle,
   SearchField,
   ProductDasboardSeller,
+  TableProduct,
 };

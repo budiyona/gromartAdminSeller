@@ -51,6 +51,7 @@ class CreateProduct extends Component {
     super(props);
     this.state = {
       product: {
+        productCode: "",
         productName: "",
         price: "",
         stock: "",
@@ -80,12 +81,17 @@ class CreateProduct extends Component {
     let arrayKey = Object.keys(product);
     let newErrorMsg = "";
     arrayKey.map((key) => {
-      if (key === "productName") {
-        !this.lengthValidation(product[key]) &&
-          (newErrorMsg = "name cannot be null");
-      } else {
-        !this.lengthValidation(product[key]) &&
-          (newErrorMsg = key + " cannot be null");
+      if (product[key] !== null) {
+        if (key === "productCode") {
+        } else if (key === "productName") {
+          console.log("k1", key);
+          !this.lengthValidation(product[key]) &&
+            (newErrorMsg = "name cannot be null");
+        } else {
+          console.log("k2", key);
+          !this.lengthValidation(product[key]) &&
+            (newErrorMsg = key + " cannot be null");
+        }
       }
     });
     this.setState({
@@ -99,6 +105,8 @@ class CreateProduct extends Component {
   };
 
   lengthValidation = (value) => {
+    value += "";
+    console.log("validation of value ", value);
     return value.length > 0;
   };
   saveProduct = (e) => {
@@ -125,8 +133,27 @@ class CreateProduct extends Component {
         .catch((e) => console.log(e));
     }
   };
+  getProductById() {
+    console.log(this.props.history.location.state);
+    let historyState = this.props.history.location.state;
+    axios
+      .get("http://localhost:8080/api/product/" + historyState.idProduct)
+      .then((res) => {
+        this.setState({
+          product: res.data,
+        });
+      });
+  }
+  componentDidMount() {
+    const { toDo } = this.props;
+    if (toDo === "update") {
+      this.getProductById();
+    }
+  }
   render() {
     console.log(this.state);
+    // console.log(this.props);
+
     const { buttonAdminStat, history, toogleMenu, classes, toDo } = this.props;
     const { product, errorMsg } = this.state;
     return (

@@ -2,11 +2,17 @@ import {
   Box,
   Button,
   Collapse,
+  FormControl,
   Grid,
+  GridList,
+  GridListTile,
+  Input,
+  InputLabel,
   MenuItem,
   Paper,
   Select,
   TextField,
+  Typography,
   withStyles,
 } from "@material-ui/core";
 import axios from "axios";
@@ -16,13 +22,18 @@ import {
   PaginationControlled,
   ProductCard,
   SearchField,
+  TableProduct,
 } from "../../component";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import { red } from "@material-ui/core/colors";
+import { connect } from "react-redux";
+import moment from "moment";
+import Pdf from "react-to-pdf";
+import ReactToPrint from "react-to-print";
 
-const useStyles = () => ({
+const useStyles = (theme) => ({
   margin: {
-    marginBottom: "12px",
+    marginBottom: theme.spacing(0),
   },
   redOff: {
     color: red[500],
@@ -30,7 +41,20 @@ const useStyles = () => ({
   redOn: {
     color: red[200],
   },
+  formControl: {
+    width: "100%",
+  },
+  buttonRed: {
+    backgroundColor: red[500],
+    color: "white",
+  },
 });
+const ref = React.createRef();
+const options = {
+  orientation: "portrait",
+  unit: "in",
+  format: [4, 2],
+};
 class SellerReport extends Component {
   constructor(props) {
     super(props);
@@ -48,46 +72,35 @@ class SellerReport extends Component {
           },
         },
       ],
-      productPage: 0,
-      filterSwitch: false,
-      filterByStatus: false,
-      filterByCode: false,
-      filterByName: false,
-      filterByDate: false,
-      statusFilter: "",
+      // productPage: 0,
+      qty: 0,
+
+      status: "all",
 
       searchField: "",
-      searchingStatus: false,
 
       fromDate: "",
       toDate: "",
 
+      filterBy: "all",
       querySearch: "",
+      offset: 0,
     };
   }
   componentDidMount() {
-    this.getAllProduct(0);
+    this.getProductWithFilter(
+      "http://localhost:8080/api/product/report/" +
+        this.props.user.userCode +
+        "?"
+    );
   }
-  getAllProduct = (offset) => {
-    axios
-      .get("http://localhost:8080/api/product?offset=" + offset)
-      .then((res) => {
-        this.setState({
-          listProduct: res.data.product,
-          productPage: Math.ceil(res.data.qty / 6),
-        });
-        // console.log(res.data.product);
-      });
-  };
+
   changePage = (page) => {
-    const { searchingStatus, querySearch } = this.state;
     console.log("changePage");
     let offset = (page - 1) * 6;
-    if (searchingStatus) {
-      this.getProductWithFilter(querySearch, offset);
-    } else {
-      this.getAllProduct(offset);
-    }
+    this.setState({
+      offset,
+    });
   };
   toogleFilter = (buttonName) => {
     console.log(buttonName);
@@ -98,79 +111,132 @@ class SellerReport extends Component {
   setFilterValue = (e) => {
     console.log(e.target.value);
     const { name, value } = e.target;
+    if (name == "filterBy") {
+      this.setState({
+        status: "all",
+        searchField: "",
+        fromDate: "",
+        toDate: "",
+      });
+      if (value) {
+        this.getProductWithFilter(
+          "http://localhost:8080/api/product/report/" + this.props.user.userCode
+        );
+      }
+    }
     this.setState({
       [name]: value,
     });
   };
 
-  doSearch = (target) => {
-    console.log("doSearch target", target);
-    const {
-      filterByStatus,
-      filterByCode,
-      filterByName,
-      filterByDate,
-      statusFilter,
-      fromDate,
-      toDate,
-    } = this.state;
-    let endpoint = "http://localhost:8080/api/product/filter?";
-    let arrayEndPoint = [];
-    if (filterByStatus) {
-      arrayEndPoint.push("status=" + statusFilter);
+  doSearch = () => {
+    console.log("doSearch");
+    const { user } = this.props;
+    const { fromDate, toDate, filterBy, searchField, status } = this.state;
+    let endpoint =
+      "http://localhost:8080/api/product/report/" + user.userCode + "?";
+    if (filterBy === "productName") {
+      endpoint += "productName=" + searchField;
+    } else if (filterBy === "productCode") {
+      endpoint += "productCode=" + searchField;
+    } else if (filterBy === "status") {
+      endpoint += "status=" + status;
+    } else if (filterBy === "date") {
+      endpoint += "fromDate=" + fromDate + "&toDate=" + toDate;
     }
-    if (filterByName) {
-      arrayEndPoint.push("productName=" + target);
-    }
-    if (filterByCode) {
-      arrayEndPoint.push("productCode=" + target);
-    }
-    if (filterByDate) {
-      arrayEndPoint.push("fromDate=" + fromDate + "&toDate=" + toDate);
-    }
-    if (!filterByStatus && !filterByName && !filterByCode && !filterByDate) {
-      arrayEndPoint.push("productName=" + target);
-    }
-
-    let finalEndPoint = endpoint + arrayEndPoint.join("&");
-
-    console.log(finalEndPoint);
-    this.getProductWithFilter(finalEndPoint, 0);
+    console.log(endpoint);
+    this.getProductWithFilter(endpoint);
   };
-  getProductWithFilter = (query, offset) => {
-    let queryOffset = "&offset=" + offset;
-    axios.get(query + queryOffset).then((res) => {
-      console.log(res.data);
+  getProductWithFilter = (query) => {
+    axios.get(query).then((res) => {
+      console.log("data get", res.data);
       this.setState({
         listProduct: res.data.product,
-        productPage: Math.ceil(res.data.qty / 6),
+        qty: res.data.qty,
       });
     });
-    this.setState({ searchingStatus: true, querySearch: query });
+    this.setState({ querySearch: query });
   };
   resetData = () => {
-    this.getAllProduct(0);
-    this.setState({
-      searchingStatus: false,
-      filterByStatus: false,
-      filterByCode: false,
-      filterByName: false,
-      filterByDate: false,
-    });
+    this.getProductWithFilter(
+      "http://localhost:8080/api/product/report/" +
+        this.props.user.userCode +
+        "?"
+    );
   };
   render() {
-    // console.log(this.state);
-    const { buttonAdminStat, history, toogleMenu, classes } = this.props;
-    const {
-      listProduct,
-      filterSwitch,
-      productPage,
-      filterByStatus,
-      filterByCode,
-      filterByName,
-      filterByDate,
-      statusFilter,
-    } = this.state;
+    console.log(this.state);
+    const { buttonAdminStat, history, toogleMenu, classes, user } = this.props;
+    const { listProduct, qty, status, filterBy, offset } = this.state;
+    let buttonGo = (
+      <Button
+        size="small"
+        variant="contained"
+        className={classes.buttonRed}
+        onClick={this.doSearch}
+      >
+        Go
+      </Button>
+    );
+    let formFilter;
+    if (filterBy === "productName" || filterBy === "productCode") {
+      formFilter = (
+        <>
+          <Grid item xs={3}>
+            <Input
+              placeholder="search"
+              style={{ height: "29px" }}
+              name="searchField"
+              onChange={(e) => this.setFilterValue(e)}
+            />
+          </Grid>
+          {buttonGo}
+        </>
+      );
+    } else if (filterBy === "status") {
+      formFilter = (
+        <>
+          <Grid item xs={3}>
+            <FormControl className={classes.formControl} size="small">
+              <Select
+                size="small"
+                value={status}
+                name="status"
+                onChange={(e) => this.setFilterValue(e)}
+              >
+                <MenuItem value="all">All</MenuItem>
+                <MenuItem value="active">Active</MenuItem>
+                <MenuItem value="inactive">Inactive</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          {buttonGo}
+        </>
+      );
+    } else if (filterBy === "date") {
+      formFilter = (
+        <>
+          <TextField
+            type="date"
+            name="fromDate"
+            onChange={(e) => this.setFilterValue(e)}
+          ></TextField>
+          <Box ml={2} mr={2}>
+            to
+          </Box>
+          <TextField
+            type="date"
+            name="toDate"
+            onChange={(e) => this.setFilterValue(e)}
+            style={{ marginRight: "12px" }}
+          ></TextField>
+          {buttonGo}
+        </>
+      );
+    } else {
+      formFilter = <Grid item xs={3}></Grid>;
+    }
+    console.log(formFilter);
     return (
       <Grid
         container
@@ -189,129 +255,117 @@ class SellerReport extends Component {
           container
           item
           xs={12}
-          justify="space-between"
+          justify="flex-start"
+          alignItems="center"
           className={classes.margin}
+          spacing={3}
         >
-          <Grid item>
-            <FilterListIcon
-              style={{ cursor: "pointer" }}
-              onClick={() => this.setState({ filterSwitch: !filterSwitch })}
-              className={!filterSwitch ? classes.redOff : classes.redOn}
-            ></FilterListIcon>
-          </Grid>
-          <Grid item>
-            <SearchField
-              onClick={this.doSearch}
-              resetData={this.resetData}
-            ></SearchField>
-          </Grid>
-        </Grid>
-        <Grid item xs={12} className={classes.margin}>
-          <Collapse in={filterSwitch}>
-            <Paper elevation={4} className={classes.paper}>
-              <Grid
-                container
-                xs={12}
-                alignItems="center"
-                direction="column"
-                spacing={1}
+          <Grid item xs={3}>
+            <FormControl className={classes.formControl} size="small">
+              <Select
+                size="small"
+                value={filterBy}
+                name="filterBy"
+                onChange={(e) => this.setFilterValue(e)}
               >
-                <Grid container item direction="column" xs={4}>
-                  <Button
-                    variant="contained"
-                    size="small"
-                    color={filterByCode ? "primary" : "default"}
-                    onClick={() => this.toogleFilter("filterByCode")}
-                  >
-                    Product Code
-                  </Button>
-                </Grid>
-                <Grid container item direction="column" xs={4}>
-                  <Button
-                    variant="contained"
-                    size="small"
-                    color={filterByName ? "primary" : "default"}
-                    onClick={() => this.toogleFilter("filterByName")}
-                  >
-                    Product Name
-                  </Button>
-                </Grid>
-                <Grid container item direction="column" xs={4}>
-                  <Button
-                    variant="contained"
-                    size="small"
-                    color={filterByStatus ? "primary" : "default"}
-                    onClick={() => this.toogleFilter("filterByStatus")}
-                  >
-                    Status
-                  </Button>
-                  <Select
-                    value={statusFilter}
-                    name="statusFilter"
-                    disabled={!filterByStatus}
-                    onChange={(e) => this.setFilterValue(e)}
-                  >
-                    <MenuItem value="active">Active</MenuItem>
-                    <MenuItem value="inactive">InActive</MenuItem>
-                  </Select>
-                </Grid>
-                <Grid container item direction="column" xs={4}>
-                  <Button
-                    variant="contained"
-                    size="small"
-                    color={filterByDate ? "primary" : "default"}
-                    onClick={() => this.toogleFilter("filterByDate")}
-                  >
-                    Date
-                  </Button>
-                </Grid>
+                <MenuItem value="all">Filter</MenuItem>
+                <MenuItem value="productName">Name</MenuItem>
+                <MenuItem value="productCode">Code</MenuItem>
+                <MenuItem value="status">Status</MenuItem>
+                <MenuItem value="date">Date</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
 
-                <Grid container item xs={12}>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      margin: "auto",
+          {formFilter}
+        </Grid>
+        <Grid
+          container
+          direction="row"
+          justify="flex-start"
+          alignItems="flex-end"
+        >
+          <Pdf targetRef={ref} filename="code-example.pdf">
+            {({ toPdf }) => <Button onClick={toPdf}>Generate Pdf</Button>}
+          </Pdf>
+          <Pdf targetRef={ref} filename="code-example.pdf">
+            {({ toPdf }) => <Button onClick={toPdf}>Generate CSV</Button>}
+          </Pdf>
+        </Grid>
+        <Grid
+          container
+          direction="row"
+          justify="space-between"
+          alignItems="flex-start"
+        >
+          <Grid container item xs={12}>
+            <GridList
+              // cellHeight={270}
+              className={classes.gridList}
+              style={{ width: "100%", height: 420 }}
+              // align="center"
+              cols={3}
+            >
+              <Box
+                border={1}
+                ref={ref}
+                style={{
+                  width: "793.7007874px",
+                  height: "1122.519685px",
+                  marginLeft: "auto",
+                  marginRight: "auto",
+                  marginTop: "10px",
+                  marginBottom: "10px",
+                }}
+              >
+                {/* <Typography variant="h6" gutterBottom align="center">
+                  REPORT#{user.userCode}
+                </Typography>
+                <hr /> */}
+                <div
+                  style={{
+                    marginLeft: "20px",
+                    marginRight: "20px",
+                    marginTop: "10px",
+                    marginBottom: "10px",
+                  }}
+                >
+                  <TableProduct
+                    user={user}
+                    page={{
+                      pageTotal: Math.ceil(qty / 20),
+                      pageNow: offset / 20 + 1,
                     }}
-                  >
-                    <TextField
-                      type="date"
-                      name="fromDate"
-                      disabled={!filterByDate}
-                      onChange={(e) => this.setFilterValue(e)}
-                    ></TextField>
-                    <Box ml={2} mr={2}>
-                      to
-                    </Box>
-                    <TextField
-                      type="date"
-                      name="toDate"
-                      disabled={!filterByDate}
-                      onChange={(e) => this.setFilterValue(e)}
-                    ></TextField>
-                  </div>
-                </Grid>
-              </Grid>
-            </Paper>
-          </Collapse>
+                    listProduct={listProduct.slice(offset, offset + 20)}
+                  />
+                </div>
+              </Box>
+            </GridList>
+          </Grid>
         </Grid>
-        <Grid container item xs={12} spacing={2}>
-          {listProduct &&
-            listProduct.map((prod, i) => (
-              <Grid item xs={4} key={i} className={classes.margin}>
-                <ProductCard product={prod}></ProductCard>
-              </Grid>
-            ))}
-        </Grid>
-        <Grid container item xs={12}>
+        <Grid container item>
           <PaginationControlled
-            page={productPage}
+            page={Math.ceil(qty / 20)}
             onClick={this.changePage}
           ></PaginationControlled>
         </Grid>
+        {/* <Pdf targetRef={ref} filename="code-example.pdf">
+          {({ toPdf }) => <button onClick={toPdf}>Generate Pdf</button>}
+        </Pdf> */}
+        {/* <ReactToPrint
+          trigger={() => <button>Print this out!</button>}
+          content={() => this.componentRef}
+          // content={() => <>HELLOOO</>}
+        /> */}
+        {/* <ComponentToPrint ref={(el) => (this.componentRef = el)} /> */}
       </Grid>
     );
   }
 }
-
-export default withStyles(useStyles)(SellerReport);
+const mapStatToProps = (state) => {
+  const { user } = state.auth;
+  return {
+    user,
+  };
+};
+export default connect(mapStatToProps)(withStyles(useStyles)(SellerReport));

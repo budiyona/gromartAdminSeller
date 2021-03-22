@@ -68,7 +68,11 @@ class ProductCard extends Component {
           onClick={
             user.userCode.includes("ADMIN")
               ? () => {}
-              : () => history.push("/seller/product/update")
+              : () =>
+                  history.push({
+                    pathname: "/seller/product/update",
+                    state: { idProduct: product.productCode },
+                  })
           }
         />
         <CardMedia className={classes.media} image={productImg} />
