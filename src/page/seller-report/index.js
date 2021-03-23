@@ -87,6 +87,7 @@ class SellerReport extends Component {
       filterBy: "all",
       querySearch: "",
       offset: 0,
+      currentPage: 1,
     };
   }
 
@@ -97,11 +98,12 @@ class SellerReport extends Component {
         "?"
     );
   }
-  changePage = (page) => {
+  changePage = (event, page) => {
     console.log("changePage");
     let offset = (page - 1) * 6;
     this.setState({
       offset,
+      currentPage: page,
     });
   };
   toogleFilter = (buttonName) => {
@@ -172,7 +174,14 @@ class SellerReport extends Component {
   render() {
     console.log(this.state);
     const { buttonAdminStat, history, toogleMenu, classes, user } = this.props;
-    const { listProduct, qty, status, filterBy, offset } = this.state;
+    const {
+      listProduct,
+      qty,
+      status,
+      filterBy,
+      offset,
+      currentPage,
+    } = this.state;
     const header = [
       { label: "Product Code", key: "productCode" },
       { label: "Product Name", key: "productName" },
@@ -419,10 +428,15 @@ class SellerReport extends Component {
           </Grid>
         </Grid>
         <Grid container item>
-          <PaginationControlled
+          {/* <PaginationControlled
             page={Math.ceil(qty / 20)}
             onClick={this.changePage}
-          ></PaginationControlled>
+          ></PaginationControlled> */}
+          <PaginationControlled
+            page={Math.ceil(qty / 20)}
+            page={currentPage}
+            onChange={this.changePage}
+          />
         </Grid>
         {/* <Pdf targetRef={ref} filename="code-example.pdf">
           {({ toPdf }) => <button onClick={toPdf}>Generate Pdf</button>}

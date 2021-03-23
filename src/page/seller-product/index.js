@@ -53,6 +53,7 @@ class SellerProduct extends Component {
       searchingStatus: false,
       page: 0,
       filterBy: "all",
+      currentPage: 1,
     };
   }
   componentDidMount() {
@@ -65,6 +66,7 @@ class SellerProduct extends Component {
   }
   setFilterValue = (e) => {
     console.log(e.target.value);
+    const { user } = this.props;
     const { name, value } = e.target;
     if (name == "filterBy") {
       this.setState({
@@ -75,7 +77,9 @@ class SellerProduct extends Component {
       });
       if (value === "all") {
         this.getProductWithFilter(
-          "http://localhost:8080/api/product/report/" + this.props.user.userCode
+          "http://localhost:8080/api/product/seller/filter/" +
+            user.userCode +
+            "?"
         );
       }
     }
@@ -172,22 +176,28 @@ class SellerProduct extends Component {
     }
     console.log(endpoint);
     this.getProductWithFilter(endpoint);
+    this.setState({
+      currentPage: 1,
+    });
   };
-  changePage = (page) => {
-    console.log("changePage");
+  changePage = (event, page) => {
+    console.log("changePage", page);
     const { user } = this.props;
     const { searchingStatus, querySearch } = this.state;
     let offset = (page - 1) * 6;
     this.getProductWithFilter(querySearch, offset);
-    // if (searchingStatus) {
-    // } else {
-    //   this.getProductWithFilter(
-    //     "http://localhost:8080/api/product/seller/filter/" +
-    //       user.userCode +
-    //       "?",
-    //     offset
-    //   );
-    // }
+    if (searchingStatus) {
+    } else {
+      this.getProductWithFilter(
+        "http://localhost:8080/api/product/seller/filter/" +
+          user.userCode +
+          "?",
+        offset
+      );
+    }
+    this.setState({
+      currentPage: page,
+    });
   };
   render() {
     const { buttonAdminStat, history, toogleMenu, classes } = this.props;
@@ -196,7 +206,7 @@ class SellerProduct extends Component {
       target,
       showClear,
       userName,
-      email,
+      currentPage,
       page,
       filterBy,
       status,
@@ -419,7 +429,11 @@ class SellerProduct extends Component {
             ))}
         </Grid>
         <Grid container item xs={12}>
-          <PaginationControlled page={page} onClick={this.changePage} />
+          <PaginationControlled
+            count={page}
+            page={currentPage}
+            onChange={this.changePage}
+          />
         </Grid>
       </Grid>
     );
