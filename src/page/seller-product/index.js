@@ -134,6 +134,7 @@ class SellerProduct extends Component {
       });
     });
     this.setState({ querySearch: query });
+
     // axios
     //   .get(
     //     "http://localhost:8080/api/product/seller/filter?" +
