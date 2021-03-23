@@ -120,7 +120,7 @@ class SellerReport extends Component {
         fromDate: "",
         toDate: "",
       });
-      if (value) {
+      if (value === "all") {
         this.getProductWithFilter(
           "http://localhost:8080/api/product/report/" + this.props.user.userCode
         );

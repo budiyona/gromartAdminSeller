@@ -1,21 +1,16 @@
 import {
+  Box,
   Button,
   FormControl,
   Grid,
-  IconButton,
   Input,
-  InputAdornment,
-  Typography,
+  MenuItem,
+  Select,
+  TextField,
   withStyles,
 } from "@material-ui/core";
 import axios from "axios";
-import ClearIcon from "@material-ui/icons/Clear";
-import {
-  Menu,
-  PaginationControlled,
-  ProductCard,
-  SearchField,
-} from "../../component";
+import { Menu, PaginationControlled, ProductCard } from "../../component";
 import React, { Component } from "react";
 import { red } from "@material-ui/core/colors";
 import { connect } from "react-redux";
@@ -27,6 +22,9 @@ const useStyles = (theme) => ({
   buttonRed: {
     backgroundColor: red[500],
     color: "white",
+  },
+  formControl: {
+    width: "100%",
   },
 });
 class SellerProduct extends Component {
@@ -54,36 +52,60 @@ class SellerProduct extends Component {
 
       searchingStatus: false,
       page: 0,
+      filterBy: "all",
     };
   }
   componentDidMount() {
-    this.getSellerProduct(0);
-    this.getSellerInfo();
+    const { user } = this.props;
+    // this.getSellerProduct(0);
+    // this.getSellerInfo();
+    this.getProductWithFilter(
+      "http://localhost:8080/api/product/seller/filter/" + user.userCode + "?"
+    );
   }
-
-  getSellerProduct = (offset) => {
-    axios
-      .get(
-        "http://localhost:8080/api/product/seller?id=" +
-          this.props.user.userCode +
-          "&offset=" +
-          offset
-      )
-      .then((res) =>
-        this.setState({
-          products: res.data.product,
-          page: Math.ceil(res.data.qty / 6),
-        })
-      );
-  };
-  getSellerInfo = () => {
-    axios
-      .get("http://localhost:8080/api/user/" + this.props.user.userCode)
-      .then((res) => {
-        const { userName, email } = res.data;
-        this.setState({ userName, email });
+  setFilterValue = (e) => {
+    console.log(e.target.value);
+    const { name, value } = e.target;
+    if (name == "filterBy") {
+      this.setState({
+        status: "all",
+        searchField: "",
+        fromDate: "",
+        toDate: "",
       });
+      if (value === "all") {
+        this.getProductWithFilter(
+          "http://localhost:8080/api/product/report/" + this.props.user.userCode
+        );
+      }
+    }
+    this.setState({
+      [name]: value,
+    });
   };
+  // getSellerProduct = (offset) => {
+  //   axios
+  //     .get(
+  //       "http://localhost:8080/api/product/seller?id=" +
+  //         this.props.user.userCode +
+  //         "&offset=" +
+  //         offset
+  //     )
+  //     .then((res) =>
+  //       this.setState({
+  //         products: res.data.product,
+  //         page: Math.ceil(res.data.qty / 6),
+  //       })
+  //     );
+  // };
+  // getSellerInfo = () => {
+  //   axios
+  //     .get("http://localhost:8080/api/user/" + this.props.user.userCode)
+  //     .then((res) => {
+  //       const { userName, email } = res.data;
+  //       this.setState({ userName, email });
+  //     });
+  // };
   setTarget = (e) => {
     console.log(e.target.value);
     const { target } = this.state;
@@ -100,46 +122,153 @@ class SellerProduct extends Component {
       showClear: false,
       searchingStatus: false,
     });
-    this.getSellerProduct(0);
+    // this.getSellerProduct(0);
   };
-  getProductWithFilter = (offset) => {
-    axios
-      .get(
-        "http://localhost:8080/api/product/seller/filter?" +
-          "id=" +
-          this.props.user.userCode +
-          "&target=" +
-          this.state.target +
-          "&offset=" +
-          offset
-      )
-      .then((res) => {
-        console.log(res.data);
-        this.setState({
-          products: res.data.product,
-          page: Math.ceil(res.data.qty / 6),
-        });
+  getProductWithFilter = (query, offset = 0) => {
+    let queryOffset = "&offset=" + offset;
+    axios.get(query + queryOffset).then((res) => {
+      console.log("data get", res.data);
+      this.setState({
+        products: res.data.product,
+        page: Math.ceil(res.data.qty / 6),
       });
+    });
+    this.setState({ querySearch: query });
+    // axios
+    //   .get(
+    //     "http://localhost:8080/api/product/seller/filter?" +
+    //       "id=" +
+    //       this.props.user.userCode +
+    //       "&target=" +
+    //       this.state.target +
+    //       "&offset=" +
+    //       offset
+    //   )
+    //   .then((res) => {
+    //     console.log(res.data);
+    //     this.setState({
+    //       products: res.data.product,
+    //       page: Math.ceil(res.data.qty / 6),
+    //     });
+    //   });
 
-    this.setState({ searchingStatus: true });
+    // this.setState({ searchingStatus: true });
   };
   doSearch = () => {
-    this.getProductWithFilter(0);
+    // this.getProductWithFilter(0);
+    const { user } = this.props;
+    const { fromDate, toDate, filterBy, searchField, status } = this.state;
+    let endpoint =
+      "http://localhost:8080/api/product/seller/filter/" + user.userCode + "?";
+    if (filterBy === "productName") {
+      endpoint += "productName=" + searchField;
+    } else if (filterBy === "productCode") {
+      endpoint += "productCode=" + searchField;
+    } else if (filterBy === "status") {
+      endpoint += "status=" + status;
+    } else if (filterBy === "date") {
+      endpoint += "fromDate=" + fromDate + "&toDate=" + toDate;
+    }
+    console.log(endpoint);
+    this.getProductWithFilter(endpoint);
   };
   changePage = (page) => {
     console.log("changePage");
+    const { user } = this.props;
     const { searchingStatus, querySearch } = this.state;
     let offset = (page - 1) * 6;
-    if (searchingStatus) {
-      this.getProductWithFilter(offset);
-    } else {
-      this.getSellerProduct(offset);
-    }
+    this.getProductWithFilter(querySearch, offset);
+    // if (searchingStatus) {
+    // } else {
+    //   this.getProductWithFilter(
+    //     "http://localhost:8080/api/product/seller/filter/" +
+    //       user.userCode +
+    //       "?",
+    //     offset
+    //   );
+    // }
   };
   render() {
     const { buttonAdminStat, history, toogleMenu, classes } = this.props;
-    const { products, target, showClear, userName, email, page } = this.state;
+    const {
+      products,
+      target,
+      showClear,
+      userName,
+      email,
+      page,
+      filterBy,
+      status,
+    } = this.state;
     console.log(this.state);
+    let buttonGo = (
+      <Button
+        size="small"
+        variant="contained"
+        className={classes.buttonRed}
+        onClick={this.doSearch}
+      >
+        Go
+      </Button>
+    );
+    let formFilter;
+    if (filterBy === "productName" || filterBy === "productCode") {
+      formFilter = (
+        <>
+          <Grid item xs={3}>
+            <Input
+              placeholder="search"
+              style={{ height: "29px" }}
+              name="searchField"
+              onChange={(e) => this.setFilterValue(e)}
+            />
+          </Grid>
+          {buttonGo}
+        </>
+      );
+    } else if (filterBy === "status") {
+      formFilter = (
+        <>
+          <Grid item xs={3}>
+            <FormControl className={classes.formControl} size="small">
+              <Select
+                size="small"
+                value={status}
+                name="status"
+                onChange={(e) => this.setFilterValue(e)}
+              >
+                <MenuItem value="all">All</MenuItem>
+                <MenuItem value="active">Active</MenuItem>
+                <MenuItem value="inactive">Inactive</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          {buttonGo}
+        </>
+      );
+    } else if (filterBy === "date") {
+      formFilter = (
+        <>
+          <TextField
+            type="date"
+            name="fromDate"
+            onChange={(e) => this.setFilterValue(e)}
+          ></TextField>
+          <Box ml={2} mr={2}>
+            to
+          </Box>
+          <TextField
+            type="date"
+            name="toDate"
+            onChange={(e) => this.setFilterValue(e)}
+            style={{ marginRight: "12px" }}
+          ></TextField>
+          {buttonGo}
+        </>
+      );
+    } else {
+      formFilter = <Grid item xs={3}></Grid>;
+    }
     return (
       <Grid
         container
@@ -154,7 +283,15 @@ class SellerProduct extends Component {
             buttonAdminStat={buttonAdminStat}
           ></Menu>
         </Grid>
-        <Grid container item xs={12} className={classes.margin} spacing={2}>
+        <Grid
+          container
+          item
+          xs={12}
+          justify="flex-start"
+          alignItems="center"
+          className={classes.margin}
+          spacing={3}
+        >
           <Grid item>
             <Button
               variant="contained"
@@ -191,7 +328,7 @@ class SellerProduct extends Component {
               Add
             </Button>
           </Grid>
-          <Grid item xs={2}>
+          {/* <Grid item xs={2}>
             <FormControl>
               <Input
                 fullWidth
@@ -222,7 +359,25 @@ class SellerProduct extends Component {
             >
               Search
             </Button>
+          </Grid> */}
+          <Grid item xs={2}>
+            <FormControl className={classes.formControl} size="small">
+              <Select
+                size="small"
+                value={filterBy}
+                name="filterBy"
+                onChange={(e) => this.setFilterValue(e)}
+              >
+                <MenuItem value="all">Filter</MenuItem>
+                <MenuItem value="productName">Name</MenuItem>
+                <MenuItem value="productCode">Code</MenuItem>
+                <MenuItem value="status">Status</MenuItem>
+                <MenuItem value="date">Date</MenuItem>
+              </Select>
+            </FormControl>
           </Grid>
+
+          {formFilter}
         </Grid>
         {/* <Grid
           container
