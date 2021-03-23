@@ -1,4 +1,10 @@
-import { AppBar, Toolbar, Typography, withStyles } from "@material-ui/core";
+import {
+  AppBar,
+  Toolbar,
+  Tooltip,
+  Typography,
+  withStyles,
+} from "@material-ui/core";
 import React, { Component } from "react";
 import { green, red } from "@material-ui/core/colors";
 import MenuIcon from "@material-ui/icons/Menu";
@@ -95,7 +101,7 @@ class Menu extends Component {
             marginBottom: 20,
           }}
         >
-          <Toolbar>
+          <Toolbar variant="dense">
             <StoreIcon
               edge="start"
               className={classes.menuButton}
@@ -107,46 +113,56 @@ class Menu extends Component {
             <Typography variant="h6" className={classes.title}>
               Gromart
             </Typography>
-            <IconButton
-              color="inherit"
-              disabled={buttonAdminStat.home}
-              onClick={() => this.toogleMenu("home")}
-            >
-              <HomeIcon className={buttonAdminStat.home && classes.red} />
-            </IconButton>
-            {isAdmin && (
+            <Tooltip title="Home">
               <IconButton
                 color="inherit"
-                disabled={buttonAdminStat.seller}
-                onClick={() => this.toogleMenu("seller")}
+                disabled={buttonAdminStat.home}
+                onClick={() => this.toogleMenu("home")}
               >
-                <SupervisorAccountIcon
-                  className={buttonAdminStat.seller && classes.red}
+                <HomeIcon className={buttonAdminStat.home && classes.red} />
+              </IconButton>
+            </Tooltip>
+            {isAdmin && (
+              <Tooltip title="Seller">
+                <IconButton
+                  color="inherit"
+                  disabled={buttonAdminStat.seller}
+                  onClick={() => this.toogleMenu("seller")}
+                >
+                  <SupervisorAccountIcon
+                    className={buttonAdminStat.seller && classes.red}
+                  />
+                </IconButton>
+              </Tooltip>
+            )}
+            <Tooltip title="Product">
+              <IconButton
+                color="inherit"
+                disabled={buttonAdminStat.product}
+                onClick={() => this.toogleMenu("product")}
+              >
+                <InboxIcon className={buttonAdminStat.product && classes.red} />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Account">
+              <IconButton
+                color="inherit"
+                disabled={buttonAdminStat.account}
+                onClick={() => this.toogleMenu("account")}
+              >
+                <AccountCircle
+                  className={buttonAdminStat.account && classes.red}
                 />
               </IconButton>
-            )}
-            <IconButton
-              color="inherit"
-              disabled={buttonAdminStat.product}
-              onClick={() => this.toogleMenu("product")}
-            >
-              <InboxIcon className={buttonAdminStat.product && classes.red} />
-            </IconButton>
-            <IconButton
-              color="inherit"
-              disabled={buttonAdminStat.account}
-              onClick={() => this.toogleMenu("account")}
-            >
-              <AccountCircle
-                className={buttonAdminStat.account && classes.red}
-              />
-            </IconButton>
-            <IconButton color="inherit">
-              <ExitToAppIcon
-                className={classes.logout}
-                onClick={this.doLogout}
-              ></ExitToAppIcon>
-            </IconButton>
+            </Tooltip>
+            <Tooltip title="Logout">
+              <IconButton color="inherit">
+                <ExitToAppIcon
+                  className={classes.logout}
+                  onClick={this.doLogout}
+                ></ExitToAppIcon>
+              </IconButton>
+            </Tooltip>
           </Toolbar>
         </AppBar>
       </>

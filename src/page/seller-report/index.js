@@ -30,6 +30,7 @@ import { connect } from "react-redux";
 import moment from "moment";
 import Pdf from "react-to-pdf";
 import ReactToPrint from "react-to-print";
+import { CSVLink, CSVDownload } from "react-csv";
 
 const useStyles = (theme) => ({
   margin: {
@@ -55,6 +56,7 @@ const options = {
   unit: "in",
   format: [4, 2],
 };
+
 class SellerReport extends Component {
   constructor(props) {
     super(props);
@@ -87,6 +89,7 @@ class SellerReport extends Component {
       offset: 0,
     };
   }
+
   componentDidMount() {
     this.getProductWithFilter(
       "http://localhost:8080/api/product/report/" +
@@ -94,7 +97,6 @@ class SellerReport extends Component {
         "?"
     );
   }
-
   changePage = (page) => {
     console.log("changePage");
     let offset = (page - 1) * 6;
@@ -164,10 +166,42 @@ class SellerReport extends Component {
         "?"
     );
   };
+  // exportCSV = () => {
+  //   <CSVLink {...csvExport}>Export to CSV</CSVLink>;
+  // };
   render() {
     console.log(this.state);
     const { buttonAdminStat, history, toogleMenu, classes, user } = this.props;
     const { listProduct, qty, status, filterBy, offset } = this.state;
+    const header = [
+      { label: "Product Code", key: "productCode" },
+      { label: "Product Name", key: "productName" },
+      { label: "Price", key: "price" },
+      { label: "Stock", key: "stock" },
+      { label: "Description", key: "description" },
+      { label: "Seller Code", key: "seller.userCode" },
+      { label: "Seller Name", key: "seller.userName" },
+    ];
+    const data = [];
+    listProduct.length > 0 &&
+      listProduct.map((product) => {
+        data.push({
+          productCode: product.productCode,
+          productName: product.productName,
+          price: product.price,
+          stock: product.stock,
+          description: product.description,
+          seller: {
+            userCode: product.seller.userCode,
+            userName: product.seller.userName,
+          },
+        });
+      });
+    const csvExport = {
+      data: data,
+      headers: header,
+      filename: "data.csv",
+    };
     let buttonGo = (
       <Button
         size="small"
@@ -237,6 +271,7 @@ class SellerReport extends Component {
       formFilter = <Grid item xs={3}></Grid>;
     }
     console.log(formFilter);
+    console.log("hadeerr", header);
     return (
       <Grid
         container
@@ -282,15 +317,55 @@ class SellerReport extends Component {
         <Grid
           container
           direction="row"
-          justify="flex-start"
+          justify="space-between"
           alignItems="flex-end"
+          spacing={2}
         >
-          <Pdf targetRef={ref} filename="code-example.pdf">
-            {({ toPdf }) => <Button onClick={toPdf}>Generate Pdf</Button>}
-          </Pdf>
-          <Pdf targetRef={ref} filename="code-example.pdf">
+          <Grid item xs={8}>
+            <Button
+              size="small"
+              variant="contained"
+              color="primary"
+              disableElevation
+              onClick={() => history.push("/seller/product")}
+            >
+              BACK
+            </Button>
+          </Grid>
+          <Grid item xs={2} align="right">
+            <Pdf targetRef={ref} filename="code-example.pdf">
+              {({ toPdf }) => (
+                <Button
+                  size="small"
+                  variant="contained"
+                  color="primary"
+                  disableElevation
+                  onClick={toPdf}
+                >
+                  EXPORT PDF
+                </Button>
+              )}
+            </Pdf>
+          </Grid>
+
+          {/* <CSVLink data={data}>Export to CSV</CSVLink> */}
+          <Grid item xs={2} align="right">
+            <CSVLink {...csvExport}>
+              <Button
+                size="small"
+                variant="contained"
+                color="primary"
+                disableElevation
+              >
+                Export CSV
+              </Button>
+            </CSVLink>
+          </Grid>
+          {/* <CSVDownload data={data}>Export to CSV</CSVDownload> */}
+          {/* <br /> */}
+          {/* <Pdf targetRef={ref} filename="code-example.pdf">
             {({ toPdf }) => <Button onClick={toPdf}>Generate CSV</Button>}
-          </Pdf>
+          </Pdf> */}
         </Grid>
         <Grid
           container

@@ -11,7 +11,7 @@ import { blue, green, red } from "@material-ui/core/colors";
 import DoneIcon from "@material-ui/icons/Done";
 import productImg from "../../static/product.jpg";
 import { connect } from "react-redux";
-
+import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 const useStyles = () => ({
   root: {
     maxWidth: 248,
@@ -32,6 +32,9 @@ const useStyles = () => ({
   },
   blue: {
     color: blue[500],
+  },
+  pointer: {
+    cursor: "pointer",
   },
 });
 
@@ -57,6 +60,9 @@ class ProductCard extends Component {
       statusNow: status[newStatusIndex],
     });
   };
+  deleteProductById = (id) => {
+    window.confirm("are you sure want to delete product");
+  };
   render() {
     const { classes, product, user, history } = this.props;
     const { statusNow } = this.state;
@@ -65,6 +71,23 @@ class ProductCard extends Component {
         <CardHeader
           title={product.productName}
           subheader={product.productCode}
+          action={
+            user.userCode.includes("ADMIN") ? (
+              ""
+            ) : (
+              <IconButton aria-label="settings">
+                <HighlightOffIcon
+                  style={{ color: red[500] }}
+                  onClick={() => this.deleteProductById(product.productCode)}
+                />
+              </IconButton>
+            )
+          }
+        />
+        <CardMedia
+          className={user.userCode.includes("ADMIN") ? "" : classes.pointer}
+          className={classes.media}
+          image={productImg}
           onClick={
             user.userCode.includes("ADMIN")
               ? () => {}
@@ -75,7 +98,6 @@ class ProductCard extends Component {
                   })
           }
         />
-        <CardMedia className={classes.media} image={productImg} />
         <CardActions disableSpacing>
           <Typography>Rp. {product.price},00</Typography>
         </CardActions>

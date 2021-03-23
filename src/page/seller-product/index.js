@@ -105,7 +105,7 @@ class SellerProduct extends Component {
   getProductWithFilter = (offset) => {
     axios
       .get(
-        "http://localhost:8080/api//product/seller/filter?" +
+        "http://localhost:8080/api/product/seller/filter?" +
           "id=" +
           this.props.user.userCode +
           "&target=" +
@@ -154,8 +154,8 @@ class SellerProduct extends Component {
             buttonAdminStat={buttonAdminStat}
           ></Menu>
         </Grid>
-        <Grid container item xs={12} className={classes.margin}>
-          <Grid item xs={3}>
+        <Grid container item xs={12} className={classes.margin} spacing={2}>
+          <Grid item>
             <Button
               variant="contained"
               color="primary"
@@ -166,12 +166,31 @@ class SellerProduct extends Component {
             </Button>
           </Grid>
 
-          <Grid item xs={6}>
+          {/* <Grid item xs={6}>
             <Typography>
               user : {userName} ( {email} )
             </Typography>
+          </Grid> */}
+          <Grid item>
+            <Button
+              variant="contained"
+              color="primary"
+              size="small"
+              onClick={() => history.push("/seller/report")}
+            >
+              Report
+            </Button>
           </Grid>
-
+          <Grid item>
+            <Button
+              variant="contained"
+              color="primary"
+              size="small"
+              onClick={() => history.push("/seller/product/create")}
+            >
+              Add
+            </Button>
+          </Grid>
           <Grid item xs={2}>
             <FormControl>
               <Input
@@ -205,7 +224,7 @@ class SellerProduct extends Component {
             </Button>
           </Grid>
         </Grid>
-        <Grid
+        {/* <Grid
           container
           item
           xs={12}
@@ -233,7 +252,7 @@ class SellerProduct extends Component {
               Add
             </Button>
           </Grid>
-        </Grid>
+        </Grid> */}
 
         <Grid container item xs={12}>
           {products &&
