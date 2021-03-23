@@ -12,6 +12,7 @@ import DoneIcon from "@material-ui/icons/Done";
 import productImg from "../../static/product.jpg";
 import { connect } from "react-redux";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
+import axios from "axios";
 const useStyles = () => ({
   root: {
     maxWidth: 248,
@@ -61,7 +62,16 @@ class ProductCard extends Component {
     });
   };
   deleteProductById = (id) => {
-    window.confirm("are you sure want to delete product");
+    let choise = window.confirm("are you sure want to delete product");
+    if (choise) {
+      axios.delete("http://localhost:8080/api/product/" + id).then((res) => {
+        if (res.status === 200) {
+          alert("succesfully deleted product");
+        } else {
+          alert("delete failed");
+        }
+      });
+    }
   };
   render() {
     const { classes, product, user, history } = this.props;

@@ -303,7 +303,7 @@ class SellerProduct extends Component {
           className={classes.margin}
           spacing={3}
         >
-          <Grid item>
+          {/* <Grid item>
             <Button
               variant="contained"
               color="primary"
@@ -312,7 +312,7 @@ class SellerProduct extends Component {
             >
               Back
             </Button>
-          </Grid>
+          </Grid> */}
 
           {/* <Grid item xs={6}>
             <Typography>
