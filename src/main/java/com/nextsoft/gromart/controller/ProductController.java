@@ -74,9 +74,9 @@ public class ProductController {
     }
 
     //filter product on specific Seller
-    @GetMapping("/product/seller/filter")
-    public ResponseEntity<?> filterProductBasedOnSeller(@RequestParam String id, String target, int offset) {
-        return new ResponseEntity<>(productService.filterProductOnSeller(id, target, offset), HttpStatus.OK);
+    @GetMapping("/product/seller/filter/{id}")
+    public ResponseEntity<?> filterProductBasedOnSeller(@PathVariable  String id, @RequestParam Map<String, String> paramsFilter) {
+        return new ResponseEntity<>(productService.filterProductOnSeller(id, paramsFilter), HttpStatus.OK);
     }
 
     //test api status
@@ -143,6 +143,10 @@ public class ProductController {
     @GetMapping("/product/report/{id}")
     public ResponseEntity<?> reportProductSeller(@PathVariable String id, @RequestParam Map<String, String> paramsFilter){
         return new ResponseEntity<>(productService.productReport(id, paramsFilter),HttpStatus.OK);
+    }
+    @DeleteMapping("/product/{id}")
+    public ResponseEntity<?> deleteProduct(@PathVariable String id){
+        return new ResponseEntity<>(productService.deleteProduct(id)+ " product Successfully deleted", HttpStatus.OK);
     }
 
 }

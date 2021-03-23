@@ -305,4 +305,9 @@ public class ProductRepositoryImpl implements ProductRepository {
                 product.getProductCode()
         );
     }
+
+    @Override
+    public int deleteProduct(String id) {
+        return jdbcTemplate.update("delete from product where productCode = ? ",Integer.class,id);
+    }
 }

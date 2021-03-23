@@ -14,11 +14,12 @@ public interface ProductService {
     Map<String , Object> filterProduct(Map<String, String> params);
     int countProductByStatus(String status);
     Map<String, Integer> getSellerSummary(String id);
-    Map<String, Object> filterProductOnSeller(String id, String target, int offset);
+    Map<String, Object> filterProductOnSeller(String id, Map<String, String> params);
 
     int createProduct(Product product, String idSeller);
     boolean isProductNameExist(String idSeller, String productName);
     boolean isProductExist(String productId);
     int updateProduct(Product product);
     Map<String, Object> productReport(String id, Map<String,String> paramsFilter);
+    int deleteProduct(String id);
 }

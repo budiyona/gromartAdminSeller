@@ -20,4 +20,5 @@ public interface ProductRepository {
     boolean isProductNameExist(String idSeller, String productName);
     boolean isProductExist(String productId);
     int updateProduct(Product product);
+    int deleteProduct(String id);
 }
