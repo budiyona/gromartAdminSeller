@@ -199,6 +199,23 @@ class SellerProduct extends Component {
       currentPage: page,
     });
   };
+  
+  deleteProductById = (id) => {
+    const {user}= this.props
+    let choise = window.confirm("are you sure want to delete product");
+    if (choise) {
+      axios.delete("http://localhost:8080/api/product/" + id).then((res) => {
+        if (res.status === 200) {
+          alert("succesfully deleted product");
+          this.getProductWithFilter(
+            "http://localhost:8080/api/product/seller/filter/" + user.userCode + "?"
+          );
+        } else {
+          alert("delete failed");
+        }
+      });
+    }
+  };
   render() {
     const { buttonAdminStat, history, toogleMenu, classes } = this.props;
     const {
@@ -424,7 +441,7 @@ class SellerProduct extends Component {
           {products &&
             products.map((product, i) => (
               <Grid item xs={4} key={i} className={classes.margin}>
-                <ProductCard history={history} product={product}></ProductCard>
+                <ProductCard history={history} product={product} deleteProductById={this.deleteProductById}></ProductCard>
               </Grid>
             ))}
         </Grid>

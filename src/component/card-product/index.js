@@ -61,26 +61,26 @@ class ProductCard extends Component {
       statusNow: status[newStatusIndex],
     });
   };
-  deleteProductById = (id) => {
-    let choise = window.confirm("are you sure want to delete product");
-    if (choise) {
-      axios.delete("http://localhost:8080/api/product/" + id).then((res) => {
-        if (res.status === 200) {
-          alert("succesfully deleted product");
-        } else {
-          alert("delete failed");
-        }
-      });
-    }
-  };
+  // deleteProductById = (id) => {
+  //   let choise = window.confirm("are you sure want to delete product");
+  //   if (choise) {
+  //     axios.delete("http://localhost:8080/api/product/" + id).then((res) => {
+  //       if (res.status === 200) {
+  //         alert("succesfully deleted product");
+  //       } else {
+  //         alert("delete failed");
+  //       }
+  //     });
+  //   }
+  // };
   render() {
-    const { classes, product, user, history } = this.props;
+    const { classes, product, user, history , deleteProductById} = this.props;
     const { statusNow } = this.state;
     return (
       <Card className={classes.root}>
         <CardHeader
           title={product.productName}
-          subheader={product.productCode}
+          subheader={product.productCode+` (${product.status})`}
           action={
             user.userCode.includes("ADMIN") ? (
               ""
@@ -88,7 +88,7 @@ class ProductCard extends Component {
               <IconButton aria-label="settings">
                 <HighlightOffIcon
                   style={{ color: red[500] }}
-                  onClick={() => this.deleteProductById(product.productCode)}
+                  onClick={() => deleteProductById(product.productCode)}
                 />
               </IconButton>
             )
