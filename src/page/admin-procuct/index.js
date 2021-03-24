@@ -48,7 +48,8 @@ class AdminProduct extends Component {
           },
         },
       ],
-      productPage: 0,
+      currentPage: 1,
+      page: 0,
       filterSwitch: false,
       filterByStatus: false,
       filterByCode: false,
@@ -74,20 +75,24 @@ class AdminProduct extends Component {
       .then((res) => {
         this.setState({
           listProduct: res.data.product,
-          productPage: Math.ceil(res.data.qty / 6),
+          page: Math.ceil(res.data.qty / 6),
         });
         // console.log(res.data.product);
       });
   };
-  changePage = (page) => {
+  changePage = (event, page) => {
     const { searchingStatus, querySearch } = this.state;
     console.log("changePage");
     let offset = (page - 1) * 6;
+    // console.log(offset, page);
     if (searchingStatus) {
       this.getProductWithFilter(querySearch, offset);
     } else {
       this.getAllProduct(offset);
     }
+    this.setState({
+      currentPage: page,
+    });
   };
   toogleFilter = (buttonName) => {
     console.log(buttonName);
@@ -143,7 +148,7 @@ class AdminProduct extends Component {
       console.log(res.data);
       this.setState({
         listProduct: res.data.product,
-        productPage: Math.ceil(res.data.qty / 6),
+        page: Math.ceil(res.data.qty / 6),
       });
     });
     this.setState({ searchingStatus: true, querySearch: query });
@@ -164,7 +169,8 @@ class AdminProduct extends Component {
     const {
       listProduct,
       filterSwitch,
-      productPage,
+      currentPage,
+      page,
       filterByStatus,
       filterByCode,
       filterByName,
@@ -311,8 +317,9 @@ class AdminProduct extends Component {
         </Grid>
         <Grid container item xs={12}>
           <PaginationControlled
-            page={productPage}
-            onClick={this.changePage}
+            count={page}
+            page={currentPage}
+            onChange={this.changePage}
           ></PaginationControlled>
         </Grid>
       </Grid>

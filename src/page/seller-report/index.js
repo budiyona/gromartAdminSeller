@@ -11,6 +11,7 @@ import {
   withStyles,
 } from "@material-ui/core";
 import axios from "axios";
+import ReactToPrint from "react-to-print";
 import React, { Component } from "react";
 import { Menu, PaginationControlled, TableProduct } from "../../component";
 import { red } from "@material-ui/core/colors";
@@ -37,7 +38,6 @@ const useStyles = (theme) => ({
   },
 });
 const ref = React.createRef();
-
 
 class SellerReport extends Component {
   constructor(props) {
@@ -150,9 +150,6 @@ class SellerReport extends Component {
         "?"
     );
   };
-  // exportCSV = () => {
-  //   <CSVLink {...csvExport}>Export to CSV</CSVLink>;
-  // };
   render() {
     console.log(this.state);
     const { buttonAdminStat, history, toogleMenu, classes, user } = this.props;
@@ -338,8 +335,26 @@ class SellerReport extends Component {
               )}
             </Pdf>
           </Grid>
+          <Grid item xs={2} align="right">
+            <ReactToPrint
+              trigger={() => {
+                // NOTE: could just as easily return <SomeComponent />. Do NOT pass an `onClick` prop
+                // to the root node of the returned component as it will be overwritten.
+                return (
+                  <Button
+                    size="small"
+                    variant="contained"
+                    color="primary"
+                    disableElevation
+                  >
+                    EXPORT PDF2
+                  </Button>
+                );
+              }}
+              content={() => this.componentRef}
+            />
+          </Grid>
 
-          {/* <CSVLink data={data}>Export to CSV</CSVLink> */}
           <Grid item xs={2} align="right">
             <CSVLink {...csvExport}>
               <Button
@@ -352,11 +367,6 @@ class SellerReport extends Component {
               </Button>
             </CSVLink>
           </Grid>
-          {/* <CSVDownload data={data}>Export to CSV</CSVDownload> */}
-          {/* <br /> */}
-          {/* <Pdf targetRef={ref} filename="code-example.pdf">
-            {({ toPdf }) => <Button onClick={toPdf}>Generate CSV</Button>}
-          </Pdf> */}
         </Grid>
         <Grid
           container
@@ -372,63 +382,77 @@ class SellerReport extends Component {
               // align="center"
               cols={3}
             >
-              <Box
-                border={1}
-                ref={ref}
-                style={{
-                  width: "793.7007874px",
-                  height: "1122.519685px",
-                  marginLeft: "auto",
-                  marginRight: "auto",
-                  marginTop: "10px",
-                  marginBottom: "10px",
-                }}
-              >
-                {/* <Typography variant="h6" gutterBottom align="center">
-                  REPORT#{user.userCode}
-                </Typography>
-                <hr /> */}
-                <div
+              <div ref={(el) => (this.componentRef = el)}>
+                <Box
+                  border={1}
+                  // ref={ref}
+                  // ref={(el) => (this.componentRef = el)}
                   style={{
-                    marginLeft: "20px",
-                    marginRight: "20px",
+                    width: "793.7007874px",
+                    height: "1112px",
+                    marginLeft: "auto",
+                    marginRight: "auto",
                     marginTop: "10px",
                     marginBottom: "10px",
                   }}
                 >
-                  <TableProduct
-                    user={user}
-                    page={{
-                      pageTotal: Math.ceil(qty / 20),
-                      pageNow: offset / 20 + 1,
+                  <div
+                    style={{
+                      marginLeft: "20px",
+                      marginRight: "20px",
+                      marginTop: "20px",
+                      marginBottom: "10px",
                     }}
-                    listProduct={listProduct.slice(offset, offset + 20)}
-                  />
-                </div>
-              </Box>
+                  >
+                    <TableProduct
+                      user={user}
+                      page={{
+                        pageTotal: Math.ceil(qty / 20),
+                        pageNow: offset / 20 + 1,
+                      }}
+                      listProduct={listProduct.slice(offset, offset + 20)}
+                    />
+                  </div>
+                </Box>
+
+                <Box
+                  border={1}
+                  // ref={ref}
+                  // ref={(el) => (this.componentRef = el)}
+                  style={{
+                    width: "793.7007874px",
+                    height: "1112px",
+                    marginLeft: "auto",
+                    marginRight: "auto",
+                    marginTop: "10px",
+                    marginBottom: "10px",
+                  }}
+                >
+                  <div
+                    style={{
+                      marginLeft: "20px",
+                      marginRight: "20px",
+                      marginTop: "20px",
+                      marginBottom: "10px",
+                    }}
+                  >
+                    <TableProduct
+                      user={user}
+                      page={{
+                        pageTotal: Math.ceil(qty / 20),
+                        pageNow: offset / 20 + 1,
+                      }}
+                      listProduct={listProduct.slice(offset, offset + 20)}
+                    />
+                  </div>
+                </Box>
+              </div>
             </GridList>
           </Grid>
         </Grid>
         <Grid container item>
-          {/* <PaginationControlled
-            page={Math.ceil(qty / 20)}
-            onClick={this.changePage}
-          ></PaginationControlled> */}
-          <PaginationControlled
-            // page={Math.ceil(qty / 20)}
-            page={currentPage}
-            onChange={this.changePage}
-          />
+          {/*<PaginationControlled page={currentPage} onChange={this.changePage} />*/}
         </Grid>
-        {/* <Pdf targetRef={ref} filename="code-example.pdf">
-          {({ toPdf }) => <button onClick={toPdf}>Generate Pdf</button>}
-        </Pdf> */}
-        {/* <ReactToPrint
-          trigger={() => <button>Print this out!</button>}
-          content={() => this.componentRef}
-          // content={() => <>HELLOOO</>}
-        /> */}
-        {/* <ComponentToPrint ref={(el) => (this.componentRef = el)} /> */}
       </Grid>
     );
   }

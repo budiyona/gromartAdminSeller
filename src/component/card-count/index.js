@@ -20,7 +20,7 @@ class CountCard extends Component {
     this.state = {};
   }
   render() {
-    const { number, title, classes } = this.props;
+    const { number, title, classes , unit} = this.props;
     const bull = <span className={classes.bullet}>•</span>;
     return (
       <Paper className={classes.cardCount} elevation={3}>
@@ -34,7 +34,7 @@ class CountCard extends Component {
           </Typography>
           <Typography variant="h4" component="h4">
             {number}
-            {bull}Product
+            {bull}{unit}
           </Typography>
         </CardContent>
       </Paper>

@@ -92,7 +92,7 @@ class SellerCard extends Component {
   saveEdit = () => {
     const { idx, editQty } = this.props;
     const { summary } = this.state;
-    editQty(idx, summary.limit);
+    editQty(idx, summary.active);
     this.toggleModal();
   };
   render() {
@@ -103,7 +103,7 @@ class SellerCard extends Component {
       history,
       idx,
       onChange,
-      
+
     } = this.props;
     const { summary, modal, currentlimit } = this.state;
     return (

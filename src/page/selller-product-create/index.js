@@ -115,7 +115,11 @@ class CreateProduct extends Component {
         .then((res) => {
           AddAlertRounded(res.data);
         })
-        .catch((e) => console.log(e));
+        .catch((e) => {
+          if (e.response !== undefined) {
+            alert(e.response.data);
+          }
+        });
     } else {
       console.log("update product");
       axios
@@ -123,7 +127,11 @@ class CreateProduct extends Component {
         .then((res) => {
           AddAlertRounded(res.data);
         })
-        .catch((e) => console.log(e));
+        .catch((e) => {
+          if (e.response !== undefined) {
+            alert(e.response.data);
+          }
+        });
     }
   };
   getProductById() {

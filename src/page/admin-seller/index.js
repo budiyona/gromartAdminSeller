@@ -42,7 +42,8 @@ class AdminSeller extends Component {
       ],
       status: ["requested", "active", "inactive"],
       statusNow: "requested",
-      sellerPage: 0,
+      page: 0,
+      currentPage: 1,
 
       filterStatus: "all",
       filterRole: "userName",
@@ -60,7 +61,7 @@ class AdminSeller extends Component {
       .get("http://localhost:8080/api//user/count-seller?status=" + status)
       .then((res) => {
         this.setState({
-          sellerPage: Math.ceil(res.data / 6),
+          page: Math.ceil(res.data / 6),
         });
       });
   };
@@ -136,12 +137,12 @@ class AdminSeller extends Component {
     }
     return false;
   };
-  editQty = (idx, curlimit) => {
+  editQty = (idx, prodActive) => {
     const { listSeller } = this.state;
     const { user } = this.props;
     let seller = listSeller[idx];
 
-    if (seller.productLimit >= curlimit) {
+    if (seller.productLimit >= prodActive) {
       let choise = window.confirm(
         "are you sure to change " + seller.userName + " product quantity"
       );
@@ -165,7 +166,7 @@ class AdminSeller extends Component {
       alert("limit must be more than or equal with active");
     }
   };
-  changePage = (page) => {
+  changePage = (event,page) => {
     console.log("changePage");
     const { searchingStatus, querySearch } = this.state;
     let offset = (page - 1) * 6;
@@ -174,6 +175,9 @@ class AdminSeller extends Component {
     } else {
       this.getAllSeller(offset);
     }
+    this.setState({
+      currentPage: page,
+    });
   };
   doSearch = (target) => {
     const { filterStatus, filterRole } = this.state;
@@ -193,7 +197,7 @@ class AdminSeller extends Component {
       console.log(res.data);
       this.setState({
         listSeller: res.data.seller,
-        sellerPage: Math.ceil(res.data.qty / 6),
+        page: Math.ceil(res.data.qty / 6),
       });
     });
     this.setState({ searchingStatus: true, querySearch: query });
@@ -217,7 +221,8 @@ class AdminSeller extends Component {
     const {
       listSeller,
       statusNow,
-      sellerPage,
+      page,
+      currentPage,
       filterStatus,
       filterRole,
     } = this.state;
@@ -306,7 +311,8 @@ class AdminSeller extends Component {
         </Grid>
 
         <Grid container item xs={12}>
-          <PaginationControlled page={sellerPage} onClick={this.changePage} />
+          <PaginationControlled count={page}
+          page={currentPage} onChange={this.changePage} />
         </Grid>
       </Grid>
     );

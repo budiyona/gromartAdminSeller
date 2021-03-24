@@ -177,12 +177,17 @@ class AdminHome extends Component {
               className={classes.cardCount}
             >
               <Grid item>
-                <CountCard title={"Seller Active"} number={sellerCard.active} />
+                <CountCard
+                  title={"Seller Active"}
+                  number={sellerCard.active}
+                  unit="Seller"
+                />
               </Grid>
               <Grid item>
                 <CountCard
                   title={"Seller Inactive"}
                   number={sellerCard.inactive}
+                  unit="Seller"
                 />
               </Grid>
             </Grid>
@@ -205,12 +210,14 @@ class AdminHome extends Component {
                 <CountCard
                   title={"Product Active"}
                   number={productCard.active}
+                  unit="Product"
                 />
               </Grid>
               <Grid item>
                 <CountCard
                   title={"Product Inactive"}
                   number={productCard.inactive}
+                  unit="Product"
                 />
               </Grid>
             </Grid>
