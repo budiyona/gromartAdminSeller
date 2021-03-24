@@ -1,13 +1,4 @@
-import {
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  withStyles,
-} from "@material-ui/core";
+import { withStyles } from "@material-ui/core";
 import moment from "moment";
 import React, { Component } from "react";
 import "./style.css";
@@ -24,7 +15,7 @@ class TableProduct extends Component {
   render() {
     const { rows } = this.state;
     console.log("rowwss", rows);
-    const { classes, listProduct, page, user } = this.props;
+    const { listProduct, page, user } = this.props;
     return (
       <>
         <div className="field">
@@ -64,9 +55,7 @@ class TableProduct extends Component {
                 // console.log(row);
                 return (
                   <tr key={key}>
-                    <td component="th" scope="row">
-                      {key + 1}
-                    </td>
+                    <td>{key + 1}</td>
                     <td>{product.productCode}</td>
                     <td>{product.productName}</td>
                     <td align="right">{product.price}</td>

@@ -5,7 +5,7 @@ import Input from "@material-ui/core/Input";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import FormControl from "@material-ui/core/FormControl";
 import ClearIcon from "@material-ui/icons/Clear";
-import { Button, Grid } from "@material-ui/core";
+import { Button } from "@material-ui/core";
 import { red } from "@material-ui/core/colors";
 
 const useStyles = makeStyles((theme) => ({

@@ -15,7 +15,6 @@ import {
   Menu,
   PaginationControlled,
   ProductCard,
-  SearchField,
 } from "../../component";
 import { red } from "@material-ui/core/colors";
 
@@ -83,7 +82,6 @@ class AdminSellerDetail extends Component {
   };
   setTarget = (e) => {
     console.log(e.target.value);
-    const { target } = this.state;
     const { value } = e.target;
     let clear = false;
     this.setState({ target: value });
@@ -125,7 +123,7 @@ class AdminSellerDetail extends Component {
   };
   changePage = (page) => {
     console.log("changePage");
-    const { searchingStatus, querySearch } = this.state;
+    const { searchingStatus } = this.state;
     let offset = (page - 1) * 6;
     if (searchingStatus) {
       this.getProductWithFilter(offset);

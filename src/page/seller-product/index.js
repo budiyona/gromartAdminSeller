@@ -66,7 +66,7 @@ class SellerProduct extends Component {
     console.log(e.target.value);
     const { user } = this.props;
     const { name, value } = e.target;
-    if (name == "filterBy") {
+    if (name === "filterBy") {
       this.setState({
         status: "all",
         searchField: "",
@@ -88,7 +88,6 @@ class SellerProduct extends Component {
 
   setTarget = (e) => {
     console.log(e.target.value);
-    const { target } = this.state;
     const { value } = e.target;
     let clear = false;
     this.setState({ target: value });
@@ -113,7 +112,6 @@ class SellerProduct extends Component {
       });
     });
     this.setState({ querySearch: query });
-
   };
   doSearch = () => {
     const { user } = this.props;
@@ -156,14 +154,16 @@ class SellerProduct extends Component {
   };
 
   deleteProductById = (id) => {
-    const {user}= this.props
+    const { user } = this.props;
     let choise = window.confirm("are you sure want to delete product");
     if (choise) {
       axios.delete("http://localhost:8080/api/product/" + id).then((res) => {
         if (res.status === 200) {
           alert("succesfully deleted product");
           this.getProductWithFilter(
-            "http://localhost:8080/api/product/seller/filter/" + user.userCode + "?"
+            "http://localhost:8080/api/product/seller/filter/" +
+              user.userCode +
+              "?"
           );
         } else {
           alert("delete failed");
@@ -173,16 +173,7 @@ class SellerProduct extends Component {
   };
   render() {
     const { buttonAdminStat, history, toogleMenu, classes } = this.props;
-    const {
-      products,
-      target,
-      showClear,
-      userName,
-      currentPage,
-      page,
-      filterBy,
-      status,
-    } = this.state;
+    const { products, currentPage, page, filterBy, status } = this.state;
     console.log(this.state);
     let buttonGo = (
       <Button
@@ -275,7 +266,6 @@ class SellerProduct extends Component {
           className={classes.margin}
           spacing={3}
         >
-
           <Grid item>
             <Button
               variant="contained"
@@ -316,13 +306,16 @@ class SellerProduct extends Component {
 
           {formFilter}
         </Grid>
-      
 
         <Grid container item xs={12}>
           {products &&
             products.map((product, i) => (
               <Grid item xs={4} key={i} className={classes.margin}>
-                <ProductCard history={history} product={product} deleteProductById={this.deleteProductById}></ProductCard>
+                <ProductCard
+                  history={history}
+                  product={product}
+                  deleteProductById={this.deleteProductById}
+                ></ProductCard>
               </Grid>
             ))}
         </Grid>

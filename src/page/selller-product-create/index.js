@@ -1,24 +1,17 @@
 import {
   Box,
   Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   FormControl,
   Grid,
   InputLabel,
-  Link,
   MenuItem,
   Select,
   TextField,
   withStyles,
 } from "@material-ui/core";
 import React, { Component } from "react";
-import { Menu, PaginationControlled, ProductCard } from "../../component";
+import { Menu } from "../../component";
 import axios from "axios";
-import moment from "moment";
 import { connect } from "react-redux";
 import { Alert } from "@material-ui/lab";
 import { AddAlertRounded } from "@material-ui/icons";

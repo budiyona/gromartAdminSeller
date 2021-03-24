@@ -6,14 +6,12 @@ import {
   DialogContentText,
   DialogTitle,
   Grid,
-  Link,
   TextField,
   withStyles,
 } from "@material-ui/core";
 import React, { Component } from "react";
-import { Menu, PaginationControlled, ProductCard } from "../../component";
+import { Menu} from "../../component";
 import axios from "axios";
-import moment from "moment";
 import { connect } from "react-redux";
 const useStyles = (theme) => ({
   paper: {
@@ -162,7 +160,7 @@ class SellerAccount extends Component {
   };
   doEditProfile = () => {
     const { fullname, phone, email, password } = this.state;
-    const { user, id } = this.props;
+    const { user } = this.props;
     // let date = moment(new Date()).format("YYYY-MM-DD HH:MM:SS");
     let userUpdate = {
       userName: fullname,

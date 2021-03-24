@@ -1,17 +1,12 @@
 import { Grid, withStyles } from "@material-ui/core";
-import { Alert } from "@material-ui/lab";
 import React, { Component } from "react";
 import {
-  CountCard,
   DasboardTitle,
   Menu,
-  ProductDasboard,
   ProductDasboardSeller,
 } from "../../component";
 import GradeIcon from "@material-ui/icons/Grade";
 import axios from "axios";
-import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
-import InboxIcon from "@material-ui/icons/Inbox";
 import { connect } from "react-redux";
 
 const useStyles = () => ({
@@ -70,12 +65,18 @@ class SellerHome extends Component {
   }
   getExpensiveProduct = () => {
     axios
-      .get("http://localhost:8080/api/product/most-expensive")
+      .get(
+        "http://localhost:8080/api/product/seller/most-expensive/" +
+          this.props.user.userCode
+      )
       .then((res) => this.setState({ expensiveProd: res.data }));
   };
   getCheapestProduct = () => {
     axios
-      .get("http://localhost:8080/api/product/cheapest")
+      .get(
+        "http://localhost:8080/api/product/seller/cheapest/" +
+          this.props.user.userCode
+      )
       .then((res) => this.setState({ cheapestProd: res.data }));
   };
   componentDidMount = () => {
@@ -101,11 +102,10 @@ class SellerHome extends Component {
   render() {
     console.log(this.state);
     const {
-      sellerCard,
-      productCard,
+
       expensiveProd,
       cheapestProd,
-      isExpesive,
+      
       summary,
     } = this.state;
     const { buttonAdminStat, history, toogleMenu, classes } = this.props;

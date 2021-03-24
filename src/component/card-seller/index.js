@@ -103,7 +103,7 @@ class SellerCard extends Component {
       history,
       idx,
       onChange,
-      editQty,
+      
     } = this.props;
     const { summary, modal, currentlimit } = this.state;
     return (

@@ -12,7 +12,6 @@ import IconButton from "@material-ui/core/IconButton";
 import HomeIcon from "@material-ui/icons/Home";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import LocalMallIcon from "@material-ui/icons/LocalMall";
 import { connect } from "react-redux";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import InboxIcon from "@material-ui/icons/Inbox";
@@ -116,7 +115,7 @@ class Menu extends Component {
             <Tooltip title="Home">
               <IconButton
                 color="inherit"
-                disabled={buttonAdminStat.home}
+                // disabled={buttonAdminStat.home}
                 onClick={() => this.toogleMenu("home")}
               >
                 <HomeIcon className={buttonAdminStat.home && classes.red} />
@@ -126,7 +125,7 @@ class Menu extends Component {
               <Tooltip title="Seller">
                 <IconButton
                   color="inherit"
-                  disabled={buttonAdminStat.seller}
+                  // disabled={buttonAdminStat.seller}
                   onClick={() => this.toogleMenu("seller")}
                 >
                   <SupervisorAccountIcon
@@ -138,7 +137,7 @@ class Menu extends Component {
             <Tooltip title="Product">
               <IconButton
                 color="inherit"
-                disabled={buttonAdminStat.product}
+                // disabled={buttonAdminStat.product}
                 onClick={() => this.toogleMenu("product")}
               >
                 <InboxIcon className={buttonAdminStat.product && classes.red} />
@@ -147,7 +146,7 @@ class Menu extends Component {
             <Tooltip title="Account">
               <IconButton
                 color="inherit"
-                disabled={buttonAdminStat.account}
+                // disabled={buttonAdminStat.account}
                 onClick={() => this.toogleMenu("account")}
               >
                 <AccountCircle

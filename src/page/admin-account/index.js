@@ -6,16 +6,13 @@ import {
   DialogContentText,
   DialogTitle,
   Grid,
-  Link,
   TextField,
   withStyles,
 } from "@material-ui/core";
 import React, { Component } from "react";
-import { Menu, PaginationControlled, ProductCard } from "../../component";
+import { Menu} from "../../component";
 import axios from "axios";
-import moment from "moment";
 import { connect } from "react-redux";
-import { NewReleasesSharp } from "@material-ui/icons";
 const useStyles = (theme) => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -164,7 +161,7 @@ class AdminInfo extends Component {
   };
   doEditProfile = () => {
     const { fullname, phone, email, password } = this.state;
-    const { user, id } = this.props;
+    const { user } = this.props;
     // let date = moment(new Date()).format("YYYY-MM-DD HH:MM:SS");
     let userUpdate = {
       userName: fullname,

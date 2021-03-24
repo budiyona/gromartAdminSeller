@@ -1,12 +1,8 @@
 import {
-  Button,
   FormControl,
   Grid,
-  InputLabel,
   MenuItem,
   Select,
-  TextField,
-  ThemeProvider,
   withStyles,
 } from "@material-ui/core";
 import axios from "axios";
@@ -17,7 +13,6 @@ import {
   SearchField,
   SellerCard,
 } from "../../component";
-import ClearIcon from "@material-ui/icons/Clear";
 import { connect } from "react-redux";
 const useStyles = (theme) => ({
   margin: {
@@ -218,7 +213,7 @@ class AdminSeller extends Component {
     });
   };
   render() {
-    const { buttonAdminStat, classes, history, toogleMenu, user } = this.props;
+    const { buttonAdminStat, classes, history, toogleMenu} = this.props;
     const {
       listSeller,
       statusNow,

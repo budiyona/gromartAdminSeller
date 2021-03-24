@@ -1,36 +1,22 @@
 import {
   Box,
   Button,
-  Collapse,
   FormControl,
   Grid,
   GridList,
-  GridListTile,
   Input,
-  InputLabel,
   MenuItem,
-  Paper,
   Select,
   TextField,
-  Typography,
   withStyles,
 } from "@material-ui/core";
 import axios from "axios";
 import React, { Component } from "react";
-import {
-  Menu,
-  PaginationControlled,
-  ProductCard,
-  SearchField,
-  TableProduct,
-} from "../../component";
-import FilterListIcon from "@material-ui/icons/FilterList";
+import { Menu, PaginationControlled, TableProduct } from "../../component";
 import { red } from "@material-ui/core/colors";
 import { connect } from "react-redux";
-import moment from "moment";
 import Pdf from "react-to-pdf";
-import ReactToPrint from "react-to-print";
-import { CSVLink, CSVDownload } from "react-csv";
+import { CSVLink } from "react-csv";
 
 const useStyles = (theme) => ({
   margin: {
@@ -51,11 +37,7 @@ const useStyles = (theme) => ({
   },
 });
 const ref = React.createRef();
-const options = {
-  orientation: "portrait",
-  unit: "in",
-  format: [4, 2],
-};
+
 
 class SellerReport extends Component {
   constructor(props) {
@@ -115,7 +97,7 @@ class SellerReport extends Component {
   setFilterValue = (e) => {
     console.log(e.target.value);
     const { name, value } = e.target;
-    if (name == "filterBy") {
+    if (name === "filterBy") {
       this.setState({
         status: "all",
         searchField: "",
@@ -433,7 +415,7 @@ class SellerReport extends Component {
             onClick={this.changePage}
           ></PaginationControlled> */}
           <PaginationControlled
-            page={Math.ceil(qty / 20)}
+            // page={Math.ceil(qty / 20)}
             page={currentPage}
             onChange={this.changePage}
           />

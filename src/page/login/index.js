@@ -8,16 +8,13 @@ import {
   Box,
   Button,
   Container,
-  CssBaseline,
   Grid,
   Link,
-  Paper,
   TextField,
   Typography,
 } from "@material-ui/core";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import axios from "axios";
-import Alert from "@material-ui/lab/Alert";
 import { connect } from "react-redux";
 
 const useStyles = (theme) => ({
