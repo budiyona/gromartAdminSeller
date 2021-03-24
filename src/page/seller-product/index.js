@@ -58,8 +58,6 @@ class SellerProduct extends Component {
   }
   componentDidMount() {
     const { user } = this.props;
-    // this.getSellerProduct(0);
-    // this.getSellerInfo();
     this.getProductWithFilter(
       "http://localhost:8080/api/product/seller/filter/" + user.userCode + "?"
     );
@@ -87,29 +85,7 @@ class SellerProduct extends Component {
       [name]: value,
     });
   };
-  // getSellerProduct = (offset) => {
-  //   axios
-  //     .get(
-  //       "http://localhost:8080/api/product/seller?id=" +
-  //         this.props.user.userCode +
-  //         "&offset=" +
-  //         offset
-  //     )
-  //     .then((res) =>
-  //       this.setState({
-  //         products: res.data.product,
-  //         page: Math.ceil(res.data.qty / 6),
-  //       })
-  //     );
-  // };
-  // getSellerInfo = () => {
-  //   axios
-  //     .get("http://localhost:8080/api/user/" + this.props.user.userCode)
-  //     .then((res) => {
-  //       const { userName, email } = res.data;
-  //       this.setState({ userName, email });
-  //     });
-  // };
+
   setTarget = (e) => {
     console.log(e.target.value);
     const { target } = this.state;
@@ -126,7 +102,6 @@ class SellerProduct extends Component {
       showClear: false,
       searchingStatus: false,
     });
-    // this.getSellerProduct(0);
   };
   getProductWithFilter = (query, offset = 0) => {
     let queryOffset = "&offset=" + offset;
@@ -139,28 +114,8 @@ class SellerProduct extends Component {
     });
     this.setState({ querySearch: query });
 
-    // axios
-    //   .get(
-    //     "http://localhost:8080/api/product/seller/filter?" +
-    //       "id=" +
-    //       this.props.user.userCode +
-    //       "&target=" +
-    //       this.state.target +
-    //       "&offset=" +
-    //       offset
-    //   )
-    //   .then((res) => {
-    //     console.log(res.data);
-    //     this.setState({
-    //       products: res.data.product,
-    //       page: Math.ceil(res.data.qty / 6),
-    //     });
-    //   });
-
-    // this.setState({ searchingStatus: true });
   };
   doSearch = () => {
-    // this.getProductWithFilter(0);
     const { user } = this.props;
     const { fromDate, toDate, filterBy, searchField, status } = this.state;
     let endpoint =
@@ -199,7 +154,7 @@ class SellerProduct extends Component {
       currentPage: page,
     });
   };
-  
+
   deleteProductById = (id) => {
     const {user}= this.props
     let choise = window.confirm("are you sure want to delete product");
@@ -320,22 +275,7 @@ class SellerProduct extends Component {
           className={classes.margin}
           spacing={3}
         >
-          {/* <Grid item>
-            <Button
-              variant="contained"
-              color="primary"
-              size="small"
-              onClick={() => history.push("/admin/seller")}
-            >
-              Back
-            </Button>
-          </Grid> */}
 
-          {/* <Grid item xs={6}>
-            <Typography>
-              user : {userName} ( {email} )
-            </Typography>
-          </Grid> */}
           <Grid item>
             <Button
               variant="contained"
@@ -356,38 +296,7 @@ class SellerProduct extends Component {
               Add
             </Button>
           </Grid>
-          {/* <Grid item xs={2}>
-            <FormControl>
-              <Input
-                fullWidth
-                placeholder="search..."
-                onChange={(e) => this.setTarget(e)}
-                value={target}
-                endAdornment={
-                  showClear && (
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={this.clearButton}
-                      >
-                        <ClearIcon />
-                      </IconButton>
-                    </InputAdornment>
-                  )
-                }
-              />
-            </FormControl>
-          </Grid>
-          <Grid item>
-            <Button
-              variant="contained"
-              className={classes.buttonRed}
-              size="small"
-              onClick={this.doSearch}
-            >
-              Search
-            </Button>
-          </Grid> */}
+
           <Grid item xs={2}>
             <FormControl className={classes.formControl} size="small">
               <Select
@@ -407,35 +316,7 @@ class SellerProduct extends Component {
 
           {formFilter}
         </Grid>
-        {/* <Grid
-          container
-          item
-          xs={12}
-          justify="flex-end"
-          spacing={2}
-          className={classes.margin}
-        >
-          <Grid item>
-            <Button
-              variant="contained"
-              color="primary"
-              size="small"
-              onClick={() => history.push("/seller/report")}
-            >
-              Report
-            </Button>
-          </Grid>
-          <Grid item>
-            <Button
-              variant="contained"
-              color="primary"
-              size="small"
-              onClick={() => history.push("/seller/product/create")}
-            >
-              Add
-            </Button>
-          </Grid>
-        </Grid> */}
+      
 
         <Grid container item xs={12}>
           {products &&
