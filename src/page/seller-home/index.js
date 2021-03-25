@@ -67,7 +67,7 @@ class SellerHome extends Component {
     axios
       .get(
         "http://localhost:8080/api/product/seller/most-expensive/" +
-          this.props.user.userCode
+        this.props.user.userCode
       )
       .then((res) => this.setState({ expensiveProd: res.data }));
   };
@@ -75,7 +75,7 @@ class SellerHome extends Component {
     axios
       .get(
         "http://localhost:8080/api/product/seller/cheapest/" +
-          this.props.user.userCode
+        this.props.user.userCode
       )
       .then((res) => this.setState({ cheapestProd: res.data }));
   };
@@ -89,7 +89,7 @@ class SellerHome extends Component {
     axios
       .get(
         "http://localhost:8080/api/product/seller-summary?id=" +
-          this.props.user.userCode
+        this.props.user.userCode
       )
       .then((res) => {
         // console.log("dateget", res.data.limit);
@@ -105,7 +105,7 @@ class SellerHome extends Component {
 
       expensiveProd,
       cheapestProd,
-      
+
       summary,
     } = this.state;
     const { buttonAdminStat, history, toogleMenu, classes } = this.props;
@@ -126,29 +126,29 @@ class SellerHome extends Component {
             xs={12}
             spacing={3}
             className={classes.cardCount}
-            // direction="column"
+          // direction="column"
           >
             <Grid item xs={3}>
               <DasboardTitle
-                pointer
+                // pointer
                 fullwidth
-                color="warning"
+                color="info"
                 icon={<GradeIcon fontSize="inherit" />}
                 title={"All Product : " + summary.all}
               />
             </Grid>
             <Grid item xs={3}>
               <DasboardTitle
-                pointer
+                // pointer
                 fullwidth
-                color="warning"
+                color="success"
                 icon={<GradeIcon fontSize="inherit" />}
                 title={"Product Active : " + summary.active}
               />
             </Grid>
             <Grid item xs={3}>
               <DasboardTitle
-                pointer
+                // pointer
                 fullwidth
                 color="warning"
                 icon={<GradeIcon fontSize="inherit" />}
@@ -157,16 +157,16 @@ class SellerHome extends Component {
             </Grid>
             <Grid item xs={3}>
               <DasboardTitle
-                pointer
+                // pointer
                 fullwidth
-                color="warning"
+                color="error"
                 icon={<GradeIcon fontSize="inherit" />}
                 title={"Limit : " + summary.limit}
               />
             </Grid>
             <Grid item xs={12}>
               <DasboardTitle
-                pointer
+                // pointer
                 fullwidth
                 color="warning"
                 icon={<GradeIcon fontSize="inherit" />}
@@ -184,7 +184,7 @@ class SellerHome extends Component {
             ))}
             <Grid item xs={12}>
               <DasboardTitle
-                pointer
+                // pointer
                 fullwidth
                 color="warning"
                 icon={<GradeIcon fontSize="inherit" />}

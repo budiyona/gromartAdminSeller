@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  ButtonGroup,
   FormControl,
   Grid,
   InputLabel,
@@ -14,7 +15,6 @@ import { Menu } from "../../component";
 import axios from "axios";
 import { connect } from "react-redux";
 import { Alert } from "@material-ui/lab";
-import { AddAlertRounded } from "@material-ui/icons";
 const useStyles = (theme) => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -69,6 +69,19 @@ class CreateProduct extends Component {
       errorMsg: msg,
     });
   };
+  // for (const property in product) {
+  //   if(product[property]!==null){
+  //     if (property === "productCode") {
+  //         } else if (property === "productName") {
+  //           !lengthValidation(product[property]) &&
+  //             console.log("name cannot be null");
+  //         } else {
+  //           !lengthValidation(product[property]) &&
+  //             console.log( property + " cannot be null");
+  //         }
+  //   }
+  // }
+
   handleValidation = () => {
     const { product } = this.state;
     let arrayKey = Object.keys(product);
@@ -105,7 +118,7 @@ class CreateProduct extends Component {
   saveProduct = (e) => {
     e.preventDefault();
     const { product } = this.state;
-    const { toDo, user } = this.props;
+    const { toDo, user, history } = this.props;
     this.handleValidation();
     if (toDo === "create") {
       console.log("save product");
@@ -113,7 +126,9 @@ class CreateProduct extends Component {
       axios
         .post("http://localhost:8080/api/product?id=" + user.userCode, product)
         .then((res) => {
-          AddAlertRounded(res.data);
+          console.log("save product");
+          alert(res.data);
+          history.push("/seller/product")
         })
         .catch((e) => {
           if (e.response !== undefined) {
@@ -125,7 +140,9 @@ class CreateProduct extends Component {
       axios
         .put("http://localhost:8080/api/product?id=" + user.userCode, product)
         .then((res) => {
-          AddAlertRounded(res.data);
+          console.log("update product");
+          alert(res.data);
+          history.push("/seller/product")
         })
         .catch((e) => {
           if (e.response !== undefined) {
@@ -187,8 +204,8 @@ class CreateProduct extends Component {
                   </Box>
                 </Grid>
               ) : (
-                <Box style={{ height: "48px" }} mb={2}></Box>
-              )}
+                  <Box style={{ height: "48px" }} mb={2}></Box>
+                )}
 
               <Grid item>
                 <TextField
@@ -270,16 +287,26 @@ class CreateProduct extends Component {
               </Grid>
 
               <Grid item>
-                <Button
-                  type="submit"
-                  fullWidth
-                  hidden={true}
-                  variant="contained"
-                  color="primary"
-                  className={classes.submit}
-                >
-                  {toDo === "create" ? "Save" : "Update"}
-                </Button>
+                <ButtonGroup fullWidth >
+                  <Button
+                    type="submit"
+
+                    variant="contained"
+                    color="primary"
+                    className={classes.submit}
+                  >
+                    {toDo === "create" ? "Save" : "Update"}
+                  </Button>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    color="secondary"
+                    className={classes.submit}
+                    onClick={() => history.push("/seller/product")}
+                  >
+                    Cancel
+                  </Button>
+                </ButtonGroup>
               </Grid>
             </form>
           </Grid>

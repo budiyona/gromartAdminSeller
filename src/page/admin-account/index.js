@@ -1,5 +1,6 @@
 import {
   Button,
+  ButtonGroup,
   Dialog,
   DialogActions,
   DialogContent,
@@ -10,7 +11,7 @@ import {
   withStyles,
 } from "@material-ui/core";
 import React, { Component } from "react";
-import { Menu} from "../../component";
+import { Menu } from "../../component";
 import axios from "axios";
 import { connect } from "react-redux";
 const useStyles = (theme) => ({
@@ -223,13 +224,13 @@ class AdminInfo extends Component {
       axios
         .put(
           "http://localhost:8080/api//user/change-password?id=" +
-            user.userCode +
-            "&oldPassword=" +
-            oldPassword +
-            "&newPassword=" +
-            newPassword +
-            "&newPassword2=" +
-            newPassword2
+          user.userCode +
+          "&oldPassword=" +
+          oldPassword +
+          "&newPassword=" +
+          newPassword +
+          "&newPassword2=" +
+          newPassword2
         )
         .then((res) => {
           res.status === 200 && alert("Update Success");
@@ -275,28 +276,29 @@ class AdminInfo extends Component {
             buttonAdminStat={buttonAdminStat}
           ></Menu>
         </Grid>
-        <Grid container item xs={12} className={classes.margin}>
-          <Grid container item xs={12} className={classes.menuprofile}>
-            <Button
-              size="small"
-              type="submit"
-              variant="contained"
-              color={edit ? "" : "primary"}
-              className={classes.submit}
-              onClick={this.toogleEdit}
-            >
-              edit
+        <Grid container item xs={12} >
+          <Grid container item xs={12} >
+            <ButtonGroup>
+              <Button
+                size="small"
+                type="submit"
+                variant="contained"
+                color={edit ? "" : "primary"}
+                style={{ width: 100 }}
+                onClick={this.toogleEdit}
+              >
+                edit
             </Button>
-            <Button
-              type="submit"
-              size="small"
-              variant="contained"
-              color={editPassword ? "" : "secondary"}
-              className={classes.submit}
-              onClick={this.toogleEditPassword}
-            >
-              change password
+              <Button
+                type="submit"
+                size="small"
+                variant="contained"
+                color={editPassword ? "" : "secondary"}
+                onClick={this.toogleEditPassword}
+              >
+                change password
             </Button>
+            </ButtonGroup>
           </Grid>
           {!editPassword ? (
             <Grid container item xs={6} className={classes.margin}>
@@ -410,82 +412,82 @@ class AdminInfo extends Component {
               </Dialog>
             </Grid>
           ) : (
-            <Grid container item xs={6} className={classes.margin}>
-              <form
-                className={classes.form}
-                noValidate
-                onSubmit={this.changePassword}
-              >
-                <Grid item>
-                  <TextField
-                    size="small"
-                    margin="normal"
-                    name="oldPassword"
-                    required
-                    fullWidth
-                    value={oldPassword}
-                    id="oldPassord"
-                    label="Old Password"
-                    type="password"
-                    autoFocus
-                    onChange={(e) => this.setValue(e)}
-                  />
-                </Grid>
-
-                <Grid item>
-                  <TextField
-                    margin="dense"
-                    size="small"
-                    required
-                    fullWidth
-                    value={newPassword}
-                    name="newPassword"
-                    label="New Password"
-                    type="password"
-                    id="Newpassword"
-                    onChange={(e) => this.setValue(e)}
-                    error={errorPassword}
-                    helperText={
-                      errorPassword
-                        ? "minimum 8 character, at least one number"
-                        : ""
-                    }
-                  />
-                </Grid>
-                <Grid item>
-                  <TextField
-                    margin="dense"
-                    size="small"
-                    required
-                    fullWidth
-                    value={newPassword2}
-                    name="newPassword2"
-                    label="Re Enter Password"
-                    type="password"
-                    id="NewPassword2"
-                    onChange={(e) => this.setValue(e)}
-                    error={errorRepassword}
-                    helperText={errorRepassword ? "password did not match" : ""}
-                  />
-                </Grid>
-
-                {editPassword && (
+              <Grid container item xs={6} className={classes.margin}>
+                <form
+                  className={classes.form}
+                  noValidate
+                  onSubmit={this.changePassword}
+                >
                   <Grid item>
-                    <Button
-                      type="submit"
+                    <TextField
+                      size="small"
+                      margin="normal"
+                      name="oldPassword"
+                      required
                       fullWidth
-                      hidden={true}
-                      variant="contained"
-                      color="primary"
-                      className={classes.submit}
-                    >
-                      change password
-                    </Button>
+                      value={oldPassword}
+                      id="oldPassord"
+                      label="Old Password"
+                      type="password"
+                      autoFocus
+                      onChange={(e) => this.setValue(e)}
+                    />
                   </Grid>
-                )}
-              </form>
-            </Grid>
-          )}
+
+                  <Grid item>
+                    <TextField
+                      margin="dense"
+                      size="small"
+                      required
+                      fullWidth
+                      value={newPassword}
+                      name="newPassword"
+                      label="New Password"
+                      type="password"
+                      id="Newpassword"
+                      onChange={(e) => this.setValue(e)}
+                      error={errorPassword}
+                      helperText={
+                        errorPassword
+                          ? "minimum 8 character, at least one number"
+                          : ""
+                      }
+                    />
+                  </Grid>
+                  <Grid item>
+                    <TextField
+                      margin="dense"
+                      size="small"
+                      required
+                      fullWidth
+                      value={newPassword2}
+                      name="newPassword2"
+                      label="Re Enter Password"
+                      type="password"
+                      id="NewPassword2"
+                      onChange={(e) => this.setValue(e)}
+                      error={errorRepassword}
+                      helperText={errorRepassword ? "password did not match" : ""}
+                    />
+                  </Grid>
+
+                  {editPassword && (
+                    <Grid item>
+                      <Button
+                        type="submit"
+                        fullWidth
+                        hidden={true}
+                        variant="contained"
+                        color="primary"
+                        className={classes.submit}
+                      >
+                        change password
+                    </Button>
+                    </Grid>
+                  )}
+                </form>
+              </Grid>
+            )}
         </Grid>
       </Grid>
     );

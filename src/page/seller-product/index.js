@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  ButtonGroup,
   FormControl,
   Grid,
   Input,
@@ -12,7 +13,7 @@ import {
 import axios from "axios";
 import { Menu, PaginationControlled, ProductCard } from "../../component";
 import React, { Component } from "react";
-import { red } from "@material-ui/core/colors";
+import { blue, green, red } from "@material-ui/core/colors";
 import { connect } from "react-redux";
 
 const useStyles = (theme) => ({
@@ -76,8 +77,8 @@ class SellerProduct extends Component {
       if (value === "all") {
         this.getProductWithFilter(
           "http://localhost:8080/api/product/seller/filter/" +
-            user.userCode +
-            "?"
+          user.userCode +
+          "?"
         );
       }
     }
@@ -143,8 +144,8 @@ class SellerProduct extends Component {
     } else {
       this.getProductWithFilter(
         "http://localhost:8080/api/product/seller/filter/" +
-          user.userCode +
-          "?",
+        user.userCode +
+        "?",
         offset
       );
     }
@@ -162,8 +163,8 @@ class SellerProduct extends Component {
           alert("succesfully deleted product");
           this.getProductWithFilter(
             "http://localhost:8080/api/product/seller/filter/" +
-              user.userCode +
-              "?"
+            user.userCode +
+            "?"
           );
         } else {
           alert("delete failed");
@@ -267,24 +268,26 @@ class SellerProduct extends Component {
           spacing={3}
         >
           <Grid item>
-            <Button
-              variant="contained"
-              color="primary"
-              size="small"
-              onClick={() => history.push("/seller/report")}
-            >
-              Report
+            <ButtonGroup>
+              <Button
+                variant="contained"
+                color="primary"
+                size="small"
+                onClick={() => history.push("/seller/report")}
+                style={{ width: 100 }}
+              >
+                Report
             </Button>
-          </Grid>
-          <Grid item>
-            <Button
-              variant="contained"
-              color="primary"
-              size="small"
-              onClick={() => history.push("/seller/product/create")}
-            >
-              Add
+              <Button
+                variant="contained"
+
+                size="small"
+                style={{ width: 100, backgroundColor: blue[500], color: 'white' }}
+                onClick={() => history.push("/seller/product/create")}
+              >
+                Add
             </Button>
+            </ButtonGroup>
           </Grid>
 
           <Grid item xs={2}>
