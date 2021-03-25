@@ -323,7 +323,7 @@ class SellerProduct extends Component {
               </Grid>
             ))}
         </Grid>
-        <Grid container item xs={12}>
+        <Grid container item xs={12} style={{ bottom: 0, position: "fixed", marginBottom: 1 }}>
           <PaginationControlled
             count={page}
             page={currentPage}
