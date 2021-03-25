@@ -69,37 +69,38 @@ class CreateProduct extends Component {
       errorMsg: msg,
     });
   };
-  // for (const property in product) {
-  //   if(product[property]!==null){
-  //     if (property === "productCode") {
-  //         } else if (property === "productName") {
-  //           !lengthValidation(product[property]) &&
-  //             console.log("name cannot be null");
-  //         } else {
-  //           !lengthValidation(product[property]) &&
-  //             console.log( property + " cannot be null");
-  //         }
-  //   }
-  // }
+
 
   handleValidation = () => {
     const { product } = this.state;
-    let arrayKey = Object.keys(product);
+    // let arrayKey = Object.keys(product);
     let newErrorMsg = "";
-    arrayKey.map((key) => {
-      if (product[key] !== null) {
-        if (key === "productCode") {
-        } else if (key === "productName") {
-          console.log("k1", key);
-          !this.lengthValidation(product[key]) &&
+    // arrayKey.map((key) => {
+    //   if (product[key] !== null) {
+    //     if (key === "productCode") {
+    //     } else if (key === "productName") {
+    //       console.log("k1", key);
+    //       !this.lengthValidation(product[key]) &&
+    //         (newErrorMsg = "name cannot be null");
+    //     } else {
+    //       console.log("k2", key);
+    //       !this.lengthValidation(product[key]) &&
+    //         (newErrorMsg = key + " cannot be null");
+    //     }
+    //   }
+    // });
+    for (const property in product) {
+      if (product[property] !== null) {
+        if (property === "productCode") {
+        } else if (property === "productName") {
+          !this.lengthValidation(product[property]) &&
             (newErrorMsg = "name cannot be null");
         } else {
-          console.log("k2", key);
-          !this.lengthValidation(product[key]) &&
-            (newErrorMsg = key + " cannot be null");
+          !this.lengthValidation(product[property]) &&
+            (newErrorMsg = property + " cannot be null");
         }
       }
-    });
+    }
     this.setState({
       errorMsg: newErrorMsg,
     });

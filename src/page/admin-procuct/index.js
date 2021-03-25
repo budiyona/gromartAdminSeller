@@ -1,8 +1,11 @@
 import {
   Box,
   Button,
+  ButtonGroup,
   Collapse,
+  FormControl,
   Grid,
+  Input,
   MenuItem,
   Paper,
   Select,
@@ -18,7 +21,7 @@ import {
   SearchField,
 } from "../../component";
 import FilterListIcon from "@material-ui/icons/FilterList";
-import { red } from "@material-ui/core/colors";
+import { blue, red } from "@material-ui/core/colors";
 
 const useStyles = () => ({
   margin: {
@@ -29,6 +32,10 @@ const useStyles = () => ({
   },
   redOn: {
     color: red[200],
+  },
+  buttonRed: {
+    backgroundColor: red[500],
+    color: "white",
   },
 });
 class AdminProduct extends Component {
@@ -64,10 +71,16 @@ class AdminProduct extends Component {
       toDate: "",
 
       querySearch: "",
+      filterBy: "all", status: "",
+      page: 0,
+      filterBy: "all",
+      currentPage: 1,
+      status: "all"
     };
   }
   componentDidMount() {
-    this.getAllProduct(0);
+    // this.getAllProduct(0);
+    this.getProductWithFilter("http://localhost:8080/api/product/filter?productName=")
   }
   getAllProduct = (offset) => {
     axios
@@ -84,12 +97,13 @@ class AdminProduct extends Component {
     const { searchingStatus, querySearch } = this.state;
     console.log("changePage");
     let offset = (page - 1) * 6;
+    this.getProductWithFilter(querySearch, offset);
     // console.log(offset, page);
-    if (searchingStatus) {
-      this.getProductWithFilter(querySearch, offset);
-    } else {
-      this.getAllProduct(offset);
-    }
+    // if (searchingStatus) {
+    //   this.getProductWithFilter(querySearch, offset);
+    // } else {
+    //   this.getAllProduct(offset);
+    // }
     this.setState({
       currentPage: page,
     });
@@ -102,47 +116,78 @@ class AdminProduct extends Component {
   };
   setFilterValue = (e) => {
     console.log(e.target.value);
+    console.log(e.target.name);
     const { name, value } = e.target;
+    if (name === "filterBy") {
+      this.setState({
+        status: "all",
+        searchField: "",
+        fromDate: "",
+        toDate: "",
+      });
+      if (value === "all") {
+        this.getAllProduct(0)
+      }
+    }
     this.setState({
       [name]: value,
     });
   };
-
-  doSearch = (target) => {
-    console.log("doSearch target", target);
-    const {
-      filterByStatus,
-      filterByCode,
-      filterByName,
-      filterByDate,
-      statusFilter,
-      fromDate,
-      toDate,
-    } = this.state;
-    let endpoint = "http://localhost:8080/api/product/filter?";
-    let arrayEndPoint = [];
-    if (filterByStatus) {
-      arrayEndPoint.push("status=" + statusFilter);
+  doSearch = () => {
+    const { user } = this.props;
+    const { fromDate, toDate, filterBy, searchField, status } = this.state;
+    let endpoint =
+      "http://localhost:8080/api/product/filter?";
+    if (filterBy === "productName") {
+      endpoint += "productName=" + searchField;
+    } else if (filterBy === "productCode") {
+      endpoint += "productCode=" + searchField;
+    } else if (filterBy === "status") {
+      endpoint += "status=" + status;
+    } else if (filterBy === "date") {
+      endpoint += "fromDate=" + fromDate + "&toDate=" + toDate;
     }
-    if (filterByName) {
-      arrayEndPoint.push("productName=" + target);
-    }
-    if (filterByCode) {
-      arrayEndPoint.push("productCode=" + target);
-    }
-    if (filterByDate) {
-      arrayEndPoint.push("fromDate=" + fromDate + "&toDate=" + toDate);
-    }
-    if (!filterByStatus && !filterByName && !filterByCode && !filterByDate) {
-      arrayEndPoint.push("productName=" + target);
-    }
-
-    let finalEndPoint = endpoint + arrayEndPoint.join("&");
-
-    console.log(finalEndPoint);
-    this.getProductWithFilter(finalEndPoint, 0);
+    console.log(endpoint);
+    this.getProductWithFilter(endpoint);
+    this.setState({
+      currentPage: 1,
+    });
   };
-  getProductWithFilter = (query, offset) => {
+  // doSearch = (target) => {
+  //   console.log("doSearch target", target);
+  //   const {
+  //     filterByStatus,
+  //     filterByCode,
+  //     filterByName,
+  //     filterByDate,
+  //     statusFilter,
+  //     fromDate,
+  //     toDate,
+  //   } = this.state;
+  //   let endpoint = "http://localhost:8080/api/product/filter?";
+  //   let arrayEndPoint = [];
+  //   if (filterByStatus) {
+  //     arrayEndPoint.push("status=" + statusFilter);
+  //   }
+  //   if (filterByName) {
+  //     arrayEndPoint.push("productName=" + target);
+  //   }
+  //   if (filterByCode) {
+  //     arrayEndPoint.push("productCode=" + target);
+  //   }
+  //   if (filterByDate) {
+  //     arrayEndPoint.push("fromDate=" + fromDate + "&toDate=" + toDate);
+  //   }
+  //   if (!filterByStatus && !filterByName && !filterByCode && !filterByDate) {
+  //     arrayEndPoint.push("productName=" + target);
+  //   }
+
+  //   let finalEndPoint = endpoint + arrayEndPoint.join("&");
+
+  //   console.log(finalEndPoint);
+  //   this.getProductWithFilter(finalEndPoint, 0);
+  // };
+  getProductWithFilter = (query, offset = 0) => {
     let queryOffset = "&offset=" + offset;
     axios.get(query + queryOffset).then((res) => {
       console.log(res.data);
@@ -176,7 +221,76 @@ class AdminProduct extends Component {
       filterByName,
       filterByDate,
       statusFilter,
+      filterBy, status
     } = this.state;
+    let buttonGo = (
+      <Button
+        size="small"
+        variant="contained"
+        className={classes.buttonRed}
+        onClick={this.doSearch}
+      >
+        Go
+      </Button>
+    );
+    let formFilter;
+    if (filterBy === "productName" || filterBy === "productCode") {
+      formFilter = (
+        <>
+          <Grid item xs={3}>
+            <Input fullWidth
+              placeholder="search"
+              style={{ height: "29px" }}
+              name="searchField"
+              onChange={(e) => this.setFilterValue(e)}
+            />
+          </Grid>
+          {buttonGo}
+        </>
+      );
+    } else if (filterBy === "status") {
+      formFilter = (
+        <>
+          <Grid item xs={3}>
+            <FormControl className={classes.formControl} size="small" fullWidth>
+              <Select
+                size="small"
+                value={status}
+                name="status"
+                onChange={(e) => this.setFilterValue(e)}
+              >
+                <MenuItem value="all">All</MenuItem>
+                <MenuItem value="active">Active</MenuItem>
+                <MenuItem value="inactive">Inactive</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          {buttonGo}
+        </>
+      );
+    } else if (filterBy === "date") {
+      formFilter = (
+        <>
+          <TextField
+            type="date"
+            name="fromDate"
+            onChange={(e) => this.setFilterValue(e)}
+          ></TextField>
+          <Box ml={2} mr={2}>
+            to
+          </Box>
+          <TextField
+            type="date"
+            name="toDate"
+            onChange={(e) => this.setFilterValue(e)}
+            style={{ marginRight: "12px" }}
+          ></TextField>
+          {buttonGo}
+        </>
+      );
+    } else {
+      formFilter = <Grid item xs={3}></Grid>;
+    }
     return (
       <Grid
         container
@@ -191,7 +305,40 @@ class AdminProduct extends Component {
             buttonAdminStat={buttonAdminStat}
           ></Menu>
         </Grid>
+
+
         <Grid
+          container
+          item
+          xs={12}
+          justify="flex-start"
+          alignItems="center"
+          className={classes.margin}
+          spacing={3}
+        >
+
+
+          <Grid item xs={3}>
+            <FormControl className={classes.formControl} size="small" fullWidth>
+              <Select
+                size="small"
+                value={filterBy}
+                name="filterBy"
+                onChange={(e) => this.setFilterValue(e)}
+              >
+                <MenuItem value="all">Filter</MenuItem>
+                <MenuItem value="productName">Name</MenuItem>
+                <MenuItem value="productCode">Code</MenuItem>
+                <MenuItem value="status">Status</MenuItem>
+                <MenuItem value="date">Date</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+
+          {formFilter}
+        </Grid>
+
+        {/* <Grid
           container
           item
           xs={12}
@@ -300,8 +447,8 @@ class AdminProduct extends Component {
               </Grid>
             </Paper>
           </Collapse>
-        </Grid>
-        <Grid container item xs={12} spacing={2}>
+        </Grid> */}
+        <Grid container item xs={12} spacing={2} >
           {listProduct &&
             listProduct.map((prod, i) => (
               <Grid
@@ -309,7 +456,6 @@ class AdminProduct extends Component {
                 xs={4}
                 key={i}
                 className={classes.margin}
-                align="center"
               >
                 <ProductCard product={prod}></ProductCard>
               </Grid>

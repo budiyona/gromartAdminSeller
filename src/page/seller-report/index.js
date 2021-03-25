@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  ButtonGroup,
   FormControl,
   Grid,
   GridList,
@@ -21,7 +22,7 @@ import { CSVLink } from "react-csv";
 
 const useStyles = (theme) => ({
   margin: {
-    marginBottom: theme.spacing(0),
+    marginBottom: theme.spacing(1),
   },
   redOff: {
     color: red[500],
@@ -36,6 +37,9 @@ const useStyles = (theme) => ({
     backgroundColor: red[500],
     color: "white",
   },
+  pagebreak: {
+    display: "none"
+  }
 });
 const ref = React.createRef();
 
@@ -76,8 +80,8 @@ class SellerReport extends Component {
   componentDidMount() {
     this.getProductWithFilter(
       "http://localhost:8080/api/product/report/" +
-        this.props.user.userCode +
-        "?"
+      this.props.user.userCode +
+      "?"
     );
   }
   changePage = (event, page) => {
@@ -135,7 +139,7 @@ class SellerReport extends Component {
   };
   getProductWithFilter = (query) => {
     axios.get(query).then((res) => {
-      console.log("data get", res.data);
+      // console.log("data get", res.data);
       this.setState({
         listProduct: res.data.product,
         qty: res.data.qty,
@@ -146,12 +150,12 @@ class SellerReport extends Component {
   resetData = () => {
     this.getProductWithFilter(
       "http://localhost:8080/api/product/report/" +
-        this.props.user.userCode +
-        "?"
+      this.props.user.userCode +
+      "?"
     );
   };
   render() {
-    console.log(this.state);
+    // console.log(this.state);
     const { buttonAdminStat, history, toogleMenu, classes, user } = this.props;
     const {
       listProduct,
@@ -172,19 +176,27 @@ class SellerReport extends Component {
     ];
     const data = [];
     listProduct.length > 0 &&
-      listProduct.map((product) => {
-        data.push({
-          productCode: product.productCode,
-          productName: product.productName,
-          price: product.price,
-          stock: product.stock,
-          description: product.description,
-          seller: {
-            userCode: product.seller.userCode,
-            userName: product.seller.userName,
-          },
-        });
+      listProduct.forEach((product) => {
+        let userToAdd = {}
+        for (const property in product) {
+          userToAdd = { ...userToAdd, [property]: product[property] }
+        }
+        data.push(userToAdd)
       });
+    // listProduct.length > 0 &&
+    //   listProduct.forEach((product) => {
+    //     data.push({
+    //       productCode: product.productCode,
+    //       productName: product.productName,
+    //       price: product.price,
+    //       stock: product.stock,
+    //       description: product.description,
+    //       seller: {
+    //         userCode: product.seller.userCode,
+    //         userName: product.seller.userName,
+    //       },
+    //     });
+    //   });
     const csvExport = {
       data: data,
       headers: header,
@@ -258,8 +270,49 @@ class SellerReport extends Component {
     } else {
       formFilter = <Grid item xs={3}></Grid>;
     }
-    console.log(formFilter);
-    console.log("hadeerr", header);
+    // console.log(formFilter);
+    // console.log("hadeerr", header);
+
+    let maxPaper = Math.ceil(listProduct.length / 5)
+    let dataToDisplay = []
+    let i = 0
+    while (i < maxPaper) {
+      // console.log("max", maxPaper);
+      dataToDisplay.push(
+        <Box
+          border={1}
+          style={{
+            width: "793.7007874px",
+            height: "1126.019685px",
+            marginLeft: "auto",
+            marginRight: "auto",
+            marginTop: "0px",
+            // marginBottom: "10px",
+          }}
+        >
+          <div
+            style={{
+              marginLeft: "20px",
+              marginRight: "20px",
+              marginTop: "20px",
+              marginBottom: "10px",
+            }}
+          >
+            <TableProduct
+              user={user}
+              page={{
+                pageTotal: maxPaper,
+                pageNow: i + 1,
+              }}
+              listProduct={listProduct.slice(i * 5, (i * 5) + 5)}
+            />
+            <div className={classes.pageBreak} />
+          </div>
+        </Box>
+      )
+      i++
+    }
+
     return (
       <Grid
         container
@@ -308,8 +361,9 @@ class SellerReport extends Component {
           justify="space-between"
           alignItems="flex-end"
           spacing={2}
+          className={classes.margin}
         >
-          <Grid item xs={8}>
+          <Grid item xs={6}>
             <Button
               size="small"
               variant="contained"
@@ -320,7 +374,7 @@ class SellerReport extends Component {
               BACK
             </Button>
           </Grid>
-          <Grid item xs={2} align="right">
+          {/* <Grid item xs={2} align="right">
             <Pdf targetRef={ref} filename="code-example.pdf">
               {({ toPdf }) => (
                 <Button
@@ -334,38 +388,40 @@ class SellerReport extends Component {
                 </Button>
               )}
             </Pdf>
-          </Grid>
-          <Grid item xs={2} align="right">
-            <ReactToPrint
-              trigger={() => {
-                // NOTE: could just as easily return <SomeComponent />. Do NOT pass an `onClick` prop
-                // to the root node of the returned component as it will be overwritten.
-                return (
-                  <Button
-                    size="small"
-                    variant="contained"
-                    color="primary"
-                    disableElevation
-                  >
-                    EXPORT PDF2
-                  </Button>
-                );
-              }}
-              content={() => this.componentRef}
-            />
-          </Grid>
+          </Grid> */}
+          <Grid item xs={4} align="right">
+            <ButtonGroup>
+              <ReactToPrint
+                trigger={() => {
+                  // NOTE: could just as easily return <SomeComponent />. Do NOT pass an `onClick` prop
+                  // to the root node of the returned component as it will be overwritten.
+                  return (
+                    <Button
+                      style={{ borderRadius: "5px 0px 0px 5px" }}
+                      size="small"
+                      variant="contained"
+                      color="primary"
+                      disableElevation
+                    >
+                      PRINT TO PDF
+                    </Button>
+                  );
+                }}
+                content={() => this.componentRef}
+              />
 
-          <Grid item xs={2} align="right">
-            <CSVLink {...csvExport}>
-              <Button
-                size="small"
-                variant="contained"
-                color="primary"
-                disableElevation
-              >
-                Export CSV
+              <CSVLink {...csvExport} style={{ textDecoration: "none" }}>
+                <Button
+                  style={{ borderRadius: "0px 5px 5px 0px" }}
+                  size="small"
+                  variant="contained"
+                  color="secondary"
+                  disableElevation
+                >
+                  Export CSV
               </Button>
-            </CSVLink>
+              </CSVLink>
+            </ButtonGroup>
           </Grid>
         </Grid>
         <Grid
@@ -383,69 +439,7 @@ class SellerReport extends Component {
               cols={3}
             >
               <div ref={(el) => (this.componentRef = el)}>
-                <Box
-                  border={1}
-                  // ref={ref}
-                  // ref={(el) => (this.componentRef = el)}
-                  style={{
-                    width: "793.7007874px",
-                    height: "1112px",
-                    marginLeft: "auto",
-                    marginRight: "auto",
-                    marginTop: "10px",
-                    marginBottom: "10px",
-                  }}
-                >
-                  <div
-                    style={{
-                      marginLeft: "20px",
-                      marginRight: "20px",
-                      marginTop: "20px",
-                      marginBottom: "10px",
-                    }}
-                  >
-                    <TableProduct
-                      user={user}
-                      page={{
-                        pageTotal: Math.ceil(qty / 20),
-                        pageNow: offset / 20 + 1,
-                      }}
-                      listProduct={listProduct.slice(offset, offset + 20)}
-                    />
-                  </div>
-                </Box>
-
-                <Box
-                  border={1}
-                  // ref={ref}
-                  // ref={(el) => (this.componentRef = el)}
-                  style={{
-                    width: "793.7007874px",
-                    height: "1112px",
-                    marginLeft: "auto",
-                    marginRight: "auto",
-                    marginTop: "10px",
-                    marginBottom: "10px",
-                  }}
-                >
-                  <div
-                    style={{
-                      marginLeft: "20px",
-                      marginRight: "20px",
-                      marginTop: "20px",
-                      marginBottom: "10px",
-                    }}
-                  >
-                    <TableProduct
-                      user={user}
-                      page={{
-                        pageTotal: Math.ceil(qty / 20),
-                        pageNow: offset / 20 + 1,
-                      }}
-                      listProduct={listProduct.slice(offset, offset + 20)}
-                    />
-                  </div>
-                </Box>
+                {dataToDisplay.map(e => e)}
               </div>
             </GridList>
           </Grid>

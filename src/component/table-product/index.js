@@ -14,7 +14,7 @@ class TableProduct extends Component {
   }
   render() {
     const { rows } = this.state;
-    console.log("rowwss", rows);
+    // console.log("rowwss", rows);
     const { listProduct, page, user } = this.props;
     return (
       <>

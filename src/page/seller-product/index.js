@@ -55,6 +55,7 @@ class SellerProduct extends Component {
       page: 0,
       filterBy: "all",
       currentPage: 1,
+      status: "all"
     };
   }
   componentDidMount() {
