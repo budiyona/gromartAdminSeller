@@ -14,8 +14,9 @@ public interface ProductRepository {
     Map<String, Object> filterProduct(String conditionQty, String conditionObject);
     int countProductByStatus(String status);
     Map<String, Integer> getSellerSummary(String id);
-
     Map<String, Object> filterProductOnSeller(String id, String target, int offset);
+    List<Product>  getProductOfSeller(String id, String sort);
+
     int createProduct(Product product, String idSeller);
     boolean isProductNameExist(String idSeller, String productName);
     boolean isProductExist(String productId);

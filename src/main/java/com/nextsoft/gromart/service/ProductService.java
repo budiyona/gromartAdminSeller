@@ -22,4 +22,5 @@ public interface ProductService {
     int updateProduct(Product product);
     Map<String, Object> productReport(String id, Map<String,String> paramsFilter);
     int deleteProduct(String id);
+    List<Product> getProductOfSeller(String id, String status);
 }

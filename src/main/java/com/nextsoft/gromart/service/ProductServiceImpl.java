@@ -261,7 +261,7 @@ public class ProductServiceImpl implements ProductService {
         }
         System.out.println(condition);
 //        System.out.println(params.get("field").equals("userName"));
-        return productRepository.filterProduct(condition, condition+limit);
+        return productRepository.filterProduct(condition, condition + limit);
     }
 
     @Override
@@ -309,10 +309,10 @@ public class ProductServiceImpl implements ProductService {
         }
 
         if (paramsFilter.containsKey("productName")) {
-             arrayCondition.add("productName like '%" + paramsFilter.get("productName") + "%'");
+            arrayCondition.add("productName like '%" + paramsFilter.get("productName") + "%'");
         }
         if (paramsFilter.containsKey("productCode")) {
-                arrayCondition.add("productCode like '%" + paramsFilter.get("productCode") + "%'");
+            arrayCondition.add("productCode like '%" + paramsFilter.get("productCode") + "%'");
 
         }
         if (paramsFilter.containsKey("fromDate") && paramsFilter.containsKey("toDate")) {
@@ -335,5 +335,14 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public int deleteProduct(String id) {
         return productRepository.deleteProduct(id);
+    }
+
+    @Override
+    public List<Product> getProductOfSeller(String id, String status) {
+        String sort="asc";
+        if (status.equals("expensive")) {
+            sort="desc";
+        }
+        return productRepository.getProductOfSeller(id,sort);
     }
 }

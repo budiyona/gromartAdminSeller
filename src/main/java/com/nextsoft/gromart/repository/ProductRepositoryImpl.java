@@ -308,6 +308,26 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public int deleteProduct(String id) {
-        return jdbcTemplate.update("delete from product where productCode = ? ",Integer.class,id);
+        return jdbcTemplate.update("delete from product where productCode = ? ",id);
+    }
+
+    @Override
+    public List<Product> getProductOfSeller(String id, String sort) {
+        //select * from product p join user u on p.userCode = u.userCode where p.userCode ='SELLER-2021-03-05-01' order by price desc
+        return jdbcTemplate.query(
+                "select * from product p join user u on p.userCode = u.userCode order by price "+sort +" limit 3",
+                (rs, i) -> new Product(
+                        rs.getString("productCode"),
+                        rs.getString("productName"),
+                        rs.getDouble("price"),
+                        rs.getInt("stock"),
+                        rs.getString("description"),
+                        rs.getString("createdDate"),
+                        rs.getString("status"),
+                        new User(
+                                rs.getString("userCode"),
+                                rs.getString("userName")
+                        )
+                ));
     }
 }
