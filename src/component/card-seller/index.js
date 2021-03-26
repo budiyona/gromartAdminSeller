@@ -32,7 +32,7 @@ const useStyles = () => ({
   },
   media: {
     height: 0,
-    paddingTop: "56.25%", // 16:9
+    paddingTop: "45.25%", // 16:9
   },
   avatar: {
     backgroundColor: red[500],
@@ -46,6 +46,10 @@ const useStyles = () => ({
   blue: {
     color: blue[500],
   },
+  miniPadding: {
+    // backgroundColor: "black"
+    padding: 12
+  }
 });
 
 class SellerCard extends Component {
@@ -108,43 +112,51 @@ class SellerCard extends Component {
     const { summary, modal, currentlimit } = this.state;
     return (
       <Card className={classes.root}>
-        <CardHeader
-          avatar={
-            <Avatar aria-label="recipe" className={classes.avatar}>
-              {user.userName[0]}
-            </Avatar>
-          }
+        <CardHeader className={classes.miniPadding}
+          // avatar={
+          //   <Avatar aria-label="recipe" className={classes.avatar}>
+          //     {user.userName[0]}
+          //   </Avatar>
+          // }
           title={user.userName}
-          subheader={moment(user.createdDate).format("MMMM DD, YYYY")}
+          subheader={user.userCode + " ("
+            + moment(user.createdDate).format("MMMM DD, YYYY") + ")"}
         />
+        {/* <Typography variant="body2" color="textSecondary" component="p">
+          {user.userCode}
+        </Typography> */}
         <CardMedia
           style={{ cursor: "pointer" }}
           className={classes.media}
           image={person}
           onClick={() => history.push("/admin/product/" + user.userCode)}
         />
-        <CardContent>
+        {/* <CardContent className={classes.miniPadding}>
           <Typography variant="body2" color="textSecondary" component="p">
             {user.userCode}
           </Typography>
-        </CardContent>
-        <CardActions disableSpacing>
-          <IconButton onClick={onClick} aria-label="share">
-            <DoneIcon
-              className={
-                user.status === "active"
-                  ? classes.green
-                  : user.status === "inactive"
-                  ? classes.red
-                  : classes.blue
-              }
-            />
-          </IconButton>
-          <Typography variant="subtitle2">{user.status}</Typography>
-          <IconButton onClick={this.toggleModal} aria-label="share">
-            <InboxIcon className={classes.blue} />
-          </IconButton>
-          <Typography variant="subtitle2">Limit</Typography>
+        </CardContent> */}
+        <CardActions disableSpacing >
+          <div style={{ display: "flex", alignItems: "center", width: "50%" }}>
+            <IconButton onClick={onClick} aria-label="share" size="small">
+              <DoneIcon
+                className={
+                  user.status === "active"
+                    ? classes.green
+                    : user.status === "inactive"
+                      ? classes.red
+                      : classes.blue
+                }
+              />
+            </IconButton>
+            <Typography variant="subtitle2">{user.status}</Typography>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", width: "50%" }}>
+            <IconButton onClick={this.toggleModal} aria-label="share" size="small">
+              <InboxIcon className={classes.blue} />
+            </IconButton>
+            <Typography variant="subtitle2">Limit</Typography>
+          </div>
         </CardActions>
         <Dialog
           open={modal}

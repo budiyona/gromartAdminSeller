@@ -68,7 +68,7 @@ export default function SearchField(props) {
       <div>
         <Button
           variant="contained"
-          className={classes.buttonRed}
+          color="secondary"
           size="small"
           onClick={() => props.onClick(target)}
         >

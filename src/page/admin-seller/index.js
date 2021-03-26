@@ -1,8 +1,12 @@
 import {
+  Box,
+  Button,
   FormControl,
   Grid,
+  Input,
   MenuItem,
   Select,
+  TextField,
   withStyles,
 } from "@material-ui/core";
 import axios from "axios";
@@ -14,12 +18,17 @@ import {
   SellerCard,
 } from "../../component";
 import { connect } from "react-redux";
-const useStyles = (theme) => ({
+import { red } from "@material-ui/core/colors";
+const useStyles = () => ({
   margin: {
-    marginBottom: theme.spacing(2),
+    marginBottom: "5px",
   },
   formControl: {
     width: "100%",
+  },
+  buttonRed: {
+    backgroundColor: red[500],
+    color: "white",
   },
 });
 class AdminSeller extends Component {
@@ -50,10 +59,14 @@ class AdminSeller extends Component {
 
       querySearch: "",
       searchingStatus: false,
+      filterBy: "all",
+      currentPage: 1,
+      status: "all"
     };
   }
   componentDidMount() {
-    this.getAllSeller(0);
+    // this.getAllSeller(0);
+    this.getSellerWithFilter("http://localhost:8080/api/user/filter?userName=")
     this.countSellerByStatus("all");
   }
   countSellerByStatus = (status) => {
@@ -99,11 +112,11 @@ class AdminSeller extends Component {
       axios
         .put(
           "http://localhost:8080/api/user/status?id=" +
-            newUser.userCode +
-            "&status=" +
-            status[newStatusIndex] +
-            "&idAdmin=" +
-            user.userCode
+          newUser.userCode +
+          "&status=" +
+          status[newStatusIndex] +
+          "&idAdmin=" +
+          user.userCode
         )
         .then((res) => {
           if (res.status) {
@@ -150,11 +163,11 @@ class AdminSeller extends Component {
         axios
           .put(
             "http://localhost:8080/api/user/product-limit?id=" +
-              seller.userCode +
-              "&limitProduct=" +
-              seller.productLimit +
-              "&idAdmin=" +
-              user.userCode
+            seller.userCode +
+            "&limitProduct=" +
+            seller.productLimit +
+            "&idAdmin=" +
+            user.userCode
           )
           .then((res) => {
             if (res.status) {
@@ -166,32 +179,61 @@ class AdminSeller extends Component {
       alert("limit must be more than or equal with active");
     }
   };
-  changePage = (event,page) => {
+  changePage = (event, page) => {
     console.log("changePage");
     const { searchingStatus, querySearch } = this.state;
     let offset = (page - 1) * 6;
-    if (searchingStatus) {
-      this.getSellerWithFilter(querySearch, offset);
-    } else {
-      this.getAllSeller(offset);
-    }
+    this.getSellerWithFilter(querySearch, offset);
     this.setState({
       currentPage: page,
     });
   };
   doSearch = (target) => {
-    const { filterStatus, filterRole } = this.state;
-    let endpoint =
-      "http://localhost:8080/api/user/filter?status=" +
-      filterStatus +
-      "&field=" +
-      filterRole +
-      "&target=" +
-      target;
-    // console.log("endpointnksjdfndj", endpoint);
-    this.getSellerWithFilter(endpoint, 0);
+    const {
+      filterStatus,
+      filterRole,
+      filterBy,
+      fromDate,
+      toDate,
+      status,
+      searchField } = this.state;
+    let endpoint = "http://localhost:8080/api/user/filter?"
+    // let endpoint =
+    //   "http://localhost:8080/api/user/filter?status=" +
+    //   filterStatus +
+    //   "&field=" +
+    //   filterRole +
+    //   "&target=" +
+    //   target;
+    switch (filterBy) {
+      case "userName":
+        endpoint += "userName=" + searchField;
+        break
+      case "userCode":
+        endpoint += "userCode=" + searchField;
+        break
+      case "status":
+        endpoint += "status=" + status;
+        break
+      case "date":
+        endpoint += "fromDate=" + fromDate + "&toDate=" + toDate;
+        break
+    }
+    // if (filterBy === "userName") {
+    //   endpoint += "userName=" + searchField;
+    // } else if (filterBy === "userCode") {
+    //   endpoint += "userCode=" + searchField;
+    // } else if (filterBy === "status") {
+    //   endpoint += "status=" + status;
+    // } else if (filterBy === "date") {
+    //   endpoint += "fromDate=" + fromDate + "&toDate=" + toDate;
+    // }
+    this.getSellerWithFilter(endpoint);
+    this.setState({
+      currentPage: 1,
+    });
   };
-  getSellerWithFilter = (query, offset) => {
+  getSellerWithFilter = (query, offset = 0) => {
     let queryOffset = "&offset=" + offset;
     axios.get(query + queryOffset).then((res) => {
       console.log(res.data);
@@ -205,6 +247,17 @@ class AdminSeller extends Component {
   setFilterValue = (e) => {
     const { name, value } = e.target;
     console.log(value, name);
+    if (name === "filterBy") {
+      this.setState({
+        status: "all",
+        searchField: "",
+        fromDate: "",
+        toDate: "",
+      });
+      if (value === "all") {
+        this.getSellerWithFilter("http://localhost:8080/api/user/filter?status=")
+      }
+    }
     this.setState({
       [name]: value,
     });
@@ -217,7 +270,7 @@ class AdminSeller extends Component {
     });
   };
   render() {
-    const { buttonAdminStat, classes, history, toogleMenu} = this.props;
+    const { buttonAdminStat, classes, history, toogleMenu } = this.props;
     const {
       listSeller,
       statusNow,
@@ -225,14 +278,87 @@ class AdminSeller extends Component {
       currentPage,
       filterStatus,
       filterRole,
+      filterBy,
+      // currentPage,
+      status
     } = this.state;
-
+    let buttonGo = (
+      <Button
+        size="small"
+        variant="contained"
+        color="secondary"
+        onClick={this.doSearch}
+      >
+        Go
+      </Button>
+    );
+    let formFilter;
+    if (filterBy === "userName" || filterBy === "userCode") {
+      formFilter = (
+        <>
+          <Grid item xs={3}>
+            <Input fullWidth
+              placeholder="search"
+              style={{ height: "29px" }}
+              name="searchField"
+              onChange={(e) => this.setFilterValue(e)}
+            />
+          </Grid>
+          {buttonGo}
+        </>
+      );
+    } else if (filterBy === "status") {
+      formFilter = (
+        <>
+          <Grid item xs={3}>
+            <FormControl className={classes.formControl} size="small" fullWidth>
+              <Select
+                size="small"
+                value={status}
+                name="status"
+                onChange={(e) => this.setFilterValue(e)}
+              >
+                <MenuItem value="all">All</MenuItem>
+                <MenuItem value="active">Active</MenuItem>
+                <MenuItem value="inactive">Inactive</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          {buttonGo}
+        </>
+      );
+    } else if (filterBy === "date") {
+      formFilter = (
+        <>
+          <TextField
+            type="date"
+            name="fromDate"
+            onChange={(e) => this.setFilterValue(e)}
+          ></TextField>
+          <Box ml={2} mr={2}>
+            to
+          </Box>
+          <TextField
+            type="date"
+            name="toDate"
+            onChange={(e) => this.setFilterValue(e)}
+            style={{ marginRight: "12px" }}
+          ></TextField>
+          {buttonGo}
+        </>
+      );
+    } else {
+      formFilter = <Grid item xs={3}></Grid>;
+    }
     return (
+
       <Grid
         container
         direction="row"
         justify="space-between"
         alignItems="center"
+        style={{ margin: 0 }}
+
       >
         <Grid container item xs={12}>
           <Menu
@@ -242,7 +368,7 @@ class AdminSeller extends Component {
           />
         </Grid>
 
-        <Grid
+        {/* <Grid
           container
           item
           xs={12}
@@ -284,6 +410,36 @@ class AdminSeller extends Component {
               resetData={this.resetData}
             ></SearchField>
           </Grid>
+        </Grid> */}
+        <Grid
+          container
+          item
+          xs={12}
+          justify="flex-start"
+          alignItems="center"
+          className={classes.margin}
+          spacing={3}
+        >
+
+
+          <Grid item xs={3}>
+            <FormControl className={classes.formControl} size="small" fullWidth>
+              <Select
+                size="small"
+                value={filterBy}
+                name="filterBy"
+                onChange={(e) => this.setFilterValue(e)}
+              >
+                <MenuItem value="all">Filter</MenuItem>
+                <MenuItem value="userName">Name</MenuItem>
+                <MenuItem value="userCode">Code</MenuItem>
+                <MenuItem value="status">Status</MenuItem>
+                <MenuItem value="date">Date</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+
+          {formFilter}
         </Grid>
 
         <Grid container item xs={12}>
@@ -294,7 +450,7 @@ class AdminSeller extends Component {
                 xs={4}
                 className={classes.margin}
                 key={i}
-                align="center"
+              // align="center"
               >
                 <SellerCard
                   idx={i}
@@ -312,7 +468,7 @@ class AdminSeller extends Component {
 
         <Grid container item xs={12}>
           <PaginationControlled count={page}
-          page={currentPage} onChange={this.changePage} />
+            page={currentPage} onChange={this.changePage} />
         </Grid>
       </Grid>
     );

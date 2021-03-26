@@ -1,10 +1,15 @@
 import {
+  Box,
   Button,
+  ButtonGroup,
   FormControl,
   Grid,
   IconButton,
   Input,
   InputAdornment,
+  MenuItem,
+  Select,
+  TextField,
   Typography,
   withStyles,
 } from "@material-ui/core";
@@ -52,6 +57,7 @@ class AdminSellerDetail extends Component {
 
       searchingStatus: false,
       page: 0,
+      currentPage: 1,
     };
   }
   componentDidMount() {
@@ -63,9 +69,9 @@ class AdminSellerDetail extends Component {
     axios
       .get(
         "http://localhost:8080/api/product/seller?id=" +
-          this.props.id +
-          "&offset=" +
-          offset
+        this.props.id +
+        "&offset=" +
+        offset
       )
       .then((res) =>
         this.setState({
@@ -101,12 +107,12 @@ class AdminSellerDetail extends Component {
     axios
       .get(
         "http://localhost:8080/api//product/seller/filter?" +
-          "id=" +
-          this.props.id +
-          "&target=" +
-          this.state.target +
-          "&offset=" +
-          offset
+        "id=" +
+        this.props.id +
+        "&target=" +
+        this.state.target +
+        "&offset=" +
+        offset
       )
       .then((res) => {
         console.log(res.data);
@@ -131,10 +137,107 @@ class AdminSellerDetail extends Component {
       this.getSellerProduct(offset);
     }
   };
+  setFilterValue = (e) => {
+    console.log(e.target.value);
+    console.log(e.target.name);
+    // const { name, value } = e.target;
+    // if (name === "filterBy") {
+    //   this.setState({
+    //     status: "all",
+    //     searchField: "",
+    //     fromDate: "",
+    //     toDate: "",
+    //   });
+    //   if (value === "all") {
+    //     this.getProductWithFilter("http://localhost:8080/api/product/filter?productName=")
+    //   }
+    // }
+    // this.setState({
+    //   [name]: value,
+    // });
+  };
   render() {
     const { buttonAdminStat, history, toogleMenu, classes } = this.props;
-    const { products, target, showClear, userName, email, page } = this.state;
+    const {
+      products,
+      target,
+      showClear,
+      userName,
+      email,
+      page,
+      currentPage,
+      filterBy,
+      status
+    } = this.state;
     console.log(this.state);
+    let buttonGo = (
+      <Button
+        size="small"
+        variant="contained"
+        color="secondary"
+        onClick={this.doSearch}
+      >
+        Go
+      </Button>
+    );
+    let formFilter;
+    if (filterBy === "productName" || filterBy === "productCode") {
+      formFilter = (
+        <>
+          <Grid item xs={3}>
+            <Input fullWidth
+              placeholder="search"
+              style={{ height: "29px" }}
+              name="searchField"
+              onChange={(e) => this.setFilterValue(e)}
+            />
+          </Grid>
+          {buttonGo}
+        </>
+      );
+    } else if (filterBy === "status") {
+      formFilter = (
+        <>
+          <Grid item xs={3}>
+            <FormControl className={classes.formControl} size="small" fullWidth>
+              <Select
+                size="small"
+                value={status}
+                name="status"
+                onChange={(e) => this.setFilterValue(e)}
+              >
+                <MenuItem value="all">All</MenuItem>
+                <MenuItem value="active">Active</MenuItem>
+                <MenuItem value="inactive">Inactive</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          {buttonGo}
+        </>
+      );
+    } else if (filterBy === "date") {
+      formFilter = (
+        <>
+          <TextField
+            type="date"
+            name="fromDate"
+            onChange={(e) => this.setFilterValue(e)}
+          ></TextField>
+          <Box ml={2} mr={2}>
+            to
+          </Box>
+          <TextField
+            type="date"
+            name="toDate"
+            onChange={(e) => this.setFilterValue(e)}
+            style={{ marginRight: "12px" }}
+          ></TextField>
+          {buttonGo}
+        </>
+      );
+    } else {
+      formFilter = <Grid item xs={3}></Grid>;
+    }
     return (
       <Grid
         container
@@ -150,7 +253,7 @@ class AdminSellerDetail extends Component {
           ></Menu>
         </Grid>
         <Grid container item xs={12} className={classes.margin}>
-          <Grid item xs={3}>
+          <Grid item xs={2}>
             <Button
               variant="contained"
               color="primary"
@@ -160,12 +263,22 @@ class AdminSellerDetail extends Component {
               Back
             </Button>
           </Grid>
-          <Grid item xs={5}>
+          <Grid item xs={4}>
+            <ButtonGroup>
+              <Button size="small" color="primary">
+                {userName}
+              </Button>
+              <Button size="small">
+                {email}
+              </Button>
+            </ButtonGroup>
+          </Grid>
+          {/* <Grid item xs={5}>
             <Typography>
               user : {userName} ( {email} )
             </Typography>
-          </Grid>
-          <Grid item xs={3}>
+          </Grid> */}
+          {/* <Grid item xs={3}>
             <FormControl>
               <Input
                 fullWidth
@@ -187,16 +300,35 @@ class AdminSellerDetail extends Component {
               />
             </FormControl>
           </Grid>
+
           <Grid item xs={1}>
             <Button
               variant="contained"
-              className={classes.buttonRed}
+              color="secondary"
               size="small"
               onClick={this.doSearch}
             >
               Search
             </Button>
+          </Grid> */}
+          <Grid item xs={3}>
+            <FormControl className={classes.formControl} size="small" fullWidth>
+              <Select
+                size="small"
+                value={filterBy}
+                name="filterBy"
+                onChange={(e) => this.setFilterValue(e)}
+              >
+                <MenuItem value="all">Filter</MenuItem>
+                <MenuItem value="productName">Name</MenuItem>
+                <MenuItem value="productCode">Code</MenuItem>
+                <MenuItem value="status">Status</MenuItem>
+                <MenuItem value="date">Date</MenuItem>
+              </Select>
+            </FormControl>
           </Grid>
+          {formFilter}
+
         </Grid>
         <Grid container item xs={12}>
           {products &&
@@ -207,7 +339,10 @@ class AdminSellerDetail extends Component {
             ))}
         </Grid>
         <Grid container item xs={12}>
-          <PaginationControlled page={page} onClick={this.changePage} />
+          <PaginationControlled
+            count={page}
+            page={currentPage}
+            onClick={this.changePage} />
         </Grid>
       </Grid>
     );

@@ -18,7 +18,7 @@ const useStyles = () => ({
   },
   media: {
     height: 0,
-    paddingTop: "40.25%", // 16:9
+    paddingTop: "41.25%", // 16:9
   },
   avatar: {
     backgroundColor: red[500],

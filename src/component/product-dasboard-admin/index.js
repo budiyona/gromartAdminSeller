@@ -9,16 +9,18 @@ import product from "../../static/product.jpg";
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
+    width: "300px"
   },
   details: {
     display: "flex",
     flexDirection: "column",
+    width: "55%"
   },
   content: {
     flex: "1 0 auto",
   },
   cover: {
-    width: 151,
+    width: "45%",
   },
 }));
 
@@ -29,10 +31,10 @@ export default function ProductDasboard(props) {
     <Card className={classes.root}>
       <div className={classes.details}>
         <CardContent className={classes.content}>
-          <Typography component="h5" variant="h5">
+          <Typography variant="h6">
             {props.title}
           </Typography>
-          <Typography variant="subtitle1" color="textSecondary">
+          <Typography variant="caption" color="textSecondary">
             Rp.{props.price}
           </Typography>
         </CardContent>

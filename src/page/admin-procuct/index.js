@@ -20,7 +20,6 @@ import {
   ProductCard,
   SearchField,
 } from "../../component";
-import FilterListIcon from "@material-ui/icons/FilterList";
 import { blue, red } from "@material-ui/core/colors";
 
 const useStyles = () => ({
@@ -71,39 +70,21 @@ class AdminProduct extends Component {
       toDate: "",
 
       querySearch: "",
-      filterBy: "all", status: "",
-      page: 0,
       filterBy: "all",
+      page: 0,
       currentPage: 1,
       status: "all"
     };
   }
   componentDidMount() {
-    // this.getAllProduct(0);
     this.getProductWithFilter("http://localhost:8080/api/product/filter?productName=")
   }
-  getAllProduct = (offset) => {
-    axios
-      .get("http://localhost:8080/api/product?offset=" + offset)
-      .then((res) => {
-        this.setState({
-          listProduct: res.data.product,
-          page: Math.ceil(res.data.qty / 6),
-        });
-        // console.log(res.data.product);
-      });
-  };
+
   changePage = (event, page) => {
     const { searchingStatus, querySearch } = this.state;
     console.log("changePage");
     let offset = (page - 1) * 6;
     this.getProductWithFilter(querySearch, offset);
-    // console.log(offset, page);
-    // if (searchingStatus) {
-    //   this.getProductWithFilter(querySearch, offset);
-    // } else {
-    //   this.getAllProduct(offset);
-    // }
     this.setState({
       currentPage: page,
     });
@@ -126,7 +107,7 @@ class AdminProduct extends Component {
         toDate: "",
       });
       if (value === "all") {
-        this.getAllProduct(0)
+        this.getProductWithFilter("http://localhost:8080/api/product/filter?productName=")
       }
     }
     this.setState({
@@ -153,40 +134,6 @@ class AdminProduct extends Component {
       currentPage: 1,
     });
   };
-  // doSearch = (target) => {
-  //   console.log("doSearch target", target);
-  //   const {
-  //     filterByStatus,
-  //     filterByCode,
-  //     filterByName,
-  //     filterByDate,
-  //     statusFilter,
-  //     fromDate,
-  //     toDate,
-  //   } = this.state;
-  //   let endpoint = "http://localhost:8080/api/product/filter?";
-  //   let arrayEndPoint = [];
-  //   if (filterByStatus) {
-  //     arrayEndPoint.push("status=" + statusFilter);
-  //   }
-  //   if (filterByName) {
-  //     arrayEndPoint.push("productName=" + target);
-  //   }
-  //   if (filterByCode) {
-  //     arrayEndPoint.push("productCode=" + target);
-  //   }
-  //   if (filterByDate) {
-  //     arrayEndPoint.push("fromDate=" + fromDate + "&toDate=" + toDate);
-  //   }
-  //   if (!filterByStatus && !filterByName && !filterByCode && !filterByDate) {
-  //     arrayEndPoint.push("productName=" + target);
-  //   }
-
-  //   let finalEndPoint = endpoint + arrayEndPoint.join("&");
-
-  //   console.log(finalEndPoint);
-  //   this.getProductWithFilter(finalEndPoint, 0);
-  // };
   getProductWithFilter = (query, offset = 0) => {
     let queryOffset = "&offset=" + offset;
     axios.get(query + queryOffset).then((res) => {
@@ -227,7 +174,7 @@ class AdminProduct extends Component {
       <Button
         size="small"
         variant="contained"
-        className={classes.buttonRed}
+        color="secondary"
         onClick={this.doSearch}
       >
         Go
@@ -337,117 +284,6 @@ class AdminProduct extends Component {
 
           {formFilter}
         </Grid>
-
-        {/* <Grid
-          container
-          item
-          xs={12}
-          justify="space-between"
-          className={classes.margin}
-        >
-          <Grid item>
-            <FilterListIcon
-              style={{ cursor: "pointer" }}
-              onClick={() => this.setState({ filterSwitch: !filterSwitch })}
-              className={!filterSwitch ? classes.redOff : classes.redOn}
-            ></FilterListIcon>
-          </Grid>
-          <Grid item>
-            <SearchField
-              onClick={this.doSearch}
-              resetData={this.resetData}
-            ></SearchField>
-          </Grid>
-        </Grid>
-        <Grid item xs={12} className={classes.margin}>
-          <Collapse in={filterSwitch}>
-            <Paper elevation={4} className={classes.paper}>
-              <Grid
-                container
-                xs={12}
-                alignItems="center"
-                direction="column"
-                spacing={1}
-              >
-                <Grid container item direction="column" xs={4}>
-                  <Button
-                    variant="contained"
-                    size="small"
-                    color={filterByCode ? "primary" : "default"}
-                    onClick={() => this.toogleFilter("filterByCode")}
-                  >
-                    Product Code
-                  </Button>
-                </Grid>
-                <Grid container item direction="column" xs={4}>
-                  <Button
-                    variant="contained"
-                    size="small"
-                    color={filterByName ? "primary" : "default"}
-                    onClick={() => this.toogleFilter("filterByName")}
-                  >
-                    Product Name
-                  </Button>
-                </Grid>
-                <Grid container item direction="column" xs={4}>
-                  <Button
-                    variant="contained"
-                    size="small"
-                    color={filterByStatus ? "primary" : "default"}
-                    onClick={() => this.toogleFilter("filterByStatus")}
-                  >
-                    Status
-                  </Button>
-                  <Select
-                    value={statusFilter}
-                    name="statusFilter"
-                    disabled={!filterByStatus}
-                    onChange={(e) => this.setFilterValue(e)}
-                  >
-                    <MenuItem value="active">Active</MenuItem>
-                    <MenuItem value="inactive">InActive</MenuItem>
-                  </Select>
-                </Grid>
-                <Grid container item direction="column" xs={4}>
-                  <Button
-                    variant="contained"
-                    size="small"
-                    color={filterByDate ? "primary" : "default"}
-                    onClick={() => this.toogleFilter("filterByDate")}
-                  >
-                    Date
-                  </Button>
-                </Grid>
-
-                <Grid container item xs={12}>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      margin: "auto",
-                    }}
-                  >
-                    <TextField
-                      type="date"
-                      name="fromDate"
-                      disabled={!filterByDate}
-                      onChange={(e) => this.setFilterValue(e)}
-                    ></TextField>
-                    <Box ml={2} mr={2}>
-                      to
-                    </Box>
-                    <TextField
-                      type="date"
-                      name="toDate"
-                      disabled={!filterByDate}
-                      onChange={(e) => this.setFilterValue(e)}
-                    ></TextField>
-                  </div>
-                </Grid>
-              </Grid>
-            </Paper>
-          </Collapse>
-        </Grid> */}
         <Grid container item xs={12} spacing={2} >
           {listProduct &&
             listProduct.map((prod, i) => (

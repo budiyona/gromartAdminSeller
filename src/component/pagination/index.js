@@ -1,5 +1,5 @@
 // import React from "react";
-import {  withStyles } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Pagination from "@material-ui/lab/Pagination";
 import React, { Component } from "react";
@@ -71,7 +71,7 @@ class PaginationControlled extends Component {
     return (
       <div className={classes.root}>
         <div>
-          <Typography className={classes.page}>Page: {page}</Typography>
+          <Typography className={classes.page} variant="body2">Page: {page}</Typography>
         </div>
         <div className={classes.center}>
           <Pagination count={count} page={page} onChange={onChange} />
