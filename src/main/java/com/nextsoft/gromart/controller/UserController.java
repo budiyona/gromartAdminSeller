@@ -135,12 +135,7 @@ public class UserController {
 
     @GetMapping("/user/filter")
     public ResponseEntity<?> filterUser(@RequestParam Map<String, Object> params) {
-        Map<String, Object> map = userService.filterUser(params);
-
-        if ((int) map.get("qty") >= 0) {
-            return new ResponseEntity<>(map, HttpStatus.OK);
-        }
-        return new ResponseEntity<>("bad request", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(userService.filterUser(params), HttpStatus.OK);
     }
 
     @PutMapping("/user/change-password")
@@ -153,9 +148,9 @@ public class UserController {
             if (cekPassword) {
                 if (newPassword.equals(newPassword2)) {
                     int changePassword = userService.changePassword(id, newPassword);
-                    if(changePassword==1){
+                    if (changePassword == 1) {
                         return new ResponseEntity<>("Success Change Password", HttpStatus.OK);
-                    }else {
+                    } else {
                         return new ResponseEntity<>("password has not changed", HttpStatus.OK);
                     }
 

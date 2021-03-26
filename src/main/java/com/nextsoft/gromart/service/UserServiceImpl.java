@@ -77,40 +77,44 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Map<String, Object> filterUser(Map<String, Object> params) {
+    public Map<String, Object> filterUser(Map<String, Object> paramsFilter) {
+
+        //status, userName, userCode
         Map<String, Object> map = new HashMap<>();
         String condition = "";
         String limit = " limit 6 offset ";
-        ArrayList<String> arrayCondition = new ArrayList<>();
-        if (params.containsKey("offset")) {
-            limit += params.get("offset");
+        String sort = " order by field(status, 'requested','active','inactive' )";
+        if (paramsFilter.containsKey("offset")) {
+            limit += paramsFilter.get("offset");
         } else {
             limit = "";
         }
 
-        if (params.containsKey("status")) {
-            switch ((String) params.get("status")){
+        if (paramsFilter.containsKey("status")) {
+            switch ((String) paramsFilter.get("status")) {
                 case "active":
                 case "inactive":
-                    arrayCondition.add("status='" + params.get("status")+"'");
+                    condition = " where status='" + paramsFilter.get("status") + "'";
                     break;
                 default:
                     break;
             }
         }
 
-        if (params.containsKey("field")) {
-            if (params.get("field").equals("userName")) {
-                arrayCondition.add("userName like '%" + params.get("target")+"%'");
-            } else {
-                arrayCondition.add("userCode like '%" + params.get("target")+"%'");
-            }
+        if (paramsFilter.containsKey("userName")) {
+            condition ="where userName like '%" + paramsFilter.get("userName") + "%'";
         }
+        if (paramsFilter.containsKey("userCode")) {
+            condition ="where userCode like '%" + paramsFilter.get("userCode") + "%'";
 
-        condition= String.join(" and ",arrayCondition);
-//        System.out.println(condition);
-//        System.out.println(params.get("field").equals("userName"));
-        return userRepository.filterUser(condition, condition + limit);
+        }
+        if (paramsFilter.containsKey("fromDate") && paramsFilter.containsKey("toDate")) {
+            condition ="where  date(createdDate) between '" + paramsFilter.get("fromDate") + "'" +
+                    " and '" + paramsFilter.get("toDate") + "'";
+
+        }
+        System.out.println(condition);
+        return userRepository.filterUser(condition, condition +sort+ limit);
     }
 
     @Override

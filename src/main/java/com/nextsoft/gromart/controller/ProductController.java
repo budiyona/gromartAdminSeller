@@ -40,7 +40,6 @@ public class ProductController {
     @GetMapping("/product/filter")
     public ResponseEntity<?> getNumberOfProduct(@RequestParam Map<String, String> params) {
         Map<String, Object> map = productService.filterProduct(params);
-//        int qty= (int) map.get("qty");
 
         if ((int) map.get("qty") >= 0) {
             return new ResponseEntity<>(map, HttpStatus.OK);

@@ -41,32 +41,6 @@ public class UserRepositoryImpl implements UserRepository {
             return null;
         }
     }
-
-//    @Override
-//    public User finByEmail(String email) {
-//        String query = "select * from user where email = ?";
-//        try {
-//            User target = jdbcTemplate.queryForObject(query, (resultSet, i) ->
-//                            new User(
-//                                    resultSet.getString("userCode"),
-//                                    resultSet.getString("userName"),
-//                                    resultSet.getString("phone"),
-//                                    resultSet.getString("email"),
-//                                    resultSet.getString("password"),
-//                                    resultSet.getString("status"),
-//                                    resultSet.getString("createdBy"),
-//                                    resultSet.getString("createdDate"),
-//                                    resultSet.getString("updateBy"),
-//                                    resultSet.getString("updateDate")
-//                            ),
-//                    email);
-//            return target;
-//
-//        } catch (Exception e) {
-//            return null;
-//        }
-//    }
-
     @Override
     public boolean isEmailExist(String email) {
         String query = "select count(*) from user where email=?";
@@ -208,14 +182,14 @@ public class UserRepositoryImpl implements UserRepository {
 
             map.put("qty",
                     jdbcTemplate.queryForObject(
-                            "select count(*) from (select * from user where userCode like 'seller%') u where " + conditionQty,
+                            "select count(*) from (select * from user where userCode like 'seller%') u " + conditionQty,
                             Integer.class)
             );
         } catch (Exception e) {
             e.printStackTrace();
         }
         map.put("seller", jdbcTemplate.query(
-                "select * from (select * from user where userCode like 'seller%') u where " + conditionObj,
+                "select * from (select * from user where userCode like 'seller%') u " + conditionObj ,
                 (rs, i) -> new User(
                         rs.getString("userCode"),
                         rs.getString("userName"),
