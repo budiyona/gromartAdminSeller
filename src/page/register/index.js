@@ -18,6 +18,7 @@ import { Copyright } from "../../component";
 import axios from "axios";
 import { Redirect } from "react-router";
 import { connect } from "react-redux";
+import productImg from "../../static/bg.jpg";
 const useStyles = (theme) => ({
   paper: {
     marginTop: theme.spacing(1),
@@ -38,6 +39,9 @@ const useStyles = (theme) => ({
   submit: {
     margin: theme.spacing(2, 0, 2),
   },
+  flexContainer: {
+    display: 'flex'
+  }
 });
 
 class Register extends Component {
@@ -200,127 +204,139 @@ class Register extends Component {
       );
     };
     return (
-      <Container component="main" maxWidth="xs">
-        <Paper elevation={3}>
-          <div className={classes.paper}>
-            <Avatar className={classes.avatar}>
-              <LockOutlinedIcon />
-            </Avatar>
-            <Typography component="h5" variant="h5">
-              Register
+      <div className={classes.flexContainer}
+        style={{
+          backgroundImage: `url('${productImg}')`,
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover"
+        }}>
+        <Container component="main" maxWidth="sm" style={{ margin: "auto" }}>
+          <Paper elevation={3}
+            style={{
+              borderRadius: "10px",
+              paddingTop: "15px",
+              paddingBottom: "15px"
+            }}>
+            <div className={classes.paper}>
+              <Avatar className={classes.avatar}>
+                <LockOutlinedIcon />
+              </Avatar>
+              <Typography component="h5" variant="h5">
+                Register
             </Typography>
 
-            {error() ? (
-              <Box style={{ height: "10px" }} mt={2}>
-                <Typography variant="caption" color="error" align="center">
-                  {errorMsg}
-                </Typography>
-              </Box>
-            ) : (
-              <Box style={{ height: "10px" }} mt={2}></Box>
-            )}
-            <form
-              className={classes.form}
-              noValidate
-              onSubmit={this.doRegister}
-            >
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <TextField
-                    autoComplete="fname"
-                    size="small"
-                    name="fullname"
-                    required
-                    fullWidth
-                    id="fullname"
-                    label="Name"
-                    autoFocus
-                    onChange={(e) => this.setValue(e)}
-                    error={errorFullname}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    size="small"
-                    required
-                    fullWidth
-                    id="phone"
-                    label="phone"
-                    name="phone"
-                    autoComplete="phone"
-                    onChange={(e) => this.setValue(e)}
-                    error={errorPhone}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    size="small"
-                    required
-                    fullWidth
-                    id="email"
-                    label="Email Address"
-                    name="email"
-                    autoComplete="email"
-                    onChange={(e) => this.setValue(e)}
-                    error={errorEmail}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    size="small"
-                    required
-                    fullWidth
-                    name="password"
-                    label="Password"
-                    type="password"
-                    id="password"
-                    autoComplete="current-password"
-                    onChange={(e) => this.setValue(e)}
-                    error={errorPassword}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    size="small"
-                    required
-                    fullWidth
-                    name="repassword"
-                    label="Reenter Password"
-                    type="password"
-                    id="repassword"
-                    autoComplete="current-password"
-                    onChange={(e) => this.setValue(e)}
-                    error={errorRepassword}
-                  />
-                </Grid>
-              </Grid>
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-                className={classes.submit}
+              {error() ? (
+                <Box style={{ height: "10px" }} mt={2}>
+                  <Typography variant="caption" color="error" align="center">
+                    {errorMsg}
+                  </Typography>
+                </Box>
+              ) : (
+                  <Box style={{ height: "10px" }} mt={2}></Box>
+                )}
+              <form
+                className={classes.form}
+                noValidate
+                onSubmit={this.doRegister}
               >
-                Register
-              </Button>
-              <Grid container justify="flex-end">
-                <Grid item>
-                  <Link
-                    href="#"
-                    variant="body2"
-                    onClick={() => this.props.history.push("/login")}
-                  >
-                    Already have an account? Login
-                  </Link>
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <TextField
+                      autoComplete="fname"
+                      size="small"
+                      name="fullname"
+                      required
+                      fullWidth
+                      id="fullname"
+                      label="Name"
+                      autoFocus
+                      onChange={(e) => this.setValue(e)}
+                      error={errorFullname}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      size="small"
+                      required
+                      fullWidth
+                      id="phone"
+                      label="phone"
+                      name="phone"
+                      autoComplete="phone"
+                      onChange={(e) => this.setValue(e)}
+                      error={errorPhone}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      size="small"
+                      required
+                      fullWidth
+                      id="email"
+                      label="Email Address"
+                      name="email"
+                      autoComplete="email"
+                      onChange={(e) => this.setValue(e)}
+                      error={errorEmail}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      size="small"
+                      required
+                      fullWidth
+                      name="password"
+                      label="Password"
+                      type="password"
+                      id="password"
+                      autoComplete="current-password"
+                      onChange={(e) => this.setValue(e)}
+                      error={errorPassword}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      size="small"
+                      required
+                      fullWidth
+                      name="repassword"
+                      label="Reenter Password"
+                      type="password"
+                      id="repassword"
+                      autoComplete="current-password"
+                      onChange={(e) => this.setValue(e)}
+                      error={errorRepassword}
+                    />
+                  </Grid>
                 </Grid>
-              </Grid>
-            </form>
-            <Box mt={2}>
-              <Copyright></Copyright>
-            </Box>
-          </div>
-        </Paper>
-      </Container>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  className={classes.submit}
+                >
+                  Register
+              </Button>
+                <Grid container justify="flex-end">
+                  <Grid item>
+                    <Link
+                      href="#"
+                      variant="body2"
+                      onClick={() => this.props.history.push("/login")}
+                    >
+                      Already have an account? Login
+                  </Link>
+                  </Grid>
+                </Grid>
+              </form>
+              <Box mt={2}>
+                <Copyright></Copyright>
+              </Box>
+            </div>
+          </Paper>
+        </Container>
+      </div>
     );
   }
 }

@@ -49,7 +49,7 @@ class AdminSeller extends Component {
           productLimit: 0,
         },
       ],
-      status: ["requested", "active", "inactive"],
+      ListStatus: ["requested", "active", "inactive"],
       statusNow: "requested",
       page: 0,
       currentPage: 1,
@@ -88,9 +88,9 @@ class AdminSeller extends Component {
       );
   };
   toogleStatus = (idx) => {
-    const { status, listSeller } = this.state;
+    const { ListStatus, listSeller } = this.state;
     const { user } = this.props;
-    let newStatusIndex = status.findIndex(
+    let newStatusIndex = ListStatus.findIndex(
       (el) => listSeller[idx].status === el
     );
     if (newStatusIndex >= 2) {
@@ -100,13 +100,13 @@ class AdminSeller extends Component {
     }
     let newUser = {
       ...listSeller[idx],
-      status: status[newStatusIndex],
+      status: ListStatus[newStatusIndex],
     };
-    let newListSeller = listSeller;
+    let newListSeller = [...listSeller];
     newListSeller.splice(idx, 1, newUser);
     if (
       window.confirm(
-        "are you sure to change " + newUser.userName + " product Qty"
+        "are you sure to change " + newUser.userName + " status"
       )
     ) {
       axios
@@ -114,7 +114,7 @@ class AdminSeller extends Component {
           "http://localhost:8080/api/user/status?id=" +
           newUser.userCode +
           "&status=" +
-          status[newStatusIndex] +
+          ListStatus[newStatusIndex] +
           "&idAdmin=" +
           user.userCode
         )

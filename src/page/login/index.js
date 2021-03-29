@@ -8,18 +8,25 @@ import {
   Box,
   Button,
   Container,
+  FormControl,
   Grid,
+  IconButton,
+  InputAdornment,
+  InputLabel,
   Link,
+  OutlinedInput,
   TextField,
   Typography,
 } from "@material-ui/core";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import axios from "axios";
 import { connect } from "react-redux";
-
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import productImg from "../../static/bg.jpg";
 const useStyles = (theme) => ({
   paper: {
-    marginTop: theme.spacing(8),
+    // marginTop: theme.spacing(8),
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -35,6 +42,9 @@ const useStyles = (theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  flexContainer: {
+    display: 'flex'
+  }
 });
 
 class Login extends Component {
@@ -44,6 +54,7 @@ class Login extends Component {
       isVerified: false,
       email: "",
       password: "",
+      showPassword: false
     };
   }
   recaptchaLoaded = () => {
@@ -65,9 +76,9 @@ class Login extends Component {
       axios
         .post(
           "http://localhost:8080/api/login?email=" +
-            email +
-            "&password=" +
-            password
+          email +
+          "&password=" +
+          password
         )
         .then((res) => {
           let payload = {
@@ -96,6 +107,11 @@ class Login extends Component {
       [e.target.name]: e.target.value,
     });
   };
+  tooglePassword = () => {
+    this.setState({
+      showPassword: !this.state.showPassword
+    })
+  }
   render() {
     console.log(this.state);
     console.log("PROPS", this.props);
@@ -107,86 +123,127 @@ class Login extends Component {
       return <Redirect to="/seller/home" />;
     }
     return (
-      <Container component="main" maxWidth="xs">
-        <div className={classes.paper}>
-          <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Login
-          </Typography>
-          {/* <Alert severity="error" style={{display:'none'}}>This is an error alert — check it out!</Alert> */}
-          <form className={classes.form} noValidate onSubmit={this.doLogin}>
-            <TextField
-              required
-              variant="outlined"
-              margin="normal"
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-              onChange={(e) => this.setValue(e)}
-            />
-            <TextField
-              onChange={(e) => this.setValue(e)}
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-            />
-            <Grid
-              container
-              item
-              alignItems="center"
-              xs={12}
-              style={{ display: "flex" }}
-            >
-              <div style={{ margin: "auto" }}>
-                <Recaptcha
-                  sitekey="6Lfg3W0aAAAAAH_wKiduCg2ecTcyehEFQVpAf66N"
-                  render="explicit"
-                  onloadCallback={this.recaptchaLoaded}
-                  verifyCallback={this.verifyCallback}
-                />
-              </div>
-            </Grid>
-            {/* <Recaptcha
-              sitekey="6Lfg3W0aAAAAAH_wKiduCg2ecTcyehEFQVpAf66N"
-              render="explicit"
-              onloadCallback={this.recaptchaLoaded}
-              verifyCallback={this.verifyCallback}
-            /> */}
+      <div className={classes.flexContainer}
+        style={{
+          backgroundImage: `url('${productImg}')`,
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover",
 
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-            >
-              LogIn
+        }}
+      >
+        <Container component="main" maxWidth="xs"
+          style={{
+            margin: "auto",
+            backgroundColor: "white",
+            borderRadius: "10px",
+            paddingTop: "15px",
+            paddingBottom: "15px"
+          }}>
+          <div className={classes.paper}>
+            <Avatar className={classes.avatar}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              Login
+          </Typography>
+            {/* <Alert severity="error" style={{display:'none'}}>This is an error alert — check it out!</Alert> */}
+            <form className={classes.form} noValidate onSubmit={this.doLogin}>
+              <TextField
+                required
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                autoFocus
+                onChange={(e) => this.setValue(e)}
+              />
+              {/* <TextField
+                onChange={(e) => this.setValue(e)}
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+              /> */}
+              <FormControl variant="outlined" fullWidth style={{ marginBottom: "10px" }}>
+                <InputLabel >Password</InputLabel>
+                <OutlinedInput
+                  name="password"
+                  type={this.state.showPassword ? 'text' : 'password'}
+                  onChange={(e) => this.setValue(e)}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={this.tooglePassword}
+                        edge="end"
+                      >
+                        {this.state.showPassword ? <Visibility /> : <VisibilityOff />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                  labelWidth={100}
+                />
+              </FormControl>
+              <div style={{ display: 'flex' }}>
+                <div style={{ margin: "auto" }}>
+                  <Recaptcha
+                    sitekey="6Lfg3W0aAAAAAH_wKiduCg2ecTcyehEFQVpAf66N"
+                    render="explicit"
+                    onloadCallback={this.recaptchaLoaded}
+                    verifyCallback={this.verifyCallback}
+                  />
+                </div>
+              </div>
+              {/* <Grid
+                container
+                item
+                alignItems="center"
+                xs={12}
+                style={{ display: "flex" }}
+              >
+                <div style={{ margin: "auto" }}>
+                  <Recaptcha
+                    sitekey="6Lfg3W0aAAAAAH_wKiduCg2ecTcyehEFQVpAf66N"
+                    render="explicit"
+                    onloadCallback={this.recaptchaLoaded}
+                    verifyCallback={this.verifyCallback}
+                  />
+                </div>
+              </Grid> */}
+
+
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+              >
+                LogIn
             </Button>
-            <Grid container>
-              <Grid item xs></Grid>
-              <Grid item>
-                <Link href="/register" variant="body2">
-                  {"Don't have an account? Register"}
-                </Link>
+              <Grid container>
+                <Grid item xs></Grid>
+                <Grid item>
+                  <Link href="/register" variant="body2">
+                    {"Don't have an account? Register"}
+                  </Link>
+                </Grid>
               </Grid>
-            </Grid>
-          </form>
-        </div>
-        <Box mt={8}>
-          <Copyright />
-        </Box>
-      </Container>
+            </form>
+          </div>
+          <Box mt={8}>
+            <Copyright />
+          </Box>
+        </Container>
+      </div>
     );
   }
 }
