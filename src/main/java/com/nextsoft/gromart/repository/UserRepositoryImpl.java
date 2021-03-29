@@ -66,8 +66,8 @@ public class UserRepositoryImpl implements UserRepository {
         user.setUserCode(genId());
         user.setStatus("requested");
         String query = "insert into user (" +
-                "userCode, userName, phone, email, password, status, createdBy, updateBy)" +
-                " values (?,?,?,?,?,?,?,?)";
+                "userCode, userName, phone, email, password, status, createdBy, updateBy, updateDate, productLimit)" +
+                " values (?,?,?,?,?,?,?,?, now(), 0)";
 
         jdbcTemplate.update(query,
                 user.getUserCode(),
