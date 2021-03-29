@@ -4,15 +4,22 @@ import {
   Box,
   Button,
   Container,
+  FormControl,
   Grid,
+  IconButton,
+  Input,
+  InputAdornment,
+  InputLabel,
   Link,
+  OutlinedInput,
   Paper,
   TextField,
   Typography,
 } from "@material-ui/core";
 
 import { withStyles } from "@material-ui/core/styles";
-
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import { Copyright } from "../../component";
 import axios from "axios";
@@ -60,6 +67,8 @@ class Register extends Component {
       errorRepassword: false,
 
       errorMsg: "",
+      showRePassword: false,
+      showPassword: false
     };
   }
   setValue = (e) => {
@@ -178,6 +187,13 @@ class Register extends Component {
         }
       });
   };
+  tooglePassword = (name) => {
+    console.log(name);
+    console.log(this.state[name]);
+    this.setState({
+      [name]: !this.state[name]
+    })
+  }
   render() {
     const { classes, isLogin, user } = this.props;
     const {
@@ -232,8 +248,8 @@ class Register extends Component {
                   </Typography>
                 </Box>
               ) : (
-                  <Box style={{ height: "10px" }} mt={2}></Box>
-                )}
+                <Box style={{ height: "10px" }} mt={2}></Box>
+              )}
               <form
                 className={classes.form}
                 noValidate
@@ -280,7 +296,7 @@ class Register extends Component {
                       error={errorEmail}
                     />
                   </Grid>
-                  <Grid item xs={12}>
+                  {/* <Grid item xs={12}>
                     <TextField
                       size="small"
                       required
@@ -288,8 +304,6 @@ class Register extends Component {
                       name="password"
                       label="Password"
                       type="password"
-                      id="password"
-                      autoComplete="current-password"
                       onChange={(e) => this.setValue(e)}
                       error={errorPassword}
                     />
@@ -302,11 +316,56 @@ class Register extends Component {
                       name="repassword"
                       label="Reenter Password"
                       type="password"
-                      id="repassword"
-                      autoComplete="current-password"
                       onChange={(e) => this.setValue(e)}
                       error={errorRepassword}
                     />
+                  </Grid> */}
+                  <Grid item xs={12}>
+                    <FormControl fullWidth required style={{ marginBottom: "10px" }}>
+                      <InputLabel >Password</InputLabel>
+                      <Input
+                        name="password"
+                        type={this.state.showPassword ? 'text' : 'password'}
+                        onChange={(e) => this.setValue(e)}
+                        endAdornment={
+                          <InputAdornment position="end">
+                            <IconButton
+                              aria-label="toggle password visibility"
+                              onClick={()=>this.tooglePassword("showPassword")}
+                              edge="end"
+                            >
+                              {this.state.showPassword ? <Visibility /> : <VisibilityOff />}
+                            </IconButton>
+                          </InputAdornment>
+                        }
+                        // labelWidth={100}
+                        error={errorPassword}
+                      />
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <FormControl fullWidth required style={{ marginBottom: "10px" }}>
+                      <InputLabel >Password</InputLabel>
+                      <Input
+                        name="repassword"
+                        
+                        type={this.state.showRePassword ? 'text' : 'password'}
+                        onChange={(e) => this.setValue(e)}
+                        endAdornment={
+                          <InputAdornment position="end">
+                            <IconButton
+                              aria-label="toggle password visibility"
+                              onClick={()=>this.tooglePassword("showRePassword")}
+                              edge="end"
+                            >
+                              {this.state.showRePassword ? <Visibility /> : <VisibilityOff />}
+                            </IconButton>
+                          </InputAdornment>
+                        }
+                        // labelWidth={100}
+                        error={errorRepassword}
+                      />
+                    </FormControl>
                   </Grid>
                 </Grid>
                 <Button
