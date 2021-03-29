@@ -31,6 +31,8 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestParam String email, String password) {
+        System.out.println(userService.isEmailExist(email));
+
         if (userService.isEmailExist(email) && userService.isUserActive(email)) {
             User target = userService.login(email);
             if (target.getPassword().equals(password)) {
