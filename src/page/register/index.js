@@ -179,7 +179,7 @@ class Register extends Component {
     axios
       .post("http://localhost:8080/api/user", user)
       .then((res) => {
-        res.status === 200 && this.props.history.push("/login");
+        res.status === 200 && alert("congratulations, your account has been successfully created."); this.props.history.push("/login");
       })
       .catch((e) => {
         if (e.response !== undefined) {
@@ -331,7 +331,7 @@ class Register extends Component {
                           <InputAdornment position="end">
                             <IconButton
                               aria-label="toggle password visibility"
-                              onClick={()=>this.tooglePassword("showPassword")}
+                              onClick={() => this.tooglePassword("showPassword")}
                               edge="end"
                             >
                               {this.state.showPassword ? <Visibility /> : <VisibilityOff />}
@@ -348,14 +348,14 @@ class Register extends Component {
                       <InputLabel >Password</InputLabel>
                       <Input
                         name="repassword"
-                        
+
                         type={this.state.showRePassword ? 'text' : 'password'}
                         onChange={(e) => this.setValue(e)}
                         endAdornment={
                           <InputAdornment position="end">
                             <IconButton
                               aria-label="toggle password visibility"
-                              onClick={()=>this.tooglePassword("showRePassword")}
+                              onClick={() => this.tooglePassword("showRePassword")}
                               edge="end"
                             >
                               {this.state.showRePassword ? <Visibility /> : <VisibilityOff />}
