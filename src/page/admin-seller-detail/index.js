@@ -16,11 +16,7 @@ import {
 import axios from "axios";
 import React, { Component } from "react";
 import ClearIcon from "@material-ui/icons/Clear";
-import {
-  Menu,
-  PaginationControlled,
-  ProductCard,
-} from "../../component";
+import { Menu, PaginationControlled, ProductCard } from "../../component";
 import { red } from "@material-ui/core/colors";
 
 const useStyles = (theme) => ({
@@ -58,6 +54,8 @@ class AdminSellerDetail extends Component {
       searchingStatus: false,
       page: 0,
       currentPage: 1,
+      status: "all",
+      filterBy: "all",
     };
   }
   componentDidMount() {
@@ -69,9 +67,9 @@ class AdminSellerDetail extends Component {
     axios
       .get(
         "http://localhost:8080/api/product/seller?id=" +
-        this.props.id +
-        "&offset=" +
-        offset
+          this.props.id +
+          "&offset=" +
+          offset
       )
       .then((res) =>
         this.setState({
@@ -106,13 +104,13 @@ class AdminSellerDetail extends Component {
   getProductWithFilter = (offset) => {
     axios
       .get(
-        "http://localhost:8080/api//product/seller/filter?" +
-        "id=" +
-        this.props.id +
-        "&target=" +
-        this.state.target +
-        "&offset=" +
-        offset
+        "http://localhost:8080/api/product/seller/filter?" +
+          "id=" +
+          this.props.id +
+          "&target=" +
+          this.state.target +
+          "&offset=" +
+          offset
       )
       .then((res) => {
         console.log(res.data);
@@ -125,7 +123,24 @@ class AdminSellerDetail extends Component {
     this.setState({ searchingStatus: true });
   };
   doSearch = () => {
-    this.getProductWithFilter(0);
+    console.log("SEACRH");
+    const { user } = this.props;
+    const { fromDate, toDate, filterBy, searchField, status } = this.state;
+    let endpoint = "http://localhost:8080/api/product/seller/filter?";
+    if (filterBy === "productName") {
+      endpoint += "productName=" + searchField;
+    } else if (filterBy === "productCode") {
+      endpoint += "productCode=" + searchField;
+    } else if (filterBy === "status") {
+      endpoint += "status=" + status;
+    } else if (filterBy === "date") {
+      endpoint += "fromDate=" + fromDate + "&toDate=" + toDate;
+    }
+    console.log(endpoint);
+    this.getProductWithFilter(endpoint);
+    this.setState({
+      currentPage: 1,
+    });
   };
   changePage = (page) => {
     console.log("changePage");
@@ -138,23 +153,21 @@ class AdminSellerDetail extends Component {
     }
   };
   setFilterValue = (e) => {
-    console.log(e.target.value);
-    console.log(e.target.name);
-    // const { name, value } = e.target;
-    // if (name === "filterBy") {
-    //   this.setState({
-    //     status: "all",
-    //     searchField: "",
-    //     fromDate: "",
-    //     toDate: "",
-    //   });
-    //   if (value === "all") {
-    //     this.getProductWithFilter("http://localhost:8080/api/product/filter?productName=")
-    //   }
-    // }
-    // this.setState({
-    //   [name]: value,
-    // });
+    const { name, value } = e.target;
+    if (name === "filterBy") {
+      this.setState({
+        status: "all",
+        searchField: "",
+        fromDate: "",
+        toDate: "",
+      });
+      // if (value === "all") {
+      //   this.getProductWithFilter("http://localhost:8080/api/product/filter?productName=")
+      // }
+    }
+    this.setState({
+      [name]: value,
+    });
   };
   render() {
     const { buttonAdminStat, history, toogleMenu, classes } = this.props;
@@ -167,9 +180,9 @@ class AdminSellerDetail extends Component {
       page,
       currentPage,
       filterBy,
-      status
+      status,
     } = this.state;
-    console.log(this.state);
+    // console.log(this.state);
     let buttonGo = (
       <Button
         size="small"
@@ -185,7 +198,8 @@ class AdminSellerDetail extends Component {
       formFilter = (
         <>
           <Grid item xs={3}>
-            <Input fullWidth
+            <Input
+              fullWidth
               placeholder="search"
               style={{ height: "29px" }}
               name="searchField"
@@ -252,8 +266,16 @@ class AdminSellerDetail extends Component {
             buttonAdminStat={buttonAdminStat}
           ></Menu>
         </Grid>
-        <Grid container item xs={12} className={classes.margin}>
-          <Grid item xs={2}>
+        <Grid
+          container
+          item
+          xs={12}
+          justify="flex-start"
+          alignItems="center"
+          className={classes.margin}
+          spacing={3}
+        >
+          <Grid item xs={1}>
             <Button
               variant="contained"
               color="primary"
@@ -265,10 +287,17 @@ class AdminSellerDetail extends Component {
           </Grid>
           <Grid item xs={4}>
             <ButtonGroup>
-              <Button size="small" color="primary">
+              <Button
+                size="small"
+                color="primary"
+                style={{ width: "150px", cursor: "default" }}
+              >
                 {userName}
               </Button>
-              <Button size="small">
+              <Button
+                size="small"
+                style={{ width: "200px", cursor: "default" }}
+              >
                 {email}
               </Button>
             </ButtonGroup>
@@ -311,7 +340,7 @@ class AdminSellerDetail extends Component {
               Search
             </Button>
           </Grid> */}
-          <Grid item xs={3}>
+          <Grid item xs={2}>
             <FormControl className={classes.formControl} size="small" fullWidth>
               <Select
                 size="small"
@@ -328,7 +357,6 @@ class AdminSellerDetail extends Component {
             </FormControl>
           </Grid>
           {formFilter}
-
         </Grid>
         <Grid container item xs={12}>
           {products &&
@@ -342,7 +370,8 @@ class AdminSellerDetail extends Component {
           <PaginationControlled
             count={page}
             page={currentPage}
-            onClick={this.changePage} />
+            onClick={this.changePage}
+          />
         </Grid>
       </Grid>
     );

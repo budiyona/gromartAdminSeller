@@ -225,13 +225,13 @@ class AdminInfo extends Component {
       axios
         .put(
           "http://localhost:8080/api//user/change-password?id=" +
-          user.userCode +
-          "&oldPassword=" +
-          oldPassword +
-          "&newPassword=" +
-          newPassword +
-          "&newPassword2=" +
-          newPassword2
+            user.userCode +
+            "&oldPassword=" +
+            oldPassword +
+            "&newPassword=" +
+            newPassword +
+            "&newPassword2=" +
+            newPassword2
         )
         .then((res) => {
           res.status === 200 && alert("Update Success");
@@ -277,8 +277,8 @@ class AdminInfo extends Component {
             buttonAdminStat={buttonAdminStat}
           ></Menu>
         </Grid>
-        <Grid container item xs={12} >
-          <Grid container item xs={12} >
+        <Grid container item xs={12}>
+          <Grid container item xs={12}>
             <ButtonGroup>
               <Button
                 size="small"
@@ -289,7 +289,7 @@ class AdminInfo extends Component {
                 onClick={this.toogleEdit}
               >
                 edit
-            </Button>
+              </Button>
               <Button
                 type="submit"
                 size="small"
@@ -298,19 +298,21 @@ class AdminInfo extends Component {
                 onClick={this.toogleEditPassword}
               >
                 change password
-            </Button>
+              </Button>
             </ButtonGroup>
           </Grid>
           {!editPassword ? (
             <Grid container item xs={12} className={classes.margin}>
-              <Paper elevation={3}
+              <Paper
+                elevation={3}
                 style={{
                   marginTop: "10px",
                   width: "100%",
                   minHeight: "70vh",
                   padding: "10px",
-                  backgroundColor: "rgba(255,255,255,0.7)"
-                }}>
+                  backgroundColor: "rgba(255,255,255,0.7)",
+                }}
+              >
                 <form
                   className={classes.form}
                   noValidate
@@ -351,7 +353,9 @@ class AdminInfo extends Component {
                       onChange={(e) => this.setValue(e)}
                       error={errorPhone}
                       helperText={
-                        errorPhone ? "minimum 8 number and cannot be letter" : ""
+                        errorPhone
+                          ? "minimum 8 number and cannot be letter"
+                          : ""
                       }
                     />
                   </Grid>
@@ -383,7 +387,7 @@ class AdminInfo extends Component {
                         className={classes.submit}
                       >
                         save
-                    </Button>
+                      </Button>
                     </Grid>
                   )}
                 </form>
@@ -423,14 +427,16 @@ class AdminInfo extends Component {
             </Grid>
           ) : (
             <Grid container item xs={12} className={classes.margin}>
-              <Paper elevation={3}
+              <Paper
+                elevation={3}
                 style={{
                   marginTop: "10px",
                   width: "100%",
                   minHeight: "70vh",
                   padding: "10px",
-                  backgroundColor: "rgba(255,255,255,0.7)"
-                }}>
+                  backgroundColor: "rgba(255,255,255,0.7)",
+                }}
+              >
                 <form
                   className={classes.form}
                   noValidate
@@ -486,7 +492,9 @@ class AdminInfo extends Component {
                       id="NewPassword2"
                       onChange={(e) => this.setValue(e)}
                       error={errorRepassword}
-                      helperText={errorRepassword ? "password did not match" : ""}
+                      helperText={
+                        errorRepassword ? "password did not match" : ""
+                      }
                     />
                   </Grid>
 
@@ -501,7 +509,7 @@ class AdminInfo extends Component {
                         className={classes.submit}
                       >
                         change password
-                    </Button>
+                      </Button>
                     </Grid>
                   )}
                 </form>

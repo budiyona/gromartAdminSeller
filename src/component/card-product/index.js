@@ -10,7 +10,8 @@ import { blue, green, red } from "@material-ui/core/colors";
 import productImg from "../../static/product.jpg";
 import { connect } from "react-redux";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
-import "./style.css"
+import "./style.css";
+import { Tooltip } from "@material-ui/core";
 const useStyles = () => ({
   root: {
     maxWidth: 248,
@@ -66,33 +67,38 @@ class ProductCard extends Component {
     return (
       <Card className={classes.root}>
         <CardHeader
-
           title={product.productName}
           subheader={product.productCode + ` (${product.status})`}
           action={
             user.userCode.includes("ADMIN") ? (
               ""
             ) : (
+              <Tooltip title="Delete">
                 <IconButton aria-label="settings">
                   <HighlightOffIcon
                     style={{ color: red[500] }}
                     onClick={() => deleteProductById(product.productCode)}
                   />
                 </IconButton>
-              )
+              </Tooltip>
+            )
           }
         />
         <CardMedia
-          className={user.userCode.includes("ADMIN") ? classes.media : classes.pointer + " " + classes.media}
+          className={
+            user.userCode.includes("ADMIN")
+              ? classes.media
+              : classes.pointer + " " + classes.media
+          }
           image={productImg}
           onClick={
             user.userCode.includes("ADMIN")
-              ? () => { }
+              ? () => {}
               : () =>
-                history.push({
-                  pathname: "/seller/product/update",
-                  state: { idProduct: product.productCode },
-                })
+                  history.push({
+                    pathname: "/seller/product/update",
+                    state: { idProduct: product.productCode },
+                  })
           }
         />
         <CardActions disableSpacing>

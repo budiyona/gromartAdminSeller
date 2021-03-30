@@ -1,7 +1,7 @@
-.MuiCardHeader-title{
-  font-size: 20px!important;
+.MuiCardHeader-title {
+  font-size: 16px !important;
   /* font-weight: bold; */
 }
-.MuiCardHeader-subheader{
-  font-size: 12px!important;
+.MuiCardHeader-subheader {
+  font-size: 12px !important;
 }
