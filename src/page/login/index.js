@@ -70,9 +70,9 @@ class Login extends Component {
   doLogin = (e) => {
     e.preventDefault();
     console.log("LOGIN");
+    const {email, password}= this.state
     if (this.state.isVerified) {
-      let email = this.state.email;
-      let password = this.state.password;
+      // console.log(email,password, this.state);
       axios
         .post(
           "http://localhost:8080/api/login?email=" +
@@ -103,8 +103,10 @@ class Login extends Component {
     }
   };
   setValue = (e) => {
+    const {name, value}=e.target
+    // console.log(name, value);
     this.setState({
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
   };
   tooglePassword = () => {
@@ -113,8 +115,6 @@ class Login extends Component {
     })
   }
   render() {
-    console.log(this.state);
-    console.log("PROPS", this.props);
     const { classes, isLogin, user } = this.props;
     if (isLogin) {
       if (user.userCode.includes("ADMIN")) {
@@ -146,7 +146,6 @@ class Login extends Component {
             <Typography component="h1" variant="h5">
               Login
           </Typography>
-            {/* <Alert severity="error" style={{display:'none'}}>This is an error alert — check it out!</Alert> */}
             <form className={classes.form} noValidate onSubmit={this.doLogin}>
               <TextField
                 required
@@ -160,18 +159,6 @@ class Login extends Component {
                 autoFocus
                 onChange={(e) => this.setValue(e)}
               />
-              {/* <TextField
-                onChange={(e) => this.setValue(e)}
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-              /> */}
               <FormControl variant="outlined" fullWidth style={{ marginBottom: "10px" }}>
                 <InputLabel >Password</InputLabel>
                 <OutlinedInput
@@ -202,23 +189,6 @@ class Login extends Component {
                   />
                 </div>
               </div>
-              {/* <Grid
-                container
-                item
-                alignItems="center"
-                xs={12}
-                style={{ display: "flex" }}
-              >
-                <div style={{ margin: "auto" }}>
-                  <Recaptcha
-                    sitekey="6Lfg3W0aAAAAAH_wKiduCg2ecTcyehEFQVpAf66N"
-                    render="explicit"
-                    onloadCallback={this.recaptchaLoaded}
-                    verifyCallback={this.verifyCallback}
-                  />
-                </div>
-              </Grid> */}
-
 
               <Button
                 type="submit"

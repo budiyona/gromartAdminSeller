@@ -33,17 +33,17 @@ class SellerProduct extends Component {
     super(props);
     this.state = {
       products: [
-        {
-          productCode: "",
-          productName: "",
-          price: 0,
-          stock: 0,
-          description: "",
-          seller: {
-            userCode: "",
-            userName: "",
-          },
-        },
+        // {
+        //   productCode: "",
+        //   productName: "",
+        //   price: 0,
+        //   stock: 0,
+        //   description: "",
+        //   seller: {
+        //     userCode: "",
+        //     userName: "",
+        //   },
+        // },
       ],
       target: "",
       showClear: false,
@@ -54,7 +54,7 @@ class SellerProduct extends Component {
       searchingStatus: false,
       page: 0,
       filterBy: "all",
-      currentPage: 1,
+      currentPage: "-",
       status: "all"
     };
   }
@@ -311,8 +311,8 @@ class SellerProduct extends Component {
           {formFilter}
         </Grid>
 
-        <Grid container item xs={12}>
-          {products &&
+        <Grid container item xs={12} style={{minHeight: "70vh"}}>
+          {products.length>0 &&
             products.map((product, i) => (
               <Grid item xs={4} key={i} className={classes.margin}>
                 <ProductCard

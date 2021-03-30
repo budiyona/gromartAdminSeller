@@ -73,22 +73,7 @@ class CreateProduct extends Component {
 
   handleValidation = () => {
     const { product } = this.state;
-    // let arrayKey = Object.keys(product);
     let newErrorMsg = "";
-    // arrayKey.map((key) => {
-    //   if (product[key] !== null) {
-    //     if (key === "productCode") {
-    //     } else if (key === "productName") {
-    //       console.log("k1", key);
-    //       !this.lengthValidation(product[key]) &&
-    //         (newErrorMsg = "name cannot be null");
-    //     } else {
-    //       console.log("k2", key);
-    //       !this.lengthValidation(product[key]) &&
-    //         (newErrorMsg = key + " cannot be null");
-    //     }
-    //   }
-    // });
     for (const property in product) {
       if (product[property] !== null) {
         if (property === "productCode") {

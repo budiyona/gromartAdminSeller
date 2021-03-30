@@ -28,32 +28,8 @@ class SellerHome extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      expensiveProd: [
-        {
-          productCode: "",
-          productName: "",
-          price: 0,
-          stock: 0,
-          description: "",
-          seller: {
-            userCode: "",
-            userName: "",
-          },
-        },
-      ],
-      cheapestProd: [
-        {
-          productCode: "",
-          productName: "",
-          price: 0,
-          stock: 0,
-          description: "",
-          seller: {
-            userCode: "",
-            userName: "",
-          },
-        },
-      ],
+      expensiveProd: [],
+      cheapestProd: [],
       isExpesive: false,
       summary: {
         active: 0,
@@ -174,7 +150,7 @@ class SellerHome extends Component {
               />
             </Grid>
 
-            {expensiveProd.map((product, i) => (
+            {expensiveProd.length > 0 && expensiveProd.map((product, i) => (
               <Grid item key={i} xs={4}>
                 <ProductDasboardSeller
                   title={product.productName}
@@ -191,7 +167,7 @@ class SellerHome extends Component {
                 title="Cheapest Product"
               />
             </Grid>
-            {cheapestProd.map((product, i) => (
+            {cheapestProd > 0 && cheapestProd.map((product, i) => (
               <Grid item key={i} xs={4}>
                 <ProductDasboardSeller
                   title={product.productName}
