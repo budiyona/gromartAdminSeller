@@ -80,7 +80,7 @@ class App extends Component {
     const { buttonAdminStat } = this.state;
     let isAdmin = this.props.userCode.includes("ADMIN");
     let adminPage = (
-      <Container maxWidth="md" spacing={3}>
+      <Container maxWidth="xl" spacing={3}>
         <Route
           path="/admin/home"
           exact
@@ -156,7 +156,7 @@ class App extends Component {
       </Container>
     );
     let sellerPage = (
-      <Container maxWidth="md" spacing={3}>
+      <Container maxWidth="xl"  spacing={3}>
         <Route
           path="/seller/home"
           exact

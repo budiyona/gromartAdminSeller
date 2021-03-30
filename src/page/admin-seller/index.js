@@ -367,50 +367,6 @@ class AdminSeller extends Component {
             buttonAdminStat={buttonAdminStat}
           />
         </Grid>
-
-        {/* <Grid
-          container
-          item
-          xs={12}
-          justify="center"
-          className={classes.margin}
-          spacing={3}
-        >
-          <Grid item xs={3}>
-            <FormControl className={classes.formControl} size="small">
-              <Select
-                size="small"
-                value={filterStatus}
-                name="filterStatus"
-                onChange={(e) => this.setFilterValue(e)}
-              >
-                <MenuItem value="all">All</MenuItem>
-                <MenuItem value="active">Active</MenuItem>
-                <MenuItem value="inactive">Inactive</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={3}>
-            <FormControl className={classes.formControl} size="small">
-              <Select
-                size="small"
-                name="filterRole"
-                value={filterRole}
-                onChange={(e) => this.setFilterValue(e)}
-              >
-                <MenuItem value="userName">Name</MenuItem>
-                <MenuItem value="userCode">UserCode</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-
-          <Grid item xs={3}>
-            <SearchField
-              onClick={this.doSearch}
-              resetData={this.resetData}
-            ></SearchField>
-          </Grid>
-        </Grid> */}
         <Grid
           container
           item
@@ -419,8 +375,8 @@ class AdminSeller extends Component {
           alignItems="center"
           className={classes.margin}
           spacing={3}
+          
         >
-
 
           <Grid item xs={3}>
             <FormControl className={classes.formControl} size="small" fullWidth>
@@ -442,7 +398,7 @@ class AdminSeller extends Component {
           {formFilter}
         </Grid>
 
-        <Grid container item xs={12}>
+        <Grid container item xs={12} style={{minHeight: "70vh"}}>
           {listSeller.map((user, i) => {
             return (
               <Grid
