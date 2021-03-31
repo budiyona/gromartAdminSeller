@@ -12,6 +12,7 @@ import { connect } from "react-redux";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import "./style.css";
 import { Tooltip } from "@material-ui/core";
+import DeleteIcon from "@material-ui/icons/Delete";
 const useStyles = () => ({
   root: {
     maxWidth: 248,
@@ -75,7 +76,7 @@ class ProductCard extends Component {
             ) : (
               <Tooltip title="Delete">
                 <IconButton aria-label="settings">
-                  <HighlightOffIcon
+                  <DeleteIcon
                     style={{ color: red[500] }}
                     onClick={() => deleteProductById(product.productCode)}
                   />

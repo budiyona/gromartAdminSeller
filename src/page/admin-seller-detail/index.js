@@ -171,6 +171,7 @@ class AdminSellerDetail extends Component {
   };
   render() {
     const { buttonAdminStat, history, toogleMenu, classes } = this.props;
+    console.log(this.props.id);
     const {
       products,
       target,
