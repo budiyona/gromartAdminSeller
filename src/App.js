@@ -375,7 +375,12 @@ class App extends Component {
             }}
           />
           {isAdmin ? adminPage.map((e) => e) : sellerPage.map((e) => e)}
-          <Route component={() => <div>NOT FOUND</div>}></Route>
+          <Route
+            component={() => {
+              let history = useHistory();
+              return <NotFound history={history}></NotFound>;
+            }}
+          />
         </Switch>
       </Router>
     );
