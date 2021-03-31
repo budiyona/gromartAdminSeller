@@ -44,7 +44,9 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public boolean isEmailExist(String email) {
         String query = "select count(*) from user where email=?";
+
         int count = jdbcTemplate.queryForObject(query, Integer.class, email);
+
         if (count == 1) {
             return true;
         }
