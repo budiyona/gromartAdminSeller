@@ -314,8 +314,9 @@ public class ProductRepositoryImpl implements ProductRepository {
     @Override
     public List<Product> getProductOfSeller(String id, String sort) {
         //select * from product p join user u on p.userCode = u.userCode where p.userCode ='SELLER-2021-03-05-01' order by price desc
+        System.out.println(id);
         return jdbcTemplate.query(
-                "select * from product p join user u on p.userCode = u.userCode order by price "+sort +" limit 3",
+                "select * from product p join user u on p.userCode = u.userCode where p.userCode = ? order by price "+sort +" limit 3",
                 (rs, i) -> new Product(
                         rs.getString("productCode"),
                         rs.getString("productName"),
@@ -328,6 +329,6 @@ public class ProductRepositoryImpl implements ProductRepository {
                                 rs.getString("userCode"),
                                 rs.getString("userName")
                         )
-                ));
+                ),id);
     }
 }
