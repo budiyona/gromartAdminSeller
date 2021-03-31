@@ -61,12 +61,12 @@ class AdminSeller extends Component {
       searchingStatus: false,
       filterBy: "all",
       currentPage: 1,
-      status: "all"
+      status: "all",
     };
   }
   componentDidMount() {
     // this.getAllSeller(0);
-    this.getSellerWithFilter("http://localhost:8080/api/user/filter?userName=")
+    this.getSellerWithFilter("http://localhost:8080/api/user/filter?userName=");
     this.countSellerByStatus("all");
   }
   countSellerByStatus = (status) => {
@@ -94,7 +94,7 @@ class AdminSeller extends Component {
       (el) => listSeller[idx].status === el
     );
     if (newStatusIndex >= 2) {
-      newStatusIndex = 0;
+      newStatusIndex = 1;
     } else {
       newStatusIndex++;
     }
@@ -105,18 +105,16 @@ class AdminSeller extends Component {
     let newListSeller = [...listSeller];
     newListSeller.splice(idx, 1, newUser);
     if (
-      window.confirm(
-        "are you sure to change " + newUser.userName + " status"
-      )
+      window.confirm("are you sure to change " + newUser.userName + " status")
     ) {
       axios
         .put(
           "http://localhost:8080/api/user/status?id=" +
-          newUser.userCode +
-          "&status=" +
-          ListStatus[newStatusIndex] +
-          "&idAdmin=" +
-          user.userCode
+            newUser.userCode +
+            "&status=" +
+            ListStatus[newStatusIndex] +
+            "&idAdmin=" +
+            user.userCode
         )
         .then((res) => {
           if (res.status) {
@@ -163,11 +161,11 @@ class AdminSeller extends Component {
         axios
           .put(
             "http://localhost:8080/api/user/product-limit?id=" +
-            seller.userCode +
-            "&limitProduct=" +
-            seller.productLimit +
-            "&idAdmin=" +
-            user.userCode
+              seller.userCode +
+              "&limitProduct=" +
+              seller.productLimit +
+              "&idAdmin=" +
+              user.userCode
           )
           .then((res) => {
             if (res.status) {
@@ -196,8 +194,9 @@ class AdminSeller extends Component {
       fromDate,
       toDate,
       status,
-      searchField } = this.state;
-    let endpoint = "http://localhost:8080/api/user/filter?"
+      searchField,
+    } = this.state;
+    let endpoint = "http://localhost:8080/api/user/filter?";
     // let endpoint =
     //   "http://localhost:8080/api/user/filter?status=" +
     //   filterStatus +
@@ -208,16 +207,16 @@ class AdminSeller extends Component {
     switch (filterBy) {
       case "userName":
         endpoint += "userName=" + searchField;
-        break
+        break;
       case "userCode":
         endpoint += "userCode=" + searchField;
-        break
+        break;
       case "status":
         endpoint += "status=" + status;
-        break
+        break;
       case "date":
         endpoint += "fromDate=" + fromDate + "&toDate=" + toDate;
-        break
+        break;
     }
     // if (filterBy === "userName") {
     //   endpoint += "userName=" + searchField;
@@ -255,7 +254,9 @@ class AdminSeller extends Component {
         toDate: "",
       });
       if (value === "all") {
-        this.getSellerWithFilter("http://localhost:8080/api/user/filter?status=")
+        this.getSellerWithFilter(
+          "http://localhost:8080/api/user/filter?status="
+        );
       }
     }
     this.setState({
@@ -280,7 +281,7 @@ class AdminSeller extends Component {
       filterRole,
       filterBy,
       // currentPage,
-      status
+      status,
     } = this.state;
     let buttonGo = (
       <Button
@@ -297,7 +298,8 @@ class AdminSeller extends Component {
       formFilter = (
         <>
           <Grid item xs={3}>
-            <Input fullWidth
+            <Input
+              fullWidth
               placeholder="search"
               style={{ height: "29px" }}
               name="searchField"
@@ -351,14 +353,12 @@ class AdminSeller extends Component {
       formFilter = <Grid item xs={3}></Grid>;
     }
     return (
-
       <Grid
         container
         direction="row"
         justify="space-between"
         alignItems="center"
         style={{ margin: 0 }}
-
       >
         <Grid container item xs={12}>
           <Menu
@@ -375,9 +375,7 @@ class AdminSeller extends Component {
           alignItems="center"
           className={classes.margin}
           spacing={3}
-          
         >
-
           <Grid item xs={3}>
             <FormControl className={classes.formControl} size="small" fullWidth>
               <Select
@@ -398,7 +396,7 @@ class AdminSeller extends Component {
           {formFilter}
         </Grid>
 
-        <Grid container item xs={12} style={{minHeight: "70vh"}}>
+        <Grid container item xs={12} style={{ minHeight: "70vh" }}>
           {listSeller.map((user, i) => {
             return (
               <Grid
@@ -406,7 +404,7 @@ class AdminSeller extends Component {
                 xs={4}
                 className={classes.margin}
                 key={i}
-              // align="center"
+                // align="center"
               >
                 <SellerCard
                   idx={i}
@@ -423,8 +421,11 @@ class AdminSeller extends Component {
         </Grid>
 
         <Grid container item xs={12}>
-          <PaginationControlled count={page}
-            page={currentPage} onChange={this.changePage} />
+          <PaginationControlled
+            count={page}
+            page={currentPage}
+            onChange={this.changePage}
+          />
         </Grid>
       </Grid>
     );

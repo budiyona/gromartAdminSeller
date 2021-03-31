@@ -1,10 +1,6 @@
 import { Grid, withStyles } from "@material-ui/core";
 import React, { Component } from "react";
-import {
-  DasboardTitle,
-  Menu,
-  ProductDasboardSeller,
-} from "../../component";
+import { DasboardTitle, Menu, ProductDasboardSeller } from "../../component";
 import GradeIcon from "@material-ui/icons/Grade";
 import axios from "axios";
 import { connect } from "react-redux";
@@ -43,17 +39,23 @@ class SellerHome extends Component {
     axios
       .get(
         "http://localhost:8080/api/product/seller/most-expensive/" +
-        this.props.user.userCode
+          this.props.user.userCode
       )
-      .then((res) => this.setState({ expensiveProd: res.data }));
+      .then((res) => {
+        console.log(res);
+        this.setState({ expensiveProd: res.data });
+      });
   };
   getCheapestProduct = () => {
     axios
       .get(
         "http://localhost:8080/api/product/seller/cheapest/" +
-        this.props.user.userCode
+          this.props.user.userCode
       )
-      .then((res) => this.setState({ cheapestProd: res.data }));
+      .then((res) => {
+        console.log(res);
+        this.setState({ cheapestProd: res.data });
+      });
   };
   componentDidMount = () => {
     this.getSellerSumary();
@@ -65,7 +67,7 @@ class SellerHome extends Component {
     axios
       .get(
         "http://localhost:8080/api/product/seller-summary?id=" +
-        this.props.user.userCode
+          this.props.user.userCode
       )
       .then((res) => {
         // console.log("dateget", res.data.limit);
@@ -76,9 +78,8 @@ class SellerHome extends Component {
   };
 
   render() {
-    console.log(this.state);
+    console.log("cehapes", this.state.cheapestProd);
     const {
-
       expensiveProd,
       cheapestProd,
 
@@ -102,7 +103,7 @@ class SellerHome extends Component {
             xs={12}
             spacing={3}
             className={classes.cardCount}
-          // direction="column"
+            // direction="column"
           >
             <Grid item xs={3}>
               <DasboardTitle
@@ -150,14 +151,15 @@ class SellerHome extends Component {
               />
             </Grid>
 
-            {expensiveProd.length > 0 && expensiveProd.map((product, i) => (
-              <Grid item key={i} xs={4}>
-                <ProductDasboardSeller
-                  title={product.productName}
-                  price={product.price}
-                />
-              </Grid>
-            ))}
+            {expensiveProd.length > 0 &&
+              expensiveProd.map((product, i) => (
+                <Grid item key={i} xs={4}>
+                  <ProductDasboardSeller
+                    title={product.productName}
+                    price={product.price}
+                  />
+                </Grid>
+              ))}
             <Grid item xs={12}>
               <DasboardTitle
                 // pointer
@@ -167,14 +169,15 @@ class SellerHome extends Component {
                 title="Cheapest Product"
               />
             </Grid>
-            {cheapestProd > 0 && cheapestProd.map((product, i) => (
-              <Grid item key={i} xs={4}>
-                <ProductDasboardSeller
-                  title={product.productName}
-                  price={product.price}
-                />
-              </Grid>
-            ))}
+            {cheapestProd.length > 0 &&
+              cheapestProd.map((product, i) => (
+                <Grid item key={i} xs={4}>
+                  <ProductDasboardSeller
+                    title={product.productName}
+                    price={product.price}
+                  />
+                </Grid>
+              ))}
           </Grid>
         </Grid>
       </Grid>

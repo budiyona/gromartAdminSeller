@@ -56,6 +56,8 @@ class AdminSellerDetail extends Component {
       currentPage: 1,
       status: "all",
       filterBy: "all",
+      querySearch: "",
+      searchField: "",
     };
   }
   componentDidMount() {
@@ -101,32 +103,25 @@ class AdminSellerDetail extends Component {
     });
     this.getSellerProduct(0);
   };
-  getProductWithFilter = (offset) => {
-    axios
-      .get(
-        "http://localhost:8080/api/product/seller/filter?" +
-          "id=" +
-          this.props.id +
-          "&target=" +
-          this.state.target +
-          "&offset=" +
-          offset
-      )
-      .then((res) => {
-        console.log(res.data);
-        this.setState({
-          products: res.data.product,
-          page: Math.ceil(res.data.qty / 6),
-        });
+  getProductWithFilter = (query, offset = 0) => {
+    let queryOffset = "&offset=" + offset;
+    axios.get(query + queryOffset).then((res) => {
+      console.log(res.data);
+      this.setState({
+        products: res.data.product,
+        page: Math.ceil(res.data.qty / 6),
       });
+    });
 
-    this.setState({ searchingStatus: true });
+    this.setState({ querySearch: query });
   };
   doSearch = () => {
     console.log("SEACRH");
-    const { user } = this.props;
+    const { id } = this.props;
     const { fromDate, toDate, filterBy, searchField, status } = this.state;
-    let endpoint = "http://localhost:8080/api/product/seller/filter?";
+    let endpoint =
+      "http://localhost:8080/api/product/seller/filter/" + id + "?";
+
     if (filterBy === "productName") {
       endpoint += "productName=" + searchField;
     } else if (filterBy === "productCode") {
@@ -144,16 +139,24 @@ class AdminSellerDetail extends Component {
   };
   changePage = (page) => {
     console.log("changePage");
-    const { searchingStatus } = this.state;
+
+    // const { id } = this.props;
+    const { searchingStatus, querySearch } = this.state;
     let offset = (page - 1) * 6;
-    if (searchingStatus) {
-      this.getProductWithFilter(offset);
-    } else {
-      this.getSellerProduct(offset);
-    }
+    this.getProductWithFilter(querySearch, offset);
+    // if (searchingStatus) {
+    // } else {
+    //   this.getProductWithFilter(
+    //     "http://localhost:8080/api/product/seller/filter/" + id
+    //   );
+    // }
+    this.setState({
+      currentPage: page,
+    });
   };
   setFilterValue = (e) => {
     const { name, value } = e.target;
+    const { id } = this.props;
     if (name === "filterBy") {
       this.setState({
         status: "all",
@@ -161,9 +164,11 @@ class AdminSellerDetail extends Component {
         fromDate: "",
         toDate: "",
       });
-      // if (value === "all") {
-      //   this.getProductWithFilter("http://localhost:8080/api/product/filter?productName=")
-      // }
+      if (value === "all") {
+        this.getProductWithFilter(
+          "http://localhost:8080/api/product/seller/filter/" + id + "?"
+        );
+      }
     }
     this.setState({
       [name]: value,

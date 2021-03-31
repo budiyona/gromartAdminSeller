@@ -20,6 +20,7 @@ import {
   SellerHome,
   SellerReport,
   CreateProduct,
+  NotFound,
 } from "./page";
 import { connect } from "react-redux";
 
@@ -79,148 +80,259 @@ class App extends Component {
   render() {
     const { buttonAdminStat } = this.state;
     let isAdmin = this.props.userCode.includes("ADMIN");
-    let adminPage = (
-      <Container maxWidth="xl" spacing={3}>
-        <Route
-          path="/admin/home"
-          exact
-          component={() => {
-            let history = useHistory();
-            return (
+    // let adminPage = (
+    //   <Container maxWidth="xl" spacing={3}>
+    //     <Route
+    //       path="/admin/home"
+    //       exact
+    //       component={() => {
+    //         let history = useHistory();
+    //         return (
+    //           <AdminHome
+    //             history={history}
+    //             buttonAdminStat={buttonAdminStat}
+    //             toogleMenu={this.toogleMenu}
+    //           />
+    //         );
+    //       }}
+    //     />
+    //     <Route
+    //       path="/admin/seller"
+    //       exact
+    //       component={() => {
+    //         let history = useHistory();
+    //         return (
+    //           <AdminSeller
+    //             history={history}
+    //             buttonAdminStat={buttonAdminStat}
+    //             toogleMenu={this.toogleMenu}
+    //           />
+    //         );
+    //       }}
+    //     />
+    //     <Route
+    //       path="/admin/product"
+    //       exact
+    //       component={() => {
+    //         let history = useHistory();
+    //         return (
+    //           <AdminProduct
+    //             history={history}
+    //             buttonAdminStat={buttonAdminStat}
+    //             toogleMenu={this.toogleMenu}
+    //           />
+    //         );
+    //       }}
+    //     />
+    //     <Route
+    //       path="/admin/account"
+    //       exact
+    //       component={() => {
+    //         let history = useHistory();
+    //         return (
+    //           <AdminInfo
+    //             history={history}
+    //             buttonAdminStat={buttonAdminStat}
+    //             toogleMenu={this.toogleMenu}
+    //           />
+    //         );
+    //       }}
+    //     />
+    //     <Route
+    //       path="/admin/product/:id"
+    //       exact
+    //       component={() => {
+    //         let history = useHistory();
+    //         const { id } = useParams();
+    //         return (
+    //           <AdminSellerDetail
+    //             history={history}
+    //             id={id}
+    //             buttonAdminStat={buttonAdminStat}
+    //             toogleMenu={this.toogleMenu}
+    //           />
+    //         );
+    //       }}
+    //     />
+    //   </Container>
+    // );
+    let adminPage = [];
+    adminPage.push(
+      <Route
+        path="/admin/home"
+        exact
+        component={() => {
+          let history = useHistory();
+          return (
+            <Container maxWidth="xl" spacing={3}>
               <AdminHome
                 history={history}
                 buttonAdminStat={buttonAdminStat}
                 toogleMenu={this.toogleMenu}
               />
-            );
-          }}
-        />
-        <Route
-          path="/admin/seller"
-          exact
-          component={() => {
-            let history = useHistory();
-            return (
+            </Container>
+          );
+        }}
+      />
+    );
+    adminPage.push(
+      <Route
+        path="/admin/seller"
+        exact
+        component={() => {
+          let history = useHistory();
+          return (
+            <Container maxWidth="xl" spacing={3}>
               <AdminSeller
                 history={history}
                 buttonAdminStat={buttonAdminStat}
                 toogleMenu={this.toogleMenu}
               />
-            );
-          }}
-        />
-        <Route
-          path="/admin/product"
-          exact
-          component={() => {
-            let history = useHistory();
-            return (
+            </Container>
+          );
+        }}
+      />
+    );
+    adminPage.push(
+      <Route
+        path="/admin/product"
+        exact
+        component={() => {
+          let history = useHistory();
+          return (
+            <Container maxWidth="xl" spacing={3}>
               <AdminProduct
                 history={history}
                 buttonAdminStat={buttonAdminStat}
                 toogleMenu={this.toogleMenu}
               />
-            );
-          }}
-        />
-        <Route
-          path="/admin/account"
-          exact
-          component={() => {
-            let history = useHistory();
-            return (
+            </Container>
+          );
+        }}
+      />
+    );
+    adminPage.push(
+      <Route
+        path="/admin/account"
+        exact
+        component={() => {
+          let history = useHistory();
+          return (
+            <Container maxWidth="xl" spacing={3}>
               <AdminInfo
                 history={history}
                 buttonAdminStat={buttonAdminStat}
                 toogleMenu={this.toogleMenu}
               />
-            );
-          }}
-        />
-        <Route
-          path="/admin/product/:id"
-          exact
-          component={() => {
-            let history = useHistory();
-            const { id } = useParams();
-            return (
+            </Container>
+          );
+        }}
+      />
+    );
+    adminPage.push(
+      <Route
+        path="/admin/product/:id"
+        exact
+        component={() => {
+          let history = useHistory();
+          const { id } = useParams();
+          return (
+            <Container maxWidth="xl" spacing={3}>
               <AdminSellerDetail
                 history={history}
                 id={id}
                 buttonAdminStat={buttonAdminStat}
                 toogleMenu={this.toogleMenu}
               />
-            );
-          }}
-        />
-      </Container>
+            </Container>
+          );
+        }}
+      />
     );
-    let sellerPage = (
-      <Container maxWidth="xl"  spacing={3}>
-        <Route
-          path="/seller/home"
-          exact
-          component={() => {
-            let history = useHistory();
-            return (
+
+    let sellerPage = [];
+    sellerPage.push(
+      <Route
+        path="/seller/home"
+        exact
+        component={() => {
+          let history = useHistory();
+          return (
+            <Container maxWidth="xl" spacing={3}>
               <SellerHome
                 history={history}
                 buttonAdminStat={buttonAdminStat}
                 toogleMenu={this.toogleMenu}
               />
-            );
-          }}
-        />
-        <Route
-          path="/seller/product"
-          exact
-          component={() => {
-            let history = useHistory();
-            return (
+            </Container>
+          );
+        }}
+      />
+    );
+    sellerPage.push(
+      <Route
+        path="/seller/product"
+        exact
+        component={() => {
+          let history = useHistory();
+          return (
+            <Container maxWidth="xl" spacing={3}>
               <SellerProduct
                 history={history}
                 buttonAdminStat={buttonAdminStat}
                 toogleMenu={this.toogleMenu}
               />
-            );
-          }}
-        />
-        <Route
-          path="/seller/account"
-          exact
-          component={() => {
-            let history = useHistory();
-            return (
+            </Container>
+          );
+        }}
+      />
+    );
+    sellerPage.push(
+      <Route
+        path="/seller/account"
+        exact
+        component={() => {
+          let history = useHistory();
+          return (
+            <Container maxWidth="xl" spacing={3}>
               <SellerAccount
                 history={history}
                 buttonAdminStat={buttonAdminStat}
                 toogleMenu={this.toogleMenu}
               />
-            );
-          }}
-        />
-        <Route
-          path="/seller/report"
-          exact
-          component={() => {
-            let history = useHistory();
-            return (
+            </Container>
+          );
+        }}
+      />
+    );
+    sellerPage.push(
+      <Route
+        path="/seller/report"
+        exact
+        component={() => {
+          let history = useHistory();
+          return (
+            <Container maxWidth="xl" spacing={3}>
               <SellerReport
                 history={history}
                 buttonAdminStat={buttonAdminStat}
                 toogleMenu={this.toogleMenu}
               />
-            );
-          }}
-        />
-        <Route
-          path="/seller/product/:toDo"
-          exact
-          component={() => {
-            let history = useHistory();
-            const { toDo } = useParams();
+            </Container>
+          );
+        }}
+      />
+    );
+    sellerPage.push(
+      <Route
+        path="/seller/product/:toDo"
+        exact
+        component={() => {
+          let history = useHistory();
+          const { toDo } = useParams();
 
-            return (
+          return (
+            <Container maxWidth="xl" spacing={3}>
               <CreateProduct
                 history={history}
                 toDo={
@@ -229,10 +341,10 @@ class App extends Component {
                 buttonAdminStat={buttonAdminStat}
                 toogleMenu={this.toogleMenu}
               />
-            );
-          }}
-        />
-      </Container>
+            </Container>
+          );
+        }}
+      />
     );
     return (
       <Router>
@@ -245,6 +357,7 @@ class App extends Component {
               return <Register history={history}></Register>;
             }}
           />
+
           <Route
             path="/"
             exact
@@ -261,7 +374,8 @@ class App extends Component {
               return <Login history={history}></Login>;
             }}
           />
-          {isAdmin ? adminPage : sellerPage}
+          {isAdmin ? adminPage.map((e) => e) : sellerPage.map((e) => e)}
+          <Route component={() => <div>NOT FOUND</div>}></Route>
         </Switch>
       </Router>
     );
