@@ -22,4 +22,5 @@ public interface UserRepository {
     Map<String, Object> filterUser(String conditionQty, String conditionObj);
     int updateUser(User user);
     int changePassword(String id,String newPassword);
+    int delete(String id);
 }

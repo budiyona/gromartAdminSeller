@@ -165,4 +165,8 @@ public class UserController {
         }
         return new ResponseEntity<>("Account Not Found", HttpStatus.NOT_FOUND);
     }
+    @DeleteMapping("/user/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable("id") String id){
+        return new ResponseEntity<>("Delete", HttpStatus.OK);
+    }
 }

@@ -223,4 +223,9 @@ public class UserRepositoryImpl implements UserRepository {
         return jdbcTemplate.update(
                 "update user set password = ? where userCode = ?",newPassword,id);
     }
+
+    @Override
+    public int delete(String id) {
+        return jdbcTemplate.update("delete from user where userCode=?",id);
+    }
 }

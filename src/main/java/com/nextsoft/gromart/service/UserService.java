@@ -21,4 +21,5 @@ public interface UserService {
 
     Map<String, Object> filterUser(Map<String, Object> params);
     int changePassword(String id, String newPassword);
+    int delete(String id);
 }

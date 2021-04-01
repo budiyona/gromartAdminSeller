@@ -121,4 +121,9 @@ public class UserServiceImpl implements UserService {
     public int changePassword(String id, String newPassword) {
         return userRepository.changePassword(id, newPassword);
     }
+
+    @Override
+    public int delete(String id) {
+        return userRepository.delete(id);
+    }
 }
