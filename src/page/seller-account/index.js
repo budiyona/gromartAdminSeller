@@ -279,20 +279,22 @@ class SellerAccount extends Component {
           <Grid item xs={12}>
             <ButtonGroup>
               <Button
+                disabled={editPassword}
                 size="small"
                 type="submit"
                 style={{ width: 100 }}
                 variant="contained"
-                color={edit ? "default" : "primary"}
+                color="primary"
                 onClick={this.toogleEdit}
               >
                 edit
               </Button>
               <Button
+                disabled={edit}
                 type="submit"
                 size="small"
                 variant="contained"
-                color={editPassword ? "default" : "secondary"}
+                color="secondary"
                 onClick={this.toogleEditPassword}
               >
                 change password

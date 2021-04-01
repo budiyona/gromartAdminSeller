@@ -244,6 +244,12 @@ class AdminInfo extends Component {
     }
     // console.log(oldPassword, newPassword, newPassword2);
   };
+  cancelAction = () => {
+    this.setState({
+      edit: false,
+      editPassword: false,
+    });
+  };
   render() {
     const { buttonAdminStat, history, toogleMenu, classes } = this.props;
     const {
@@ -281,20 +287,24 @@ class AdminInfo extends Component {
           <Grid container item xs={12}>
             <ButtonGroup>
               <Button
+                disabled={editPassword || edit}
                 size="small"
                 type="submit"
                 variant="contained"
-                color={edit ? "" : "primary"}
+                // color={edit ? "default" : "primary"}
+                color="primary"
                 style={{ width: 100 }}
                 onClick={this.toogleEdit}
               >
                 edit
               </Button>
               <Button
+                disabled={editPassword || edit}
                 type="submit"
                 size="small"
                 variant="contained"
-                color={editPassword ? "" : "secondary"}
+                // color={editPassword ? "default" : "secondary"}
+                color="secondary"
                 onClick={this.toogleEditPassword}
               >
                 change password
@@ -378,16 +388,26 @@ class AdminInfo extends Component {
 
                   {edit && (
                     <Grid item>
-                      <Button
-                        type="submit"
-                        fullWidth
-                        hidden={true}
-                        variant="contained"
-                        color="primary"
-                        className={classes.submit}
-                      >
-                        save
-                      </Button>
+                      <ButtonGroup fullWidth>
+                        <Button
+                          type="submit"
+                          fullWidth
+                          variant="contained"
+                          color="primary"
+                          className={classes.submit}
+                        >
+                          save
+                        </Button>
+                        <Button
+                          fullWidth
+                          variant="contained"
+                          color="secondary"
+                          className={classes.submit}
+                          onClick={this.cancelAction}
+                        >
+                          cancel
+                        </Button>
+                      </ButtonGroup>
                     </Grid>
                   )}
                 </form>
@@ -509,16 +529,26 @@ class AdminInfo extends Component {
 
                   {editPassword && (
                     <Grid item>
-                      <Button
-                        type="submit"
-                        fullWidth
-                        hidden={true}
-                        variant="contained"
-                        color="primary"
-                        className={classes.submit}
-                      >
-                        change password
-                      </Button>
+                      <ButtonGroup fullWidth>
+                        <Button
+                          type="submit"
+                          fullWidth
+                          variant="contained"
+                          color="primary"
+                          className={classes.submit}
+                        >
+                          change password
+                        </Button>
+                        <Button
+                          fullWidth
+                          variant="contained"
+                          color="secondary"
+                          className={classes.submit}
+                          onClick={this.cancelAction}
+                        >
+                          cancel
+                        </Button>
+                      </ButtonGroup>
                     </Grid>
                   )}
                 </form>
