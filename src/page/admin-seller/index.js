@@ -270,6 +270,7 @@ class AdminSeller extends Component {
       searchingStatus: false,
     });
   };
+  rejectSeller = (id) => {};
   render() {
     const { buttonAdminStat, classes, history, toogleMenu } = this.props;
     const {

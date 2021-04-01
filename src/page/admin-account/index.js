@@ -107,7 +107,7 @@ class AdminInfo extends Component {
     }
   };
   validationPhone = (phone) => {
-    const patterPhone = new RegExp("[0-9]{9,12}");
+    const patterPhone = new RegExp("^(^\\+62|62|^08)(\\d{3,4}-?){2}\\d{3,4}$");
     let valid = patterPhone.test(phone);
     if (valid) {
       this.setState({
@@ -120,9 +120,7 @@ class AdminInfo extends Component {
     }
   };
   validationEmail = (email) => {
-    const patternEmail = new RegExp(
-      "^[a-zA-Z0-9-_]+@[a-zA-Z0-9]+\\.[a-zA-Z]{2,}$"
-    );
+    const patternEmail = new RegExp("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
     let valid = patternEmail.test(email);
     if (valid) {
       this.setState({
@@ -242,7 +240,6 @@ class AdminInfo extends Component {
           }
         });
     }
-    // console.log(oldPassword, newPassword, newPassword2);
   };
   cancelAction = () => {
     this.setState({
@@ -291,7 +288,6 @@ class AdminInfo extends Component {
                 size="small"
                 type="submit"
                 variant="contained"
-                // color={edit ? "default" : "primary"}
                 color="primary"
                 style={{ width: 100 }}
                 onClick={this.toogleEdit}
@@ -303,7 +299,6 @@ class AdminInfo extends Component {
                 type="submit"
                 size="small"
                 variant="contained"
-                // color={editPassword ? "default" : "secondary"}
                 color="secondary"
                 onClick={this.toogleEditPassword}
               >

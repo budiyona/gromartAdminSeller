@@ -106,7 +106,7 @@ class SellerAccount extends Component {
     }
   };
   validationPhone = (phone) => {
-    const patterPhone = new RegExp("[0-9]{9,12}");
+    const patterPhone = new RegExp("^(^\\+62|62|^08)(\\d{3,4}-?){2}\\d{3,4}$");
     let valid = patterPhone.test(phone);
     if (valid) {
       this.setState({
@@ -119,9 +119,7 @@ class SellerAccount extends Component {
     }
   };
   validationEmail = (email) => {
-    const patternEmail = new RegExp(
-      "^[a-zA-Z0-9-_]+@[a-zA-Z0-9]+\\.[a-zA-Z]{2,}$"
-    );
+    const patternEmail = new RegExp("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
     let valid = patternEmail.test(email);
     if (valid) {
       this.setState({
@@ -243,6 +241,12 @@ class SellerAccount extends Component {
     }
     // console.log(oldPassword, newPassword, newPassword2);
   };
+  cancelAction = () => {
+    this.setState({
+      edit: false,
+      editPassword: false,
+    });
+  };
   render() {
     const { buttonAdminStat, history, toogleMenu, classes } = this.props;
     const {
@@ -279,7 +283,7 @@ class SellerAccount extends Component {
           <Grid item xs={12}>
             <ButtonGroup>
               <Button
-                disabled={editPassword}
+                disabled={editPassword || edit}
                 size="small"
                 type="submit"
                 style={{ width: 100 }}
@@ -290,7 +294,7 @@ class SellerAccount extends Component {
                 edit
               </Button>
               <Button
-                disabled={edit}
+                disabled={editPassword || edit}
                 type="submit"
                 size="small"
                 variant="contained"
@@ -320,6 +324,7 @@ class SellerAccount extends Component {
                 >
                   <Grid item>
                     <TextField
+                      // disabled
                       size="small"
                       margin="normal"
                       name="fullname"
@@ -328,9 +333,9 @@ class SellerAccount extends Component {
                       label="Name"
                       value={fullname}
                       onChange={(e) => this.setValue(e)}
-                      error={errorFullname}
+                      error={edit && errorFullname}
                       helperText={
-                        errorFullname
+                        edit && errorFullname
                           ? "name cannot be number or special character"
                           : ""
                       }
@@ -376,16 +381,27 @@ class SellerAccount extends Component {
 
                   {edit && (
                     <Grid item>
-                      <Button
-                        type="submit"
-                        fullWidth
-                        hidden={true}
-                        variant="contained"
-                        color="primary"
-                        className={classes.submit}
-                      >
-                        save
-                      </Button>
+                      <ButtonGroup fullWidth>
+                        <Button
+                          type="submit"
+                          fullWidth
+                          hidden={true}
+                          variant="contained"
+                          color="primary"
+                          className={classes.submit}
+                        >
+                          save
+                        </Button>
+                        <Button
+                          fullWidth
+                          variant="contained"
+                          color="secondary"
+                          className={classes.submit}
+                          onClick={this.cancelAction}
+                        >
+                          cancel
+                        </Button>
+                      </ButtonGroup>
                     </Grid>
                   )}
                 </form>
@@ -505,16 +521,27 @@ class SellerAccount extends Component {
 
                   {editPassword && (
                     <Grid item>
-                      <Button
-                        type="submit"
-                        fullWidth
-                        hidden={true}
-                        variant="contained"
-                        color="primary"
-                        className={classes.submit}
-                      >
-                        change password
-                      </Button>
+                      <ButtonGroup fullWidth>
+                        <Button
+                          type="submit"
+                          fullWidth
+                          hidden={true}
+                          variant="contained"
+                          color="primary"
+                          className={classes.submit}
+                        >
+                          change password
+                        </Button>
+                        <Button
+                          fullWidth
+                          variant="contained"
+                          color="secondary"
+                          className={classes.submit}
+                          onClick={this.cancelAction}
+                        >
+                          cancel
+                        </Button>
+                      </ButtonGroup>
                     </Grid>
                   )}
                 </form>

@@ -48,8 +48,8 @@ const useStyles = () => ({
   },
   miniPadding: {
     // backgroundColor: "black"
-    padding: 12
-  }
+    padding: 12,
+  },
 });
 
 class SellerCard extends Component {
@@ -57,6 +57,7 @@ class SellerCard extends Component {
     super(props);
     this.state = {
       modal: false,
+      modalApproval: false,
       summary: {
         active: 0,
         inactive: 0,
@@ -66,10 +67,10 @@ class SellerCard extends Component {
       currentLimit: 0,
     };
   }
-  toggleModal = () => {
-    this.getSellerSumary(this.props.user.userCode);
+  toggleModal = (modalName) => {
+    console.log(modalName, "modal");
     this.setState({
-      modal: !this.state.modal,
+      [modalName]: !this.state[modalName],
     });
   };
 
@@ -100,63 +101,66 @@ class SellerCard extends Component {
     this.toggleModal();
   };
   render() {
-    const {
-      classes,
-      onClick,
-      user,
-      history,
-      idx,
-      onChange,
-
-    } = this.props;
-    const { summary, modal, currentlimit } = this.state;
+    const { classes, onClick, user, history, idx, onChange } = this.props;
+    const { summary, modal, currentlimit, modalApproval } = this.state;
     return (
       <Card className={classes.root}>
-        <CardHeader className={classes.miniPadding}
-          // avatar={
-          //   <Avatar aria-label="recipe" className={classes.avatar}>
-          //     {user.userName[0]}
-          //   </Avatar>
-          // }
+        <CardHeader
+          className={classes.miniPadding}
           title={user.userName}
-          subheader={user.userCode + " ("
-            + moment(user.createdDate).format("MMMM DD, YYYY") + ")"}
+          subheader={
+            user.userCode +
+            " (" +
+            moment(user.createdDate).format("MMMM DD, YYYY") +
+            ")"
+          }
         />
-        {/* <Typography variant="body2" color="textSecondary" component="p">
-          {user.userCode}
-        </Typography> */}
+
         <CardMedia
           style={{ cursor: "pointer" }}
           className={classes.media}
           image={person}
           onClick={() => history.push("/admin/product/" + user.userCode)}
         />
-        {/* <CardContent className={classes.miniPadding}>
-          <Typography variant="body2" color="textSecondary" component="p">
-            {user.userCode}
-          </Typography>
-        </CardContent> */}
-        <CardActions disableSpacing >
+
+        <CardActions disableSpacing>
           <div style={{ display: "flex", alignItems: "center", width: "50%" }}>
-            <IconButton onClick={onClick} aria-label="share" size="small">
+            {/* <IconButton onClick={onClick} aria-label="share" size="small"> */}
+            <IconButton
+              onClick={
+                user.status === "requested"
+                  ? () => this.toggleModal("modalApproval")
+                  : onClick
+              }
+              aria-label="share"
+              size="small"
+            >
               <DoneIcon
                 className={
                   user.status === "active"
                     ? classes.green
                     : user.status === "inactive"
-                      ? classes.red
-                      : classes.blue
+                    ? classes.red
+                    : classes.blue
                 }
               />
             </IconButton>
             <Typography variant="subtitle2">{user.status}</Typography>
           </div>
-          <div style={{ display: "flex", alignItems: "center", width: "50%" }}>
-            <IconButton onClick={this.toggleModal} aria-label="share" size="small">
-              <InboxIcon className={classes.blue} />
-            </IconButton>
-            <Typography variant="subtitle2">Limit</Typography>
-          </div>
+          {user.status !== "requested" && (
+            <div
+              style={{ display: "flex", alignItems: "center", width: "50%" }}
+            >
+              <IconButton
+                onClick={() => this.toggleModal("modal")}
+                aria-label="share"
+                size="small"
+              >
+                <InboxIcon className={classes.blue} />
+              </IconButton>
+              <Typography variant="subtitle2">Limit</Typography>
+            </div>
+          )}
         </CardActions>
         <Dialog
           open={modal}
@@ -235,11 +239,41 @@ class SellerCard extends Component {
             </Grid>
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.toggleModal} color="primary">
+            <Button onClick={() => this.toggleModal("modal")} color="primary">
               Cancel
             </Button>
             <Button onClick={this.saveEdit} color="primary">
               Save
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <Dialog
+          open={modalApproval}
+          onClose={() => {
+            this.setState({
+              modalApproval: false,
+            });
+          }}
+        >
+          <DialogTitle>Approval</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Are you sure to approve {user.userName} as seller
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button color="primary" onClick={onClick}>
+              Yes
+            </Button>
+            <Button
+              color="secondary"
+              onClick={() => {
+                this.setState({
+                  modalApproval: false,
+                });
+              }}
+            >
+              No
             </Button>
           </DialogActions>
         </Dialog>
