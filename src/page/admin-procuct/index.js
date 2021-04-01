@@ -54,8 +54,7 @@ class AdminProduct extends Component {
           },
         },
       ],
-      currentPage: 1,
-      page: 0,
+
       filterSwitch: false,
       filterByStatus: false,
       filterByCode: false,
@@ -73,11 +72,13 @@ class AdminProduct extends Component {
       filterBy: "all",
       page: 0,
       currentPage: 1,
-      status: "all"
+      status: "all",
     };
   }
   componentDidMount() {
-    this.getProductWithFilter("http://localhost:8080/api/product/filter?productName=")
+    this.getProductWithFilter(
+      "http://localhost:8080/api/product/filter?productName="
+    );
   }
 
   changePage = (event, page) => {
@@ -107,7 +108,9 @@ class AdminProduct extends Component {
         toDate: "",
       });
       if (value === "all") {
-        this.getProductWithFilter("http://localhost:8080/api/product/filter?productName=")
+        this.getProductWithFilter(
+          "http://localhost:8080/api/product/filter?productName="
+        );
       }
     }
     this.setState({
@@ -117,8 +120,7 @@ class AdminProduct extends Component {
   doSearch = () => {
     const { user } = this.props;
     const { fromDate, toDate, filterBy, searchField, status } = this.state;
-    let endpoint =
-      "http://localhost:8080/api/product/filter?";
+    let endpoint = "http://localhost:8080/api/product/filter?";
     if (filterBy === "productName") {
       endpoint += "productName=" + searchField;
     } else if (filterBy === "productCode") {
@@ -168,7 +170,8 @@ class AdminProduct extends Component {
       filterByName,
       filterByDate,
       statusFilter,
-      filterBy, status
+      filterBy,
+      status,
     } = this.state;
     let buttonGo = (
       <Button
@@ -185,7 +188,8 @@ class AdminProduct extends Component {
       formFilter = (
         <>
           <Grid item xs={3}>
-            <Input fullWidth
+            <Input
+              fullWidth
               placeholder="search"
               style={{ height: "29px" }}
               name="searchField"
@@ -253,7 +257,6 @@ class AdminProduct extends Component {
           ></Menu>
         </Grid>
 
-
         <Grid
           container
           item
@@ -263,8 +266,6 @@ class AdminProduct extends Component {
           className={classes.margin}
           spacing={3}
         >
-
-
           <Grid item xs={3}>
             <FormControl className={classes.formControl} size="small" fullWidth>
               <Select
@@ -284,15 +285,10 @@ class AdminProduct extends Component {
 
           {formFilter}
         </Grid>
-        <Grid container item xs={12} spacing={2} >
+        <Grid container item xs={12} spacing={2}>
           {listProduct &&
             listProduct.map((prod, i) => (
-              <Grid
-                item
-                xs={4}
-                key={i}
-                className={classes.margin}
-              >
+              <Grid item xs={4} key={i} className={classes.margin}>
                 <ProductCard product={prod}></ProductCard>
               </Grid>
             ))}

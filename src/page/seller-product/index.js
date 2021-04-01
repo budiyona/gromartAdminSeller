@@ -32,19 +32,7 @@ class SellerProduct extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      products: [
-        // {
-        //   productCode: "",
-        //   productName: "",
-        //   price: 0,
-        //   stock: 0,
-        //   description: "",
-        //   seller: {
-        //     userCode: "",
-        //     userName: "",
-        //   },
-        // },
-      ],
+      products: [],
       target: "",
       showClear: false,
 
@@ -54,8 +42,8 @@ class SellerProduct extends Component {
       searchingStatus: false,
       page: 0,
       filterBy: "all",
-      currentPage: "-",
-      status: "all"
+      currentPage: 1,
+      status: "all",
     };
   }
   componentDidMount() {
@@ -78,8 +66,8 @@ class SellerProduct extends Component {
       if (value === "all") {
         this.getProductWithFilter(
           "http://localhost:8080/api/product/seller/filter/" +
-          user.userCode +
-          "?"
+            user.userCode +
+            "?"
         );
       }
     }
@@ -145,8 +133,8 @@ class SellerProduct extends Component {
     } else {
       this.getProductWithFilter(
         "http://localhost:8080/api/product/seller/filter/" +
-        user.userCode +
-        "?",
+          user.userCode +
+          "?",
         offset
       );
     }
@@ -164,8 +152,8 @@ class SellerProduct extends Component {
           alert("succesfully deleted product");
           this.getProductWithFilter(
             "http://localhost:8080/api/product/seller/filter/" +
-            user.userCode +
-            "?"
+              user.userCode +
+              "?"
           );
         } else {
           alert("delete failed");
@@ -278,16 +266,19 @@ class SellerProduct extends Component {
                 style={{ width: 100 }}
               >
                 Report
-            </Button>
+              </Button>
               <Button
                 variant="contained"
-
                 size="small"
-                style={{ width: 100, backgroundColor: blue[500], color: 'white' }}
+                style={{
+                  width: 100,
+                  backgroundColor: blue[500],
+                  color: "white",
+                }}
                 onClick={() => history.push("/seller/product/create")}
               >
                 Add
-            </Button>
+              </Button>
             </ButtonGroup>
           </Grid>
 
@@ -311,8 +302,8 @@ class SellerProduct extends Component {
           {formFilter}
         </Grid>
 
-        <Grid container item xs={12} style={{minHeight: "70vh"}}>
-          {products.length>0 &&
+        <Grid container item xs={12} style={{ minHeight: "70vh" }}>
+          {products.length > 0 &&
             products.map((product, i) => (
               <Grid item xs={4} key={i} className={classes.margin}>
                 <ProductCard
@@ -323,7 +314,7 @@ class SellerProduct extends Component {
               </Grid>
             ))}
         </Grid>
-        <Grid container item xs={12} >
+        <Grid container item xs={12}>
           <PaginationControlled
             count={page}
             page={currentPage}

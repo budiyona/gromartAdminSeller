@@ -75,11 +75,9 @@ class SellerCard extends Component {
   };
 
   getSellerSumary = (id) => {
-    // console.log("iddd", id);
     axios
       .get("http://localhost:8080/api/product/seller-summary?id=" + id)
       .then((res) => {
-        // console.log("dateget", res.data.limit);
         this.setState({
           summary: res.data,
         });
@@ -87,8 +85,6 @@ class SellerCard extends Component {
   };
   changeLimit = (e) => {
     const { name, value } = e.target;
-    // console.log(e.target);
-
     this.setState({
       [name]: value,
     });
