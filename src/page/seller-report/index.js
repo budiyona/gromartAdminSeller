@@ -38,8 +38,8 @@ const useStyles = (theme) => ({
     color: "white",
   },
   pagebreak: {
-    display: "none"
-  }
+    display: "none",
+  },
 });
 const ref = React.createRef();
 
@@ -80,8 +80,8 @@ class SellerReport extends Component {
   componentDidMount() {
     this.getProductWithFilter(
       "http://localhost:8080/api/product/report/" +
-      this.props.user.userCode +
-      "?"
+        this.props.user.userCode +
+        "?"
     );
   }
   changePage = (event, page) => {
@@ -150,8 +150,8 @@ class SellerReport extends Component {
   resetData = () => {
     this.getProductWithFilter(
       "http://localhost:8080/api/product/report/" +
-      this.props.user.userCode +
-      "?"
+        this.props.user.userCode +
+        "?"
     );
   };
   render() {
@@ -177,26 +177,13 @@ class SellerReport extends Component {
     const data = [];
     listProduct.length > 0 &&
       listProduct.forEach((product) => {
-        let userToAdd = {}
+        let userToAdd = {};
         for (const property in product) {
-          userToAdd = { ...userToAdd, [property]: product[property] }
+          userToAdd = { ...userToAdd, [property]: product[property] };
         }
-        data.push(userToAdd)
+        data.push(userToAdd);
       });
-    // listProduct.length > 0 &&
-    //   listProduct.forEach((product) => {
-    //     data.push({
-    //       productCode: product.productCode,
-    //       productName: product.productName,
-    //       price: product.price,
-    //       stock: product.stock,
-    //       description: product.description,
-    //       seller: {
-    //         userCode: product.seller.userCode,
-    //         userName: product.seller.userName,
-    //       },
-    //     });
-    //   });
+
     const csvExport = {
       data: data,
       headers: header,
@@ -273,9 +260,9 @@ class SellerReport extends Component {
     // console.log(formFilter);
     // console.log("hadeerr", header);
 
-    let maxPaper = Math.ceil(listProduct.length / 5)
-    let dataToDisplay = []
-    let i = 0
+    let maxPaper = Math.ceil(listProduct.length / 5);
+    let dataToDisplay = [];
+    let i = 0;
     while (i < maxPaper) {
       // console.log("max", maxPaper);
       dataToDisplay.push(
@@ -283,7 +270,7 @@ class SellerReport extends Component {
           border={1}
           style={{
             width: "793.7007874px",
-            height: "1126.019685px",
+            height: "1125.019685px",
             marginLeft: "auto",
             marginRight: "auto",
             marginTop: "0px",
@@ -304,13 +291,13 @@ class SellerReport extends Component {
                 pageTotal: maxPaper,
                 pageNow: i + 1,
               }}
-              listProduct={listProduct.slice(i * 5, (i * 5) + 5)}
+              listProduct={listProduct.slice(i * 5, i * 5 + 5)}
             />
             <div className={classes.pageBreak} />
           </div>
         </Box>
-      )
-      i++
+      );
+      i++;
     }
 
     return (
@@ -374,27 +361,11 @@ class SellerReport extends Component {
               BACK
             </Button>
           </Grid>
-          {/* <Grid item xs={2} align="right">
-            <Pdf targetRef={ref} filename="code-example.pdf">
-              {({ toPdf }) => (
-                <Button
-                  size="small"
-                  variant="contained"
-                  color="primary"
-                  disableElevation
-                  onClick={toPdf}
-                >
-                  EXPORT PDF
-                </Button>
-              )}
-            </Pdf>
-          </Grid> */}
+
           <Grid item xs={4} align="right">
             <ButtonGroup>
               <ReactToPrint
                 trigger={() => {
-                  // NOTE: could just as easily return <SomeComponent />. Do NOT pass an `onClick` prop
-                  // to the root node of the returned component as it will be overwritten.
                   return (
                     <Button
                       style={{ borderRadius: "5px 0px 0px 5px" }}
@@ -419,7 +390,7 @@ class SellerReport extends Component {
                   disableElevation
                 >
                   Export CSV
-              </Button>
+                </Button>
               </CSVLink>
             </ButtonGroup>
           </Grid>
@@ -429,17 +400,22 @@ class SellerReport extends Component {
           direction="row"
           justify="space-between"
           alignItems="flex-start"
+          style={{
+            backgroundColor: "white",
+            padding: "20px",
+            borderRadius: "10px",
+          }}
         >
           <Grid container item xs={12}>
             <GridList
               // cellHeight={270}
               className={classes.gridList}
-              style={{ width: "100%", height: 420 }}
+              style={{ width: "100%", height: 520 }}
               // align="center"
               cols={3}
             >
               <div ref={(el) => (this.componentRef = el)}>
-                {dataToDisplay.map(e => e)}
+                {dataToDisplay.map((e) => e)}
               </div>
             </GridList>
           </Grid>

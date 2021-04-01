@@ -456,6 +456,9 @@ class AdminInfo extends Component {
                       type="password"
                       autoFocus
                       onChange={(e) => this.setValue(e)}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
                     />
                   </Grid>
 
@@ -477,6 +480,9 @@ class AdminInfo extends Component {
                           ? "minimum 8 character, at least one number"
                           : ""
                       }
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
                     />
                   </Grid>
                   <Grid item>
@@ -495,6 +501,9 @@ class AdminInfo extends Component {
                       helperText={
                         errorRepassword ? "password did not match" : ""
                       }
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
                     />
                   </Grid>
 

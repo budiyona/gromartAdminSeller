@@ -7,6 +7,7 @@ import {
   DialogContentText,
   DialogTitle,
   Grid,
+  Paper,
   TextField,
   withStyles,
 } from "@material-ui/core";
@@ -223,13 +224,13 @@ class SellerAccount extends Component {
       axios
         .put(
           "http://localhost:8080/api//user/change-password?id=" +
-          user.userCode +
-          "&oldPassword=" +
-          oldPassword +
-          "&newPassword=" +
-          newPassword +
-          "&newPassword2=" +
-          newPassword2
+            user.userCode +
+            "&oldPassword=" +
+            oldPassword +
+            "&newPassword=" +
+            newPassword +
+            "&newPassword2=" +
+            newPassword2
         )
         .then((res) => {
           res.status === 200 && alert("Update Success");
@@ -274,8 +275,8 @@ class SellerAccount extends Component {
             buttonAdminStat={buttonAdminStat}
           ></Menu>
         </Grid>
-        <Grid container item xs={12} >
-          <Grid item xs={12} >
+        <Grid container item xs={12}>
+          <Grid item xs={12}>
             <ButtonGroup>
               <Button
                 size="small"
@@ -286,7 +287,7 @@ class SellerAccount extends Component {
                 onClick={this.toogleEdit}
               >
                 edit
-            </Button>
+              </Button>
               <Button
                 type="submit"
                 size="small"
@@ -295,86 +296,98 @@ class SellerAccount extends Component {
                 onClick={this.toogleEditPassword}
               >
                 change password
-            </Button>
+              </Button>
             </ButtonGroup>
           </Grid>
           {!editPassword ? (
-            <Grid container item xs={6} className={classes.margin}>
-
-              <form
-                className={classes.form}
-                onSubmit={this.openModal}
+            <Grid container item xs={12} className={classes.margin}>
+              <Paper
+                elevation={3}
+                style={{
+                  marginTop: "10px",
+                  width: "100%",
+                  minHeight: "70vh",
+                  padding: "10px",
+                  backgroundColor: "rgba(255,255,255,0.7)",
+                }}
               >
-                <Grid item>
-                  <TextField
-                    size="small"
-                    margin="normal"
-                    name="fullname"
-                    required
-                    fullWidth
-                    label="Name"
-                    value={fullname}
-                    onChange={(e) => this.setValue(e)}
-                    error={errorFullname}
-                    helperText={
-                      errorFullname
-                        ? "name cannot be number or special character"
-                        : ""
-                    }
-                  />
-                </Grid>
-
-                <Grid item>
-                  <TextField
-                    margin="dense"
-                    size="small"
-                    required
-                    fullWidth
-                    label="phone"
-                    value={phone}
-                    name="phone"
-                    autoComplete="phone"
-                    onChange={(e) => this.setValue(e)}
-                    error={errorPhone}
-                    helperText={
-                      errorPhone ? "minimum 8 number and cannot be letter" : ""
-                    }
-                  />
-                </Grid>
-
-                <Grid item>
-                  <TextField
-                    margin="dense"
-                    size="small"
-                    required
-                    fullWidth
-                    value={email}
-                    id="email"
-                    label="Email Address"
-                    name="email"
-                    autoComplete="email"
-                    onChange={(e) => this.setValue(e)}
-                    error={errorEmail}
-                    helperText={errorEmail ? "incorrect email format" : ""}
-                  />
-                </Grid>
-
-
-                {edit && (
+                <form
+                  className={classes.form}
+                  onSubmit={this.openModal}
+                  style={{ width: "50%" }}
+                >
                   <Grid item>
-                    <Button
-                      type="submit"
+                    <TextField
+                      size="small"
+                      margin="normal"
+                      name="fullname"
+                      required
                       fullWidth
-                      hidden={true}
-                      variant="contained"
-                      color="primary"
-                      className={classes.submit}
-                    >
-                      save
-                    </Button>
+                      label="Name"
+                      value={fullname}
+                      onChange={(e) => this.setValue(e)}
+                      error={errorFullname}
+                      helperText={
+                        errorFullname
+                          ? "name cannot be number or special character"
+                          : ""
+                      }
+                    />
                   </Grid>
-                )}
-              </form>
+
+                  <Grid item>
+                    <TextField
+                      margin="dense"
+                      size="small"
+                      required
+                      fullWidth
+                      label="phone"
+                      value={phone}
+                      name="phone"
+                      autoComplete="phone"
+                      onChange={(e) => this.setValue(e)}
+                      error={errorPhone}
+                      helperText={
+                        errorPhone
+                          ? "minimum 8 number and cannot be letter"
+                          : ""
+                      }
+                    />
+                  </Grid>
+
+                  <Grid item>
+                    <TextField
+                      margin="dense"
+                      size="small"
+                      required
+                      fullWidth
+                      value={email}
+                      id="email"
+                      label="Email Address"
+                      name="email"
+                      autoComplete="email"
+                      onChange={(e) => this.setValue(e)}
+                      error={errorEmail}
+                      helperText={errorEmail ? "incorrect email format" : ""}
+                    />
+                  </Grid>
+
+                  {edit && (
+                    <Grid item>
+                      <Button
+                        type="submit"
+                        fullWidth
+                        hidden={true}
+                        variant="contained"
+                        color="primary"
+                        className={classes.submit}
+                      >
+                        save
+                      </Button>
+                    </Grid>
+                  )}
+                </form>
+              </Paper>
               <Dialog
                 open={modal}
                 onClose={() => {
@@ -392,7 +405,6 @@ class SellerAccount extends Component {
                   <TextField
                     autoFocus
                     margin="dense"
-
                     name="password"
                     type="password"
                     onChange={(e) => this.setValue(e)}
@@ -410,10 +422,21 @@ class SellerAccount extends Component {
               </Dialog>
             </Grid>
           ) : (
-              <Grid container item xs={6} className={classes.margin}>
+            <Grid container item xs={12} className={classes.margin}>
+              <Paper
+                elevation={3}
+                style={{
+                  marginTop: "10px",
+                  width: "100%",
+                  minHeight: "70vh",
+                  padding: "10px",
+                  backgroundColor: "rgba(255,255,255,0.7)",
+                }}
+              >
                 <form
                   className={classes.form}
                   onSubmit={this.changePassword}
+                  style={{ width: "50%" }}
                 >
                   <Grid item>
                     <TextField
@@ -472,7 +495,9 @@ class SellerAccount extends Component {
                       }}
                       onChange={(e) => this.setValue(e)}
                       error={errorRepassword}
-                      helperText={errorRepassword ? "password did not match" : ""}
+                      helperText={
+                        errorRepassword ? "password did not match" : ""
+                      }
                     />
                   </Grid>
 
@@ -487,12 +512,13 @@ class SellerAccount extends Component {
                         className={classes.submit}
                       >
                         change password
-                    </Button>
+                      </Button>
                     </Grid>
                   )}
                 </form>
-              </Grid>
-            )}
+              </Paper>
+            </Grid>
+          )}
         </Grid>
       </Grid>
     );
