@@ -160,7 +160,7 @@ class AdminHome extends Component {
         </Grid>
 
         <Grid container item xs={12} spacing={3}>
-          <Grid container item xs={8} spacing={3}>
+          <Grid container item xs={6} spacing={3}>
             <Grid container item xs={12} className={classes.label}>
               <DasboardTitle
                 fullwidth
@@ -222,7 +222,7 @@ class AdminHome extends Component {
               </Grid>
             </Grid>
           </Grid>
-          <Grid container item xs={4} spacing={3}>
+          <Grid container item xs={6} spacing={3}>
             <Grid item xs={12}>
               <DasboardTitle
                 pointer

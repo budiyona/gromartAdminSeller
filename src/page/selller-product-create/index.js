@@ -65,33 +65,20 @@ class CreateProduct extends Component {
       product: newProduct,
     });
   };
-  setErrorMsg = (msg) => {
-    this.setState({
-      errorMsg: msg,
-    });
-  };
 
   handleValidation = () => {
-    const { product } = this.state;
+    const { productName, price, stock, description } = this.state.product;
+
     let newErrorMsg = "";
-    for (const property in product) {
-      if (
-        product[property] !== null &&
-        property !== "createdDate" &&
-        property !== "seller"
-      ) {
-        if (property === "productCode") {
-        } else if (property === "productName") {
-          !this.lengthValidation(product[property]) &&
-            (newErrorMsg = "name cannot be null");
-        } else if (property === "price" || property === "stock") {
-          !this.lengthValidation(product[property]) &&
-            (newErrorMsg = property + " cannot be null or minus");
-        } else {
-          !this.lengthValidation(product[property]) &&
-            (newErrorMsg = property + " cannot be null");
-        }
-      }
+
+    if (!this.lengthValidation(productName)) {
+      newErrorMsg = "name cannot be null";
+    } else if (!this.lengthValidation(price)) {
+      newErrorMsg = "price cannot be null or minus";
+    } else if (!this.lengthValidation(stock)) {
+      newErrorMsg = "stock cannot be null or minus";
+    } else if (!this.lengthValidation(description)) {
+      newErrorMsg = "description cannot be null";
     }
     this.setState({
       errorMsg: newErrorMsg,

@@ -96,8 +96,17 @@ class SellerCard extends Component {
     editQty(idx, summary.active);
     this.toggleModal();
   };
+
   render() {
-    const { classes, onClick, user, history, idx, onChange } = this.props;
+    const {
+      classes,
+      toggleStatus,
+      user,
+      history,
+      idx,
+      onChange,
+      rejectSeller,
+    } = this.props;
     const { summary, modal, currentlimit, modalApproval } = this.state;
     return (
       <Card className={classes.root}>
@@ -126,7 +135,7 @@ class SellerCard extends Component {
               onClick={
                 user.status === "requested"
                   ? () => this.toggleModal("modalApproval")
-                  : onClick
+                  : () => toggleStatus(idx)
               }
               aria-label="share"
               size="small"
@@ -258,15 +267,21 @@ class SellerCard extends Component {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button color="primary" onClick={onClick}>
+            <Button
+              color="primary"
+              onClick={() => {
+                toggleStatus(idx);
+                this.toggleModal("modalApproval");
+              }}
+            >
               Yes
             </Button>
+
             <Button
               color="secondary"
               onClick={() => {
-                this.setState({
-                  modalApproval: false,
-                });
+                rejectSeller(user.userCode);
+                this.toggleModal("modalApproval");
               }}
             >
               No

@@ -15,6 +15,7 @@ import React, { Component } from "react";
 import { Menu } from "../../component";
 import axios from "axios";
 import { connect } from "react-redux";
+import ErrorOutlineIcon from "@material-ui/icons/ErrorOutline";
 const useStyles = (theme) => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -282,29 +283,51 @@ class AdminInfo extends Component {
         </Grid>
         <Grid container item xs={12}>
           <Grid container item xs={12}>
-            <ButtonGroup>
-              <Button
-                disabled={editPassword || edit}
-                size="small"
-                type="submit"
-                variant="contained"
-                color="primary"
-                style={{ width: 100 }}
-                onClick={this.toogleEdit}
-              >
-                edit
-              </Button>
-              <Button
-                disabled={editPassword || edit}
-                type="submit"
-                size="small"
-                variant="contained"
-                color="secondary"
-                onClick={this.toogleEditPassword}
-              >
-                change password
-              </Button>
-            </ButtonGroup>
+            <Grid item xs={4}>
+              <ButtonGroup>
+                <Button
+                  disabled={editPassword || edit}
+                  size="small"
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  style={{ width: 100 }}
+                  onClick={this.toogleEdit}
+                >
+                  edit
+                </Button>
+                <Button
+                  disabled={editPassword || edit}
+                  type="submit"
+                  size="small"
+                  variant="contained"
+                  color="secondary"
+                  onClick={this.toogleEditPassword}
+                >
+                  change password
+                </Button>
+              </ButtonGroup>
+            </Grid>
+            <Grid>
+              {(edit || editPassword) && (
+                <Button
+                  type="submit"
+                  size="small"
+                  color="primary"
+                  variant="contained"
+                  disableElevation
+                  startIcon={<ErrorOutlineIcon />}
+                  style={{
+                    width: 500,
+                    pointerEvents: "none",
+                    backgroundColor: "rgba(0, 0, 0, 0.7)",
+                    color: "orange",
+                  }}
+                >
+                  {edit ? "Edit Profile" : "Edit Password"} - Mode
+                </Button>
+              )}
+            </Grid>
           </Grid>
           {!editPassword ? (
             <Grid container item xs={12} className={classes.margin}>
@@ -326,6 +349,9 @@ class AdminInfo extends Component {
                 >
                   <Grid item>
                     <TextField
+                      InputProps={{
+                        readOnly: !edit,
+                      }}
                       size="small"
                       margin="normal"
                       autoComplete="fname"
@@ -346,6 +372,9 @@ class AdminInfo extends Component {
                   </Grid>
                   <Grid item>
                     <TextField
+                      InputProps={{
+                        readOnly: !edit,
+                      }}
                       margin="dense"
                       size="small"
                       required
@@ -366,6 +395,9 @@ class AdminInfo extends Component {
                   </Grid>
                   <Grid item>
                     <TextField
+                      InputProps={{
+                        readOnly: !edit,
+                      }}
                       margin="dense"
                       size="small"
                       required

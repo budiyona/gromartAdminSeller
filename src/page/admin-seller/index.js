@@ -88,6 +88,7 @@ class AdminSeller extends Component {
       );
   };
   toogleStatus = (idx) => {
+    console.log("toogle status");
     const { ListStatus, listSeller } = this.state;
     const { user } = this.props;
     let newStatusIndex = ListStatus.findIndex(
@@ -270,7 +271,26 @@ class AdminSeller extends Component {
       searchingStatus: false,
     });
   };
-  rejectSeller = (id) => {};
+  rejectSeller = (id) => {
+    const { querySearch } = this.props;
+    axios
+      .delete("http://localhost:8080/api/user/" + id)
+      .then((response) => {
+        if (response.status === 200) {
+          alert("Succesfully reject seller");
+          this.getSellerWithFilter(
+            "http://localhost:8080/api/user/filter?status="
+          );
+        }
+      })
+      .catch((errorResponse) => {
+        console.log("erroooor", errorResponse);
+        // console.log(e);
+        if (errorResponse.response !== undefined) {
+          alert(errorResponse.response.data);
+        }
+      });
+  };
   render() {
     const { buttonAdminStat, classes, history, toogleMenu } = this.props;
     const {
@@ -324,6 +344,7 @@ class AdminSeller extends Component {
                 <MenuItem value="all">All</MenuItem>
                 <MenuItem value="active">Active</MenuItem>
                 <MenuItem value="inactive">Inactive</MenuItem>
+                <MenuItem value="requested">Requested</MenuItem>
               </Select>
             </FormControl>
           </Grid>
@@ -411,10 +432,11 @@ class AdminSeller extends Component {
                   idx={i}
                   user={user}
                   history={history}
-                  onClick={() => this.toogleStatus(i)}
+                  toggleStatus={this.toogleStatus}
                   onChange={this.setQty}
                   statusNow={statusNow}
                   editQty={this.editQty}
+                  rejectSeller={this.rejectSeller}
                 />
               </Grid>
             );

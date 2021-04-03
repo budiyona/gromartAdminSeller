@@ -308,44 +308,7 @@ class AdminSellerDetail extends Component {
               </Button>
             </ButtonGroup>
           </Grid>
-          {/* <Grid item xs={5}>
-            <Typography>
-              user : {userName} ( {email} )
-            </Typography>
-          </Grid> */}
-          {/* <Grid item xs={3}>
-            <FormControl>
-              <Input
-                fullWidth
-                placeholder="search..."
-                onChange={(e) => this.setTarget(e)}
-                value={target}
-                endAdornment={
-                  showClear && (
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={this.clearButton}
-                      >
-                        <ClearIcon />
-                      </IconButton>
-                    </InputAdornment>
-                  )
-                }
-              />
-            </FormControl>
-          </Grid>
 
-          <Grid item xs={1}>
-            <Button
-              variant="contained"
-              color="secondary"
-              size="small"
-              onClick={this.doSearch}
-            >
-              Search
-            </Button>
-          </Grid> */}
           <Grid item xs={2}>
             <FormControl className={classes.formControl} size="small" fullWidth>
               <Select
