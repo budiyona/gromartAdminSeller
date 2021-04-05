@@ -144,7 +144,6 @@ public class ProductRepositoryImpl implements ProductRepository {
     public Map<String, Object> filterProduct(String conditionQty, String conditionObject) {
         Map<String, Object> map = new HashMap<>();
         try {
-
             map.put("qty",
                     jdbcTemplate.queryForObject(
                             "select count(*) from product p " + conditionQty,

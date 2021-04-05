@@ -41,169 +41,41 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Map<String, Object> filterProduct(Map<String, String> params) {
+    public Map<String, Object> filterProduct(Map<String, String> paramsFilter) {
         Map<String, Object> map = new HashMap<>();
         String condition = "";
         String limit = " limit 6 offset ";
-        if (params.containsKey("offset")) {
-            limit += params.get("offset");
+        if (paramsFilter.containsKey("offset")) {
+            limit += paramsFilter.get("offset");
         } else {
             limit = "";
         }
 
-        if (params.containsKey("status") &&
-                params.containsKey("productCode") &&
-                params.containsKey("productName") &&
-                params.containsKey("fromDate") &&
-                params.containsKey("toDate")) {
-            condition = "where p.status = '"
-                    + params.get("status")
-                    + "' and (date(p.createdDate) between '"
-                    + params.get("fromDate")
-                    + "' and '"
-                    + params.get("toDate")
-                    + "') and ( productCode like '%"
-                    + params.get("productCode")
-                    + "%' or productName like '%"
-                    + params.get("productName")
-                    + "%' )";
-
-
-        } else if (params.containsKey("status") &&
-                params.containsKey("productCode") &&
-                params.containsKey("productName")) {
-            condition = "where p.status = '"
-                    + params.get("status")
-                    + "' and ( productCode like '%"
-                    + params.get("productCode")
-                    + "%' or productName like '%"
-                    + params.get("productName")
-                    + "%' )";
-
-        } else if (params.containsKey("status") &&
-                params.containsKey("productCode") &&
-                params.containsKey("fromDate") &&
-                params.containsKey("toDate")) {
-            condition = "where p.status = '"
-                    + params.get("status")
-                    + "' and (date(p.createdDate) between '"
-                    + params.get("fromDate")
-                    + "' and '"
-                    + params.get("toDate")
-                    + "') and productCode like '%"
-                    + params.get("productCode")
-                    + "%'";
-
-        } else if (params.containsKey("status") &&
-                params.containsKey("productName") &&
-                params.containsKey("fromDate") &&
-                params.containsKey("toDate")) {
-            condition = "where p.status = '"
-                    + params.get("status")
-                    + "' and (date(p.createdDate) between '"
-                    + params.get("fromDate")
-                    + "' and '"
-                    + params.get("toDate")
-                    + "') and ( productName like '%"
-                    + params.get("productName")
-                    + "%' )";
-
-        } else if (params.containsKey("productCode") &&
-                params.containsKey("productName") &&
-                params.containsKey("fromDate") &&
-                params.containsKey("toDate")) {
-            condition = "where (date(p.createdDate) between '"
-                    + params.get("fromDate")
-                    + "' and '"
-                    + params.get("toDate")
-                    + "') and ( productCode like '%"
-                    + params.get("productCode")
-                    + "%' or productName like '%"
-                    + params.get("productName")
-                    + "%' )";
-
-        } else if (params.containsKey("status") &&
-                params.containsKey("productName")) {
-            condition = "where p.status = '"
-                    + params.get("status")
-                    + "' and productName like '%"
-                    + params.get("productName")
-                    + "%' ";
-
-        } else if (params.containsKey("status") &&
-                params.containsKey("productCode")) {
-            condition = "where p.status = '"
-                    + params.get("status")
-                    + "' and productCode like '%"
-                    + params.get("productCode")
-                    + "%' ";
-        } else if (params.containsKey("status") &&
-                params.containsKey("fromDate") &&
-                params.containsKey("toDate")) {
-            condition = "where p.status = '"
-                    + params.get("status")
-                    + "' and (date(p.createdDate) between '"
-                    + params.get("fromDate")
-                    + "' and '"
-                    + params.get("toDate")
-                    + "')";
-        } else if (params.containsKey("productCode") &&
-                params.containsKey("productName")) {
-            condition = "where productCode like '%"
-                    + params.get("productName")
-                    + "%' and productName like '%"
-                    + params.get("productCode")
-                    + "%' ";
-
-        } else if (params.containsKey("productName") &&
-                params.containsKey("fromDate") &&
-                params.containsKey("toDate")) {
-            condition = "where (date(p.createdDate) between '"
-                    + params.get("fromDate")
-                    + "' and '"
-                    + params.get("toDate")
-                    + "') and productName like '%"
-                    + params.get("productName")
-                    + "%' ";
-
-        } else if (params.containsKey("productCode") &&
-                params.containsKey("fromDate") &&
-                params.containsKey("toDate")) {
-            condition = "where (date(p.createdDate) between '"
-                    + params.get("fromDate")
-                    + "' and '"
-                    + params.get("toDate")
-                    + "') and productCode like '%"
-                    + params.get("productCode")
-                    + "%' ";
-
-        } else if (params.containsKey("status")) {
-            condition = "where p.status = '"
-                    + params.get("status")
-                    + "' ";
-        } else if (params.containsKey("productCode")) {
-            condition = "where productCode like '%"
-                    + params.get("productCode")
-                    + "%' ";
-
-        } else if (params.containsKey("productName")) {
-            condition = "where productName like '%"
-                    + params.get("productName")
-                    + "%' ";
-
-        } else if (params.containsKey("fromDate") &&
-                params.containsKey("toDate")) {
-            condition = "where (date(p.createdDate) between '"
-                    + params.get("fromDate")
-                    + "' and '"
-                    + params.get("toDate")
-                    + "')";
-        } else {
-            map.put("qty", -1);
-            map.put("product", null);
-            return map;
+        if (paramsFilter.containsKey("status")) {
+            switch ((String) paramsFilter.get("status")) {
+                case "active":
+                case "inactive":
+                    condition="where p.status='" + paramsFilter.get("status") + "'";
+                    break;
+                default:
+                    break;
+            }
         }
-//        condition+=limit;
+
+        if (paramsFilter.containsKey("productName")) {
+            condition="where productName like '%" + paramsFilter.get("productName") + "%'";
+        }
+        if (paramsFilter.containsKey("productCode")) {
+            condition="where productCode like '%" + paramsFilter.get("productCode") + "%'";
+
+        }
+        if (paramsFilter.containsKey("fromDate") && paramsFilter.containsKey("toDate")) {
+            condition="where date(p.createdDate) between '" + paramsFilter.get("fromDate") + "'" +
+                    " and '" + paramsFilter.get("toDate") + "'";
+
+        }
+
+        System.out.println(condition);
         return productRepository.filterProduct(condition, condition + limit);
     }
 

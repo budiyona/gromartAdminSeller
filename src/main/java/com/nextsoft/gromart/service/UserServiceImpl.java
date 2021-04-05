@@ -94,6 +94,7 @@ public class UserServiceImpl implements UserService {
             switch ((String) paramsFilter.get("status")) {
                 case "active":
                 case "inactive":
+                case "requested":
                     condition = " where status='" + paramsFilter.get("status") + "'";
                     break;
                 default:

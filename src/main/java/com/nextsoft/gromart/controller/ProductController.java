@@ -39,12 +39,7 @@ public class ProductController {
 
     @GetMapping("/product/filter")
     public ResponseEntity<?> getNumberOfProduct(@RequestParam Map<String, String> params) {
-        Map<String, Object> map = productService.filterProduct(params);
-
-        if ((int) map.get("qty") >= 0) {
-            return new ResponseEntity<>(map, HttpStatus.OK);
-        }
-        return new ResponseEntity<>("bad request", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(productService.filterProduct(params), HttpStatus.OK);
     }
 
     @GetMapping("/product/count-by-status")
