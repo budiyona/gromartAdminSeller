@@ -14,12 +14,7 @@ import {
 } from "@material-ui/core";
 import axios from "axios";
 import React, { Component } from "react";
-import {
-  Menu,
-  PaginationControlled,
-  ProductCard,
-  SearchField,
-} from "../../component";
+import { Menu, PaginationControlled, ProductCard } from "../../component";
 import { blue, red } from "@material-ui/core/colors";
 
 const useStyles = () => ({
@@ -55,15 +50,15 @@ class AdminProduct extends Component {
         },
       ],
 
-      filterSwitch: false,
-      filterByStatus: false,
-      filterByCode: false,
-      filterByName: false,
-      filterByDate: false,
-      statusFilter: "",
+      // filterSwitch: false,
+      // filterByStatus: false,
+      // filterByCode: false,
+      // filterByName: false,
+      // filterByDate: false,
+      // statusFilter: "",
 
       searchField: "",
-      searchingStatus: false,
+      // searchingStatus: false,
 
       fromDate: "",
       toDate: "",
@@ -82,7 +77,7 @@ class AdminProduct extends Component {
   }
 
   changePage = (event, page) => {
-    const { searchingStatus, querySearch } = this.state;
+    const { querySearch } = this.state;
     console.log("changePage");
     let offset = (page - 1) * 6;
     this.getProductWithFilter(querySearch, offset);
@@ -145,34 +140,13 @@ class AdminProduct extends Component {
         page: Math.ceil(res.data.qty / 6),
       });
     });
-    this.setState({ searchingStatus: true, querySearch: query });
+    this.setState({ querySearch: query });
   };
-  resetData = () => {
-    this.getAllProduct(0);
-    this.setState({
-      searchingStatus: false,
-      filterByStatus: false,
-      filterByCode: false,
-      filterByName: false,
-      filterByDate: false,
-    });
-  };
+
   render() {
     // console.log(this.state);
-    const { buttonAdminStat, history, toogleMenu, classes } = this.props;
-    const {
-      listProduct,
-      filterSwitch,
-      currentPage,
-      page,
-      filterByStatus,
-      filterByCode,
-      filterByName,
-      filterByDate,
-      statusFilter,
-      filterBy,
-      status,
-    } = this.state;
+    const { history, classes } = this.props;
+    const { listProduct, currentPage, page, filterBy, status } = this.state;
     let buttonGo = (
       <Button
         size="small"
@@ -250,11 +224,7 @@ class AdminProduct extends Component {
         alignItems="center"
       >
         <Grid container item xs={12}>
-          <Menu
-            history={history}
-            toogleMenu={toogleMenu}
-            buttonAdminStat={buttonAdminStat}
-          ></Menu>
+          <Menu history={history}></Menu>
         </Grid>
 
         <Grid

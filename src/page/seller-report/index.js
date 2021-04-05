@@ -19,6 +19,8 @@ import { red } from "@material-ui/core/colors";
 import { connect } from "react-redux";
 import Pdf from "react-to-pdf";
 import { CSVLink } from "react-csv";
+import Pagination from "@material-ui/lab/Pagination";
+// import {  } from 'react-scroll/';
 
 const useStyles = (theme) => ({
   margin: {
@@ -85,12 +87,13 @@ class SellerReport extends Component {
     );
   }
   changePage = (event, page) => {
-    console.log("changePage");
-    let offset = (page - 1) * 6;
-    this.setState({
-      offset,
-      currentPage: page,
-    });
+    console.log("changePage " + page);
+
+    // let offset = (page - 1) * 6;
+    // this.setState({
+    //   offset,
+    //   currentPage: page,
+    // });
   };
   toogleFilter = (buttonName) => {
     console.log(buttonName);
@@ -156,7 +159,7 @@ class SellerReport extends Component {
   };
   render() {
     // console.log(this.state);
-    const { buttonAdminStat, history, toogleMenu, classes, user } = this.props;
+    const { history, classes, user } = this.props;
     const {
       listProduct,
       qty,
@@ -164,6 +167,8 @@ class SellerReport extends Component {
       filterBy,
       offset,
       currentPage,
+      count,
+      page,
     } = this.state;
     const header = [
       { label: "Product Code", key: "productCode" },
@@ -257,8 +262,6 @@ class SellerReport extends Component {
     } else {
       formFilter = <Grid item xs={3}></Grid>;
     }
-    // console.log(formFilter);
-    // console.log("hadeerr", header);
 
     let maxPaper = Math.ceil(listProduct.length / 5);
     let dataToDisplay = [];
@@ -267,13 +270,15 @@ class SellerReport extends Component {
       // console.log("max", maxPaper);
       dataToDisplay.push(
         <Box
+          name={"page" + (i + 1)}
           border={1}
           style={{
-            width: "793.7007874px",
-            height: "1125.019685px",
+            width: "807.7007874px",
+            height: "1050.019685px",
             marginLeft: "auto",
             marginRight: "auto",
             marginTop: "0px",
+            boxSizing: "border-box",
             // marginBottom: "10px",
           }}
         >
@@ -308,11 +313,7 @@ class SellerReport extends Component {
         alignItems="center"
       >
         <Grid container item xs={12}>
-          <Menu
-            history={history}
-            toogleMenu={toogleMenu}
-            buttonAdminStat={buttonAdminStat}
-          ></Menu>
+          <Menu history={history}></Menu>
         </Grid>
         <Grid
           container
@@ -350,7 +351,7 @@ class SellerReport extends Component {
           spacing={2}
           className={classes.margin}
         >
-          <Grid item xs={6}>
+          <Grid item xs={3}>
             <Button
               size="small"
               variant="contained"
@@ -360,6 +361,10 @@ class SellerReport extends Component {
             >
               BACK
             </Button>
+          </Grid>
+
+          <Grid item xs={3}>
+            <Pagination count={count} page={page} onChange={this.changePage} />
           </Grid>
 
           <Grid item xs={4} align="right">
@@ -410,7 +415,7 @@ class SellerReport extends Component {
             <GridList
               // cellHeight={270}
               className={classes.gridList}
-              style={{ width: "100%", height: 520 }}
+              style={{ width: "100%", height: 450 }}
               // align="center"
               cols={3}
             >
@@ -419,9 +424,6 @@ class SellerReport extends Component {
               </div>
             </GridList>
           </Grid>
-        </Grid>
-        <Grid container item>
-          {/*<PaginationControlled page={currentPage} onChange={this.changePage} />*/}
         </Grid>
       </Grid>
     );

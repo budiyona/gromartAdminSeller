@@ -148,15 +148,11 @@ class AdminHome extends Component {
       cheapestProd,
       isExpesive,
     } = this.state;
-    const { buttonAdminStat, history, toogleMenu, classes } = this.props;
+    const { history, classes } = this.props;
     return (
       <Grid container direction="row" justify="space-between">
         <Grid container item xs={12}>
-          <Menu
-            history={history}
-            toogleMenu={toogleMenu}
-            buttonAdminStat={buttonAdminStat}
-          ></Menu>
+          <Menu history={history}></Menu>
         </Grid>
 
         <Grid container item xs={12} spacing={3}>
