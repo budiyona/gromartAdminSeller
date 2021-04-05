@@ -125,7 +125,7 @@ class SellerCard extends Component {
           style={{ cursor: "pointer" }}
           className={classes.media}
           image={person}
-          onClick={() => history.push("/admin/product/" + user.userCode)}
+          onClick={() => history.push("/admin/seller/product/" + user.userCode)}
         />
 
         <CardActions disableSpacing>

@@ -64,27 +64,25 @@ class Menu extends Component {
     let url;
     switch (buttonName) {
       case "home":
-        toogleMenu("home");
         isAdmin ? (url = "/admin/home") : (url = "/seller/home");
         break;
       case "product":
-        toogleMenu("product");
         isAdmin ? (url = "/admin/product") : (url = "/seller/product");
         break;
       case "seller":
-        toogleMenu("seller");
         url = "/admin/seller";
         break;
       default:
-        toogleMenu("account");
         isAdmin ? (url = "/admin/account") : (url = "/seller/account");
         break;
     }
     history.push(url);
   };
   render() {
-    const { classes, buttonAdminStat, userCode } = this.props;
+    const { classes, userCode, history } = this.props;
+    const currentPathName = history.location.pathname.split("/")[2];
     let isAdmin = userCode.includes("ADMIN");
+    console.log("location", this.props.history.location.pathname);
 
     return (
       <>
@@ -111,21 +109,21 @@ class Menu extends Component {
             <Tooltip title="Home">
               <IconButton
                 color="inherit"
-                // disabled={buttonAdminStat.home}
                 onClick={() => this.toogleMenu("home")}
               >
-                <HomeIcon className={buttonAdminStat.home && classes.red} />
+                <HomeIcon
+                  className={currentPathName === "home" && classes.red}
+                />
               </IconButton>
             </Tooltip>
             {isAdmin && (
               <Tooltip title="Seller">
                 <IconButton
                   color="inherit"
-                  // disabled={buttonAdminStat.seller}
                   onClick={() => this.toogleMenu("seller")}
                 >
                   <SupervisorAccountIcon
-                    className={buttonAdminStat.seller && classes.red}
+                    className={currentPathName === "seller" && classes.red}
                   />
                 </IconButton>
               </Tooltip>
@@ -133,20 +131,20 @@ class Menu extends Component {
             <Tooltip title="Product">
               <IconButton
                 color="inherit"
-                // disabled={buttonAdminStat.product}
                 onClick={() => this.toogleMenu("product")}
               >
-                <InboxIcon className={buttonAdminStat.product && classes.red} />
+                <InboxIcon
+                  className={currentPathName === "product" && classes.red}
+                />
               </IconButton>
             </Tooltip>
             <Tooltip title="Account">
               <IconButton
                 color="inherit"
-                // disabled={buttonAdminStat.account}
                 onClick={() => this.toogleMenu("account")}
               >
                 <AccountCircle
-                  className={buttonAdminStat.account && classes.red}
+                  className={currentPathName === "account" && classes.red}
                 />
               </IconButton>
             </Tooltip>

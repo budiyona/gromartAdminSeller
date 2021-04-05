@@ -28,135 +28,12 @@ import { connect } from "react-redux";
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      buttonAdminStat: {
-        home: true,
-        product: false,
-        seller: false,
-        account: false,
-      },
-    };
+    this.state = {};
   }
-  toogleMenu = (buttonName) => {
-    let newStat = {};
-    switch (buttonName) {
-      case "home":
-        newStat = {
-          home: true,
-          product: false,
-          seller: false,
-          account: false,
-        };
-        break;
-      case "product":
-        newStat = {
-          home: false,
-          product: true,
-          seller: false,
-          account: false,
-        };
-        break;
-      case "seller":
-        newStat = {
-          home: false,
-          product: false,
-          seller: true,
-          account: false,
-        };
-        break;
-      default:
-        newStat = {
-          home: false,
-          product: false,
-          seller: false,
-          account: true,
-        };
 
-        break;
-    }
-    this.setState({
-      buttonAdminStat: newStat,
-    });
-  };
   render() {
-    const { buttonAdminStat } = this.state;
     let isAdmin = this.props.userCode.includes("ADMIN");
-    // let adminPage = (
-    //   <Container maxWidth="xl" spacing={3}>
-    //     <Route
-    //       path="/admin/home"
-    //       exact
-    //       component={() => {
-    //         let history = useHistory();
-    //         return (
-    //           <AdminHome
-    //             history={history}
-    //             buttonAdminStat={buttonAdminStat}
-    //             toogleMenu={this.toogleMenu}
-    //           />
-    //         );
-    //       }}
-    //     />
-    //     <Route
-    //       path="/admin/seller"
-    //       exact
-    //       component={() => {
-    //         let history = useHistory();
-    //         return (
-    //           <AdminSeller
-    //             history={history}
-    //             buttonAdminStat={buttonAdminStat}
-    //             toogleMenu={this.toogleMenu}
-    //           />
-    //         );
-    //       }}
-    //     />
-    //     <Route
-    //       path="/admin/product"
-    //       exact
-    //       component={() => {
-    //         let history = useHistory();
-    //         return (
-    //           <AdminProduct
-    //             history={history}
-    //             buttonAdminStat={buttonAdminStat}
-    //             toogleMenu={this.toogleMenu}
-    //           />
-    //         );
-    //       }}
-    //     />
-    //     <Route
-    //       path="/admin/account"
-    //       exact
-    //       component={() => {
-    //         let history = useHistory();
-    //         return (
-    //           <AdminInfo
-    //             history={history}
-    //             buttonAdminStat={buttonAdminStat}
-    //             toogleMenu={this.toogleMenu}
-    //           />
-    //         );
-    //       }}
-    //     />
-    //     <Route
-    //       path="/admin/product/:id"
-    //       exact
-    //       component={() => {
-    //         let history = useHistory();
-    //         const { id } = useParams();
-    //         return (
-    //           <AdminSellerDetail
-    //             history={history}
-    //             id={id}
-    //             buttonAdminStat={buttonAdminStat}
-    //             toogleMenu={this.toogleMenu}
-    //           />
-    //         );
-    //       }}
-    //     />
-    //   </Container>
-    // );
+
     let adminPage = [];
     adminPage.push(
       <Route
@@ -166,11 +43,7 @@ class App extends Component {
           let history = useHistory();
           return (
             <Container maxWidth="xl" spacing={3}>
-              <AdminHome
-                history={history}
-                buttonAdminStat={buttonAdminStat}
-                toogleMenu={this.toogleMenu}
-              />
+              <AdminHome history={history} />
             </Container>
           );
         }}
@@ -184,11 +57,7 @@ class App extends Component {
           let history = useHistory();
           return (
             <Container maxWidth="xl" spacing={3}>
-              <AdminSeller
-                history={history}
-                buttonAdminStat={buttonAdminStat}
-                toogleMenu={this.toogleMenu}
-              />
+              <AdminSeller history={history} />
             </Container>
           );
         }}
@@ -202,11 +71,7 @@ class App extends Component {
           let history = useHistory();
           return (
             <Container maxWidth="xl" spacing={3}>
-              <AdminProduct
-                history={history}
-                buttonAdminStat={buttonAdminStat}
-                toogleMenu={this.toogleMenu}
-              />
+              <AdminProduct history={history} />
             </Container>
           );
         }}
@@ -220,11 +85,7 @@ class App extends Component {
           let history = useHistory();
           return (
             <Container maxWidth="xl" spacing={3}>
-              <UserInfo
-                history={history}
-                buttonAdminStat={buttonAdminStat}
-                toogleMenu={this.toogleMenu}
-              />
+              <UserInfo history={history} />
             </Container>
           );
         }}
@@ -232,19 +93,14 @@ class App extends Component {
     );
     adminPage.push(
       <Route
-        path="/admin/product/:id"
+        path="/admin/seller/product/:id"
         exact
         component={() => {
           let history = useHistory();
           const { id } = useParams();
           return (
             <Container maxWidth="xl" spacing={3}>
-              <AdminSellerDetail
-                history={history}
-                id={id}
-                buttonAdminStat={buttonAdminStat}
-                toogleMenu={this.toogleMenu}
-              />
+              <AdminSellerDetail history={history} id={id} />
             </Container>
           );
         }}
@@ -260,11 +116,7 @@ class App extends Component {
           let history = useHistory();
           return (
             <Container maxWidth="xl" spacing={3}>
-              <SellerHome
-                history={history}
-                buttonAdminStat={buttonAdminStat}
-                toogleMenu={this.toogleMenu}
-              />
+              <SellerHome history={history} />
             </Container>
           );
         }}
@@ -278,11 +130,7 @@ class App extends Component {
           let history = useHistory();
           return (
             <Container maxWidth="xl" spacing={3}>
-              <SellerProduct
-                history={history}
-                buttonAdminStat={buttonAdminStat}
-                toogleMenu={this.toogleMenu}
-              />
+              <SellerProduct history={history} />
             </Container>
           );
         }}
@@ -296,11 +144,7 @@ class App extends Component {
           let history = useHistory();
           return (
             <Container maxWidth="xl" spacing={3}>
-              <UserInfo
-                history={history}
-                buttonAdminStat={buttonAdminStat}
-                toogleMenu={this.toogleMenu}
-              />
+              <UserInfo history={history} />
             </Container>
           );
         }}
@@ -314,11 +158,7 @@ class App extends Component {
           let history = useHistory();
           return (
             <Container maxWidth="xl" spacing={3}>
-              <SellerReport
-                history={history}
-                buttonAdminStat={buttonAdminStat}
-                toogleMenu={this.toogleMenu}
-              />
+              <SellerReport history={history} />
             </Container>
           );
         }}
@@ -339,8 +179,6 @@ class App extends Component {
                 toDo={
                   toDo === "create" ? "create" : toDo === "update" && "update"
                 }
-                buttonAdminStat={buttonAdminStat}
-                toogleMenu={this.toogleMenu}
               />
             </Container>
           );
