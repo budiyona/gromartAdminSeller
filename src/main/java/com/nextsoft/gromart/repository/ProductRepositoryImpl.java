@@ -174,7 +174,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     @Override
     public int countProductByStatus(String status) {
         return jdbcTemplate.queryForObject(
-                "select count(*) from product " + status,
+                "select count(*) from product  where status like '" + status + "%'",
                 Integer.class);
     }
 

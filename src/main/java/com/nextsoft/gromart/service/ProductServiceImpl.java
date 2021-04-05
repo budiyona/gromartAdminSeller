@@ -3,6 +3,8 @@ package com.nextsoft.gromart.service;
 import com.nextsoft.gromart.model.Product;
 import com.nextsoft.gromart.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -55,7 +57,7 @@ public class ProductServiceImpl implements ProductService {
             switch ((String) paramsFilter.get("status")) {
                 case "active":
                 case "inactive":
-                    condition="where p.status='" + paramsFilter.get("status") + "'";
+                    condition = "where p.status='" + paramsFilter.get("status") + "'";
                     break;
                 default:
                     break;
@@ -63,14 +65,14 @@ public class ProductServiceImpl implements ProductService {
         }
 
         if (paramsFilter.containsKey("productName")) {
-            condition="where productName like '%" + paramsFilter.get("productName") + "%'";
+            condition = "where productName like '%" + paramsFilter.get("productName") + "%'";
         }
         if (paramsFilter.containsKey("productCode")) {
-            condition="where productCode like '%" + paramsFilter.get("productCode") + "%'";
+            condition = "where productCode like '%" + paramsFilter.get("productCode") + "%'";
 
         }
         if (paramsFilter.containsKey("fromDate") && paramsFilter.containsKey("toDate")) {
-            condition="where date(p.createdDate) between '" + paramsFilter.get("fromDate") + "'" +
+            condition = "where date(p.createdDate) between '" + paramsFilter.get("fromDate") + "'" +
                     " and '" + paramsFilter.get("toDate") + "'";
 
         }
@@ -81,7 +83,14 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public int countProductByStatus(String status) {
-        return productRepository.countProductByStatus(status);
+        System.out.println(status);
+        String targetStatus = "";
+        switch (status) {
+            case "active":
+            case "inactive":
+                targetStatus = status;
+        }
+        return productRepository.countProductByStatus(targetStatus);
     }
 
     @Override
@@ -211,10 +220,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> getProductOfSeller(String id, String status) {
-        String sort="asc";
+        String sort = "asc";
         if (status.equals("expensive")) {
-            sort="desc";
+            sort = "desc";
         }
-        return productRepository.getProductOfSeller(id,sort);
+        return productRepository.getProductOfSeller(id, sort);
     }
 }

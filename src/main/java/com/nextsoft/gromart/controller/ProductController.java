@@ -44,21 +44,24 @@ public class ProductController {
 
     @GetMapping("/product/count-by-status")
     public ResponseEntity<?> getNumberOfProductByStatus(@RequestParam String status) {
-        switch (status) {
-            case "active":
-            case "inactive":
-                return new ResponseEntity<>(
-                        productService.countProductByStatus(" where status = '" + status + "'"),
-                        HttpStatus.OK);
+//        switch (status) {
+//            case "active":
+//            case "inactive":
+//                return new ResponseEntity<>(
+//                        productService.countProductByStatus(" where status = '" + status + "'"),
+//                        HttpStatus.OK);
+//
+//            case "all":
+//                return new ResponseEntity<>(
+//                        productService.countProductByStatus(""),
+//                        HttpStatus.OK);
+//            default:
+//                return new ResponseEntity<>("request not found",
+//                        HttpStatus.BAD_REQUEST);
+//        }
+        return new ResponseEntity<>(
+                productService.countProductByStatus(status), HttpStatus.OK);
 
-            case "all":
-                return new ResponseEntity<>(
-                        productService.countProductByStatus(""),
-                        HttpStatus.OK);
-            default:
-                return new ResponseEntity<>("request not found",
-                        HttpStatus.BAD_REQUEST);
-        }
     }
 
     @GetMapping("/product/seller/most-expensive/{id}")
