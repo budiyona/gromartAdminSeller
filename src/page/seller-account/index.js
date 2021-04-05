@@ -280,30 +280,52 @@ class SellerAccount extends Component {
           ></Menu>
         </Grid>
         <Grid container item xs={12}>
-          <Grid item xs={12}>
-            <ButtonGroup>
-              <Button
-                disabled={editPassword || edit}
-                size="small"
-                type="submit"
-                style={{ width: 100 }}
-                variant="contained"
-                color="primary"
-                onClick={this.toogleEdit}
-              >
-                edit
-              </Button>
-              <Button
-                disabled={editPassword || edit}
-                type="submit"
-                size="small"
-                variant="contained"
-                color="secondary"
-                onClick={this.toogleEditPassword}
-              >
-                change password
-              </Button>
-            </ButtonGroup>
+          <Grid container item xs={12}>
+            <Grid item xs={4}>
+              <ButtonGroup>
+                <Button
+                  disabled={editPassword || edit}
+                  size="small"
+                  type="submit"
+                  style={{ width: 100 }}
+                  variant="contained"
+                  color="primary"
+                  onClick={this.toogleEdit}
+                >
+                  edit
+                </Button>
+                <Button
+                  disabled={editPassword || edit}
+                  type="submit"
+                  size="small"
+                  variant="contained"
+                  color="secondary"
+                  onClick={this.toogleEditPassword}
+                >
+                  change password
+                </Button>
+              </ButtonGroup>
+            </Grid>
+            <Grid>
+              {(edit || editPassword) && (
+                <Button
+                  type="submit"
+                  size="small"
+                  color="primary"
+                  variant="contained"
+                  disableElevation
+                  startIcon={<ErrorOutlineIcon />}
+                  style={{
+                    width: 500,
+                    pointerEvents: "none",
+                    backgroundColor: "rgba(0, 0, 0, 0.7)",
+                    color: "orange",
+                  }}
+                >
+                  {edit ? "Edit Profile" : "Edit Password"} - Mode
+                </Button>
+              )}
+            </Grid>
           </Grid>
           {!editPassword ? (
             <Grid container item xs={12} className={classes.margin}>
@@ -324,6 +346,9 @@ class SellerAccount extends Component {
                 >
                   <Grid item>
                     <TextField
+                      InputProps={{
+                        readOnly: !edit,
+                      }}
                       // disabled
                       size="small"
                       margin="normal"
@@ -344,6 +369,9 @@ class SellerAccount extends Component {
 
                   <Grid item>
                     <TextField
+                      InputProps={{
+                        readOnly: !edit,
+                      }}
                       margin="dense"
                       size="small"
                       required
@@ -364,6 +392,9 @@ class SellerAccount extends Component {
 
                   <Grid item>
                     <TextField
+                      InputProps={{
+                        readOnly: !edit,
+                      }}
                       margin="dense"
                       size="small"
                       required
