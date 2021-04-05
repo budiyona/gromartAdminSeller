@@ -36,11 +36,7 @@ const useStyles = (theme) => ({
   title: {
     flexGrow: 1,
   },
-  button: {
-    "&.focus": {
-      color: "black",
-    },
-  },
+
   red: {
     color: red[200],
   },

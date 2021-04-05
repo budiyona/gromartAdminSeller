@@ -7,6 +7,8 @@ import {
   DialogContentText,
   DialogTitle,
   Grid,
+  IconButton,
+  InputAdornment,
   Paper,
   TextField,
   withStyles,
@@ -16,6 +18,9 @@ import { Menu } from "../../component";
 import axios from "axios";
 import { connect } from "react-redux";
 import ErrorOutlineIcon from "@material-ui/icons/ErrorOutline";
+
+import Visibility from "@material-ui/icons/Visibility";
+import VisibilityOff from "@material-ui/icons/VisibilityOff";
 const useStyles = (theme) => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -34,13 +39,8 @@ const useStyles = (theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
-  // menuprofile: {
-  //   "& > *": {
-  //     margin: theme.spacing(1),
-  //   },
-  // },
 });
-class SellerAccount extends Component {
+class UserInfo extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -74,6 +74,7 @@ class SellerAccount extends Component {
   }
   setValue = (e) => {
     const { name, value } = e.target;
+    console.log(name);
     this.setState({
       [name]: value,
     });
@@ -165,7 +166,8 @@ class SellerAccount extends Component {
   };
   doEditProfile = () => {
     const { fullname, phone, email, password } = this.state;
-    const { user } = this.props;
+    const { user, doLogout } = this.props;
+    // let date = moment(new Date()).format("YYYY-MM-DD HH:MM:SS");
     let userUpdate = {
       userName: fullname,
       phone: phone,
@@ -175,7 +177,11 @@ class SellerAccount extends Component {
     axios
       .put("http://localhost:8080/api/user/" + user.userCode, userUpdate)
       .then((res) => {
-        res.status === 200 && alert("Update Success");
+        // res.status === 200 && this.props.history.push("/login");
+        //pagil reducer logout
+        if (res.status === 200) {
+          alert("Update Success");
+        }
       })
       .catch((e) => {
         if (e.response !== undefined) {
@@ -235,6 +241,7 @@ class SellerAccount extends Component {
         )
         .then((res) => {
           res.status === 200 && alert("Update Success");
+          this.doLogout();
         })
         .catch((e) => {
           if (e.response !== undefined) {
@@ -248,6 +255,15 @@ class SellerAccount extends Component {
       edit: false,
       editPassword: false,
     });
+  };
+  showPassword = (field) => {
+    this.setState({
+      [field]: !this.state[field],
+    });
+  };
+  doLogout = () => {
+    this.props.doLogout();
+    this.props.history.push("/login");
   };
   render() {
     const { buttonAdminStat, history, toogleMenu, classes } = this.props;
@@ -266,7 +282,11 @@ class SellerAccount extends Component {
       phone,
       email,
       modal,
+      showOldPassword,
+      showNewPassword,
+      showRePassword,
     } = this.state;
+    console.log(this.state);
     return (
       <Grid
         container
@@ -289,9 +309,9 @@ class SellerAccount extends Component {
                   disabled={editPassword || edit}
                   size="small"
                   type="submit"
-                  style={{ width: 100 }}
                   variant="contained"
                   color="primary"
+                  style={{ width: 100 }}
                   onClick={this.toogleEdit}
                 >
                   edit
@@ -343,6 +363,7 @@ class SellerAccount extends Component {
               >
                 <form
                   className={classes.form}
+                  noValidate
                   onSubmit={this.openModal}
                   style={{ width: "50%" }}
                 >
@@ -351,24 +372,24 @@ class SellerAccount extends Component {
                       InputProps={{
                         readOnly: !edit,
                       }}
-                      // disabled
                       size="small"
                       margin="normal"
+                      autoComplete="fname"
                       name="fullname"
                       required
                       fullWidth
+                      id="fullname"
                       label="Name"
                       value={fullname}
                       onChange={(e) => this.setValue(e)}
-                      error={edit && errorFullname}
+                      error={errorFullname}
                       helperText={
-                        edit && errorFullname
+                        errorFullname
                           ? "name cannot be number or special character"
                           : ""
                       }
                     />
                   </Grid>
-
                   <Grid item>
                     <TextField
                       InputProps={{
@@ -378,6 +399,7 @@ class SellerAccount extends Component {
                       size="small"
                       required
                       fullWidth
+                      id="phone"
                       label="phone"
                       value={phone}
                       name="phone"
@@ -391,7 +413,6 @@ class SellerAccount extends Component {
                       }
                     />
                   </Grid>
-
                   <Grid item>
                     <TextField
                       InputProps={{
@@ -418,7 +439,6 @@ class SellerAccount extends Component {
                         <Button
                           type="submit"
                           fullWidth
-                          hidden={true}
                           variant="contained"
                           color="primary"
                           className={classes.submit}
@@ -486,6 +506,7 @@ class SellerAccount extends Component {
               >
                 <form
                   className={classes.form}
+                  noValidate
                   onSubmit={this.changePassword}
                   style={{ width: "50%" }}
                 >
@@ -499,11 +520,31 @@ class SellerAccount extends Component {
                       value={oldPassword}
                       id="oldPassord"
                       label="Old Password"
-                      type="password"
+                      type={showOldPassword ? "text" : "password"}
+                      autoFocus
+                      onChange={(e) => this.setValue(e)}
                       InputLabelProps={{
                         shrink: true,
                       }}
-                      onChange={(e) => this.setValue(e)}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton
+                              aria-label="toggle password visibility"
+                              onClick={() =>
+                                this.showPassword("showOldPassword")
+                              }
+                              edge="end"
+                            >
+                              {showOldPassword ? (
+                                <Visibility />
+                              ) : (
+                                <VisibilityOff />
+                              )}
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      }}
                     />
                   </Grid>
 
@@ -516,18 +557,37 @@ class SellerAccount extends Component {
                       value={newPassword}
                       name="newPassword"
                       label="New Password"
-                      type="password"
+                      type={showNewPassword ? "text" : "password"}
                       id="Newpassword"
                       onChange={(e) => this.setValue(e)}
                       error={errorPassword}
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
                       helperText={
                         errorPassword
                           ? "minimum 8 character, at least one number"
                           : ""
                       }
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton
+                              aria-label="toggle password visibility"
+                              onClick={() =>
+                                this.showPassword("showNewPassword")
+                              }
+                              edge="end"
+                            >
+                              {showNewPassword ? (
+                                <Visibility />
+                              ) : (
+                                <VisibilityOff />
+                              )}
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      }}
                     />
                   </Grid>
                   <Grid item>
@@ -539,16 +599,35 @@ class SellerAccount extends Component {
                       value={newPassword2}
                       name="newPassword2"
                       label="Re Enter Password"
-                      type="password"
+                      type={showRePassword ? "text" : "password"}
                       id="NewPassword2"
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
                       onChange={(e) => this.setValue(e)}
                       error={errorRepassword}
                       helperText={
                         errorRepassword ? "password did not match" : ""
                       }
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton
+                              aria-label="toggle password visibility"
+                              onClick={() =>
+                                this.showPassword("showRePassword")
+                              }
+                              edge="end"
+                            >
+                              {showRePassword ? (
+                                <Visibility />
+                              ) : (
+                                <VisibilityOff />
+                              )}
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      }}
                     />
                   </Grid>
 
@@ -558,7 +637,6 @@ class SellerAccount extends Component {
                         <Button
                           type="submit"
                           fullWidth
-                          hidden={true}
                           variant="contained"
                           color="primary"
                           className={classes.submit}
@@ -604,4 +682,4 @@ const mapDispatchToProps = (dispatch) => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withStyles(useStyles)(SellerAccount));
+)(withStyles(useStyles)(UserInfo));

@@ -11,6 +11,7 @@ import SellerHome from "./seller-home";
 import SellerReport from "./seller-report";
 import CreateProduct from "./selller-product-create";
 import NotFound from "./not-found";
+import UserInfo from "./user-account";
 
 export {
   AdminProduct,
@@ -26,4 +27,5 @@ export {
   SellerReport,
   CreateProduct,
   NotFound,
+  UserInfo,
 };

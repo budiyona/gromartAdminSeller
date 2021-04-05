@@ -21,6 +21,7 @@ import {
   SellerReport,
   CreateProduct,
   NotFound,
+  UserInfo,
 } from "./page";
 import { connect } from "react-redux";
 
@@ -219,7 +220,7 @@ class App extends Component {
           let history = useHistory();
           return (
             <Container maxWidth="xl" spacing={3}>
-              <AdminInfo
+              <UserInfo
                 history={history}
                 buttonAdminStat={buttonAdminStat}
                 toogleMenu={this.toogleMenu}
@@ -295,7 +296,7 @@ class App extends Component {
           let history = useHistory();
           return (
             <Container maxWidth="xl" spacing={3}>
-              <SellerAccount
+              <UserInfo
                 history={history}
                 buttonAdminStat={buttonAdminStat}
                 toogleMenu={this.toogleMenu}
