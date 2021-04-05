@@ -7,6 +7,8 @@ import {
   DialogContentText,
   DialogTitle,
   Grid,
+  IconButton,
+  InputAdornment,
   Paper,
   TextField,
   withStyles,
@@ -16,6 +18,9 @@ import { Menu } from "../../component";
 import axios from "axios";
 import { connect } from "react-redux";
 import ErrorOutlineIcon from "@material-ui/icons/ErrorOutline";
+
+import Visibility from "@material-ui/icons/Visibility";
+import VisibilityOff from "@material-ui/icons/VisibilityOff";
 const useStyles = (theme) => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -62,6 +67,10 @@ class AdminInfo extends Component {
       errorPassword: false,
       errorRepassword: false,
 
+      showOldPassword: false,
+      showNewPassword: false,
+      showRePassword: false,
+
       modal: false,
     };
   }
@@ -87,7 +96,7 @@ class AdminInfo extends Component {
       case "newPassword":
         this.validationPassword(value);
         break;
-      case "newPpassword2":
+      case "newPassword2":
         this.validationRepassword(value);
         break;
       default:
@@ -248,6 +257,11 @@ class AdminInfo extends Component {
       editPassword: false,
     });
   };
+  showPassword = (field) => {
+    this.setState({
+      [field]: !this.state[field],
+    });
+  };
   render() {
     const { buttonAdminStat, history, toogleMenu, classes } = this.props;
     const {
@@ -265,6 +279,9 @@ class AdminInfo extends Component {
       phone,
       email,
       modal,
+      showOldPassword,
+      showNewPassword,
+      showRePassword,
     } = this.state;
     console.log(this.state);
     return (
@@ -500,11 +517,30 @@ class AdminInfo extends Component {
                       value={oldPassword}
                       id="oldPassord"
                       label="Old Password"
-                      type="password"
+                      type={showOldPassword ? "text" : "password"}
                       autoFocus
                       onChange={(e) => this.setValue(e)}
                       InputLabelProps={{
                         shrink: true,
+                      }}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton
+                              aria-label="toggle password visibility"
+                              onClick={() =>
+                                this.showPassword("showOldPassword")
+                              }
+                              edge="end"
+                            >
+                              {showOldPassword ? (
+                                <Visibility />
+                              ) : (
+                                <VisibilityOff />
+                              )}
+                            </IconButton>
+                          </InputAdornment>
+                        ),
                       }}
                     />
                   </Grid>
@@ -518,7 +554,7 @@ class AdminInfo extends Component {
                       value={newPassword}
                       name="newPassword"
                       label="New Password"
-                      type="password"
+                      type={showNewPassword ? "text" : "password"}
                       id="Newpassword"
                       onChange={(e) => this.setValue(e)}
                       error={errorPassword}
@@ -529,6 +565,25 @@ class AdminInfo extends Component {
                       }
                       InputLabelProps={{
                         shrink: true,
+                      }}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton
+                              aria-label="toggle password visibility"
+                              onClick={() =>
+                                this.showPassword("showNewPassword")
+                              }
+                              edge="end"
+                            >
+                              {showNewPassword ? (
+                                <Visibility />
+                              ) : (
+                                <VisibilityOff />
+                              )}
+                            </IconButton>
+                          </InputAdornment>
+                        ),
                       }}
                     />
                   </Grid>
@@ -541,7 +596,7 @@ class AdminInfo extends Component {
                       value={newPassword2}
                       name="newPassword2"
                       label="Re Enter Password"
-                      type="password"
+                      type={showRePassword ? "text" : "password"}
                       id="NewPassword2"
                       onChange={(e) => this.setValue(e)}
                       error={errorRepassword}
@@ -550,6 +605,25 @@ class AdminInfo extends Component {
                       }
                       InputLabelProps={{
                         shrink: true,
+                      }}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton
+                              aria-label="toggle password visibility"
+                              onClick={() =>
+                                this.showPassword("showRePassword")
+                              }
+                              edge="end"
+                            >
+                              {showRePassword ? (
+                                <Visibility />
+                              ) : (
+                                <VisibilityOff />
+                              )}
+                            </IconButton>
+                          </InputAdornment>
+                        ),
                       }}
                     />
                   </Grid>
