@@ -1,13 +1,10 @@
 import {
   Box,
   Button,
-  ButtonGroup,
-  Collapse,
   FormControl,
   Grid,
   Input,
   MenuItem,
-  Paper,
   Select,
   TextField,
   withStyles,
@@ -15,7 +12,7 @@ import {
 import axios from "axios";
 import React, { Component } from "react";
 import { Menu, PaginationControlled, ProductCard } from "../../component";
-import { blue, red } from "@material-ui/core/colors";
+import { red } from "@material-ui/core/colors";
 
 const useStyles = () => ({
   margin: {
@@ -97,19 +94,22 @@ class AdminProduct extends Component {
     });
   };
   doSearch = () => {
-    const { user } = this.props;
     const { fromDate, toDate, filterBy, searchField, status } = this.state;
     let endpoint = "http://localhost:8080/api/product/filter?";
-    if (filterBy === "productName") {
-      endpoint += "productName=" + searchField;
-    } else if (filterBy === "productCode") {
-      endpoint += "productCode=" + searchField;
-    } else if (filterBy === "status") {
-      endpoint += "status=" + status;
-    } else if (filterBy === "date") {
-      endpoint += "fromDate=" + fromDate + "&toDate=" + toDate;
+    switch (filterBy) {
+      case "productName":
+        endpoint += "productName=" + searchField;
+        break;
+      case "productCode":
+        endpoint += "productCode=" + searchField;
+        break;
+      case "status":
+        endpoint += "status=" + status;
+        break;
+      case "date":
+        endpoint += "fromDate=" + fromDate + "&toDate=" + toDate;
+        break;
     }
-
     this.getProductWithFilter(endpoint);
     this.setState({
       currentPage: 1,
@@ -122,9 +122,9 @@ class AdminProduct extends Component {
       this.setState({
         listProduct: res.data.product,
         page: Math.ceil(res.data.qty / 6),
+        querySearch: query,
       });
     });
-    this.setState({ querySearch: query });
   };
 
   render() {
@@ -235,7 +235,6 @@ class AdminProduct extends Component {
               </Select>
             </FormControl>
           </Grid>
-
           {formFilter}
         </Grid>
         <Grid container item xs={12} spacing={2} style={{ minHeight: "73vh" }}>

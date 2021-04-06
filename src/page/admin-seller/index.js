@@ -157,9 +157,9 @@ class AdminSeller extends Component {
       this.setState({
         listSeller: res.data.seller,
         page: Math.ceil(res.data.qty / 6),
+        querySearch: query,
       });
     });
-    this.setState({ querySearch: query });
   };
   setFilterValue = (e) => {
     const { name, value } = e.target;
@@ -190,6 +190,8 @@ class AdminSeller extends Component {
       axios
         .delete("http://localhost:8080/api/user/" + id)
         .then((response) => {
+          console.log(response.status);
+          console.log(response.status.ok);
           if (response.status === 200) {
             alert("Succesfully reject seller");
             this.getSellerWithFilter(

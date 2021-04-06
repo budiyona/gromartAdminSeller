@@ -4,24 +4,20 @@ import {
   ButtonGroup,
   FormControl,
   Grid,
-  IconButton,
   Input,
-  InputAdornment,
   MenuItem,
   Select,
   TextField,
-  Typography,
   withStyles,
 } from "@material-ui/core";
 import axios from "axios";
 import React, { Component } from "react";
-import ClearIcon from "@material-ui/icons/Clear";
 import { Menu, PaginationControlled, ProductCard } from "../../component";
 import { red } from "@material-ui/core/colors";
 
 const useStyles = (theme) => ({
   margin: {
-    marginBottom: theme.spacing(2),
+    marginBottom: theme.spacing(1),
   },
   buttonRed: {
     backgroundColor: red[500],
@@ -32,26 +28,11 @@ class AdminSellerDetail extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      products: [
-        {
-          productCode: "",
-          productName: "",
-          price: 0,
-          stock: 0,
-          description: "",
-          seller: {
-            userCode: "",
-            userName: "",
-          },
-        },
-      ],
-      target: "",
-      showClear: false,
+      products: [],
 
       userName: "",
       email: "",
 
-      searchingStatus: false,
       page: 0,
       currentPage: 1,
       status: "all",
@@ -61,48 +42,20 @@ class AdminSellerDetail extends Component {
     };
   }
   componentDidMount() {
-    this.getSellerProduct(0);
+    const { id } = this.props;
+    this.getProductWithFilter(
+      "http://localhost:8080/api/product/seller/filter/" + id + "?"
+    );
     this.getSellerInfo();
   }
 
-  getSellerProduct = (offset) => {
-    axios
-      .get(
-        "http://localhost:8080/api/product/seller?id=" +
-          this.props.id +
-          "&offset=" +
-          offset
-      )
-      .then((res) =>
-        this.setState({
-          products: res.data.product,
-          page: Math.ceil(res.data.qty / 6),
-        })
-      );
-  };
   getSellerInfo = () => {
     axios.get("http://localhost:8080/api/user/" + this.props.id).then((res) => {
       const { userName, email } = res.data;
       this.setState({ userName, email });
     });
   };
-  setTarget = (e) => {
-    console.log(e.target.value);
-    const { value } = e.target;
-    let clear = false;
-    this.setState({ target: value });
-    value.length > 0 && (clear = true);
 
-    this.setState({ showClear: clear });
-  };
-  clearButton = () => {
-    this.setState({
-      target: "",
-      showClear: false,
-      searchingStatus: false,
-    });
-    this.getSellerProduct(0);
-  };
   getProductWithFilter = (query, offset = 0) => {
     let queryOffset = "&offset=" + offset;
     axios.get(query + queryOffset).then((res) => {
@@ -110,10 +63,9 @@ class AdminSellerDetail extends Component {
       this.setState({
         products: res.data.product,
         page: Math.ceil(res.data.qty / 6),
+        querySearch: query,
       });
     });
-
-    this.setState({ querySearch: query });
   };
   doSearch = () => {
     console.log("SEACRH");
@@ -139,17 +91,9 @@ class AdminSellerDetail extends Component {
   };
   changePage = (page) => {
     console.log("changePage");
-
-    // const { id } = this.props;
-    const { searchingStatus, querySearch } = this.state;
+    const { querySearch } = this.state;
     let offset = (page - 1) * 6;
     this.getProductWithFilter(querySearch, offset);
-    // if (searchingStatus) {
-    // } else {
-    //   this.getProductWithFilter(
-    //     "http://localhost:8080/api/product/seller/filter/" + id
-    //   );
-    // }
     this.setState({
       currentPage: page,
     });
@@ -175,20 +119,19 @@ class AdminSellerDetail extends Component {
     });
   };
   render() {
-    const { buttonAdminStat, history, toogleMenu, classes } = this.props;
+    const { history, classes } = this.props;
     console.log(this.props.id);
     const {
       products,
-      target,
-      showClear,
       userName,
       email,
       page,
       currentPage,
       filterBy,
       status,
+      searchField,
     } = this.state;
-    // console.log(this.state);
+
     let buttonGo = (
       <Button
         size="small"
@@ -209,6 +152,7 @@ class AdminSellerDetail extends Component {
               placeholder="search"
               style={{ height: "29px" }}
               name="searchField"
+              value={searchField}
               onChange={(e) => this.setFilterValue(e)}
             />
           </Grid>
@@ -266,11 +210,7 @@ class AdminSellerDetail extends Component {
         alignItems="center"
       >
         <Grid container item xs={12}>
-          <Menu
-            history={history}
-            toogleMenu={toogleMenu}
-            buttonAdminStat={buttonAdminStat}
-          ></Menu>
+          <Menu history={history}></Menu>
         </Grid>
         <Grid
           container
@@ -327,8 +267,8 @@ class AdminSellerDetail extends Component {
           </Grid>
           {formFilter}
         </Grid>
-        <Grid container item xs={12}>
-          {products &&
+        <Grid container item xs={12} style={{ minHeight: "71vh" }}>
+          {products.length > 0 &&
             products.map((product, i) => (
               <Grid item xs={4} key={i} className={classes.margin}>
                 <ProductCard product={product}></ProductCard>

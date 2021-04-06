@@ -59,7 +59,7 @@ class Menu extends Component {
     this.props.history.push("/login");
   };
   toogleMenu = (buttonName) => {
-    const { toogleMenu, userCode, history } = this.props;
+    const { userCode, history } = this.props;
     let isAdmin = userCode.includes("ADMIN");
     let url;
     switch (buttonName) {

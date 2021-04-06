@@ -8,14 +8,12 @@ import {
 } from "react-router-dom";
 import { Container } from "@material-ui/core";
 import {
-  AdminInfo,
   AdminProduct,
   AdminSeller,
   Login,
   Register,
   AdminHome,
   AdminSellerDetail,
-  SellerAccount,
   SellerProduct,
   SellerHome,
   SellerReport,

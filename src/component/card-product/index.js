@@ -9,7 +9,6 @@ import Typography from "@material-ui/core/Typography";
 import { blue, green, red } from "@material-ui/core/colors";
 import productImg from "../../static/product.jpg";
 import { connect } from "react-redux";
-import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import "./style.css";
 import { Tooltip } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -44,7 +43,6 @@ class ProductCard extends Component {
     super(props);
     this.state = {
       status: ["requested", "active", "inactive"],
-      statusNow: "requested",
     };
   }
   status = () => {
@@ -64,7 +62,6 @@ class ProductCard extends Component {
 
   render() {
     const { classes, product, user, history, deleteProductById } = this.props;
-    const { statusNow } = this.state;
     return (
       <Card className={classes.root}>
         <CardHeader

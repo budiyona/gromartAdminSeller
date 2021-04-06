@@ -408,7 +408,7 @@ class UserInfo extends Component {
                       error={errorPhone}
                       helperText={
                         errorPhone
-                          ? "minimum 8 number and cannot be letter"
+                          ? "minimum 10 number and cannot be letter"
                           : ""
                       }
                     />

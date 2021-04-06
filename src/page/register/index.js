@@ -109,7 +109,7 @@ class Register extends Component {
     }
   };
   validationPhone = (phone) => {
-    const patterPhone = new RegExp("[0-9]{9,12}");
+    const patterPhone = new RegExp("^(^\\+62|62|^08)(\\d{3,4}-?){2}\\d{3,4}$");
     let valid = patterPhone.test(phone);
     if (valid) {
       this.setState({
@@ -123,9 +123,7 @@ class Register extends Component {
     }
   };
   validationEmail = (email) => {
-    const patternEmail = new RegExp(
-      "^[a-zA-Z0-9-_]+@[a-zA-Z0-9]+\\.[a-zA-Z]{2,}$"
-    );
+    const patternEmail = new RegExp("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
     let valid = patternEmail.test(email);
     if (valid) {
       this.setState({
@@ -150,7 +148,7 @@ class Register extends Component {
     } else {
       this.setState({
         errorPassword: true,
-        errorMsg: "minimum 8 character, at least one number",
+        errorMsg: "minimum 10 character, at least one number",
       });
     }
   };
