@@ -11,12 +11,7 @@ import {
 } from "@material-ui/core";
 import axios from "axios";
 import React, { Component } from "react";
-import {
-  Menu,
-  PaginationControlled,
-  SearchField,
-  SellerCard,
-} from "../../component";
+import { Menu, PaginationControlled, SellerCard } from "../../component";
 import { connect } from "react-redux";
 import { red } from "@material-ui/core/colors";
 const useStyles = () => ({
@@ -35,58 +30,24 @@ class AdminSeller extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      listSeller: [
-        {
-          userCode: "",
-          userName: "",
-          phone: "",
-          email: "",
-          status: "requested",
-          createdBy: "",
-          createdDate: "",
-          updateBy: "",
-          updateDate: "",
-          productLimit: 0,
-        },
-      ],
+      listSeller: [],
       ListStatus: ["requested", "active", "inactive"],
-      statusNow: "requested",
+
       page: 0,
       currentPage: 1,
 
-      filterStatus: "all",
-      filterRole: "userName",
+      searchField: "",
+      fromDate: "",
+      toDate: "",
 
       querySearch: "",
-      searchingStatus: false,
       filterBy: "all",
-      currentPage: 1,
       status: "all",
     };
   }
   componentDidMount() {
-    // this.getAllSeller(0);
     this.getSellerWithFilter("http://localhost:8080/api/user/filter?userName=");
-    this.countSellerByStatus("all");
   }
-  countSellerByStatus = (status) => {
-    axios
-      .get("http://localhost:8080/api//user/count-seller?status=" + status)
-      .then((res) => {
-        this.setState({
-          page: Math.ceil(res.data / 6),
-        });
-      });
-  };
-  getAllSeller = (offset) => {
-    axios
-      .get("http://localhost:8080/api/user/seller?offset=" + offset)
-      .then((res) =>
-        this.setState({
-          listSeller: res.data,
-        })
-      );
-  };
   toogleStatus = (idx) => {
     console.log("toogle status");
     const { ListStatus, listSeller } = this.state;
@@ -126,35 +87,13 @@ class AdminSeller extends Component {
         });
     }
   };
-  setQty = (e, idx) => {
-    console.log("setvalueQTYYYYY", e.target.name, e.target.value, idx);
 
-    const { listSeller } = this.state;
-    const currSeller = listSeller[idx];
-
-    currSeller.productLimit = e.target.value;
-
-    let newListSeller = listSeller;
-    newListSeller.splice(idx, 1, currSeller);
-
-    this.setState({
-      listSeller: newListSeller,
-    });
-  };
-  validationNumber = (num) => {
-    const patterPhone = new RegExp("[0-9]");
-    let valid = patterPhone.test(num);
-    if (valid) {
-      return true;
-    }
-    return false;
-  };
-  editQty = (idx, prodActive) => {
+  editQty = (idx, productActive, currentLimit) => {
     const { listSeller } = this.state;
     const { user } = this.props;
     let seller = listSeller[idx];
 
-    if (seller.productLimit >= prodActive) {
+    if (currentLimit >= productActive) {
       let choise = window.confirm(
         "are you sure to change " + seller.userName + " product quantity"
       );
@@ -164,7 +103,7 @@ class AdminSeller extends Component {
             "http://localhost:8080/api/user/product-limit?id=" +
               seller.userCode +
               "&limitProduct=" +
-              seller.productLimit +
+              currentLimit +
               "&idAdmin=" +
               user.userCode
           )
@@ -178,6 +117,7 @@ class AdminSeller extends Component {
       alert("limit must be more than or equal with active");
     }
   };
+
   changePage = (event, page) => {
     console.log("changePage");
     const { searchingStatus, querySearch } = this.state;
@@ -187,24 +127,10 @@ class AdminSeller extends Component {
       currentPage: page,
     });
   };
-  doSearch = (target) => {
-    const {
-      filterStatus,
-      filterRole,
-      filterBy,
-      fromDate,
-      toDate,
-      status,
-      searchField,
-    } = this.state;
+  doSearch = () => {
+    const { filterBy, fromDate, toDate, status, searchField } = this.state;
     let endpoint = "http://localhost:8080/api/user/filter?";
-    // let endpoint =
-    //   "http://localhost:8080/api/user/filter?status=" +
-    //   filterStatus +
-    //   "&field=" +
-    //   filterRole +
-    //   "&target=" +
-    //   target;
+
     switch (filterBy) {
       case "userName":
         endpoint += "userName=" + searchField;
@@ -219,15 +145,6 @@ class AdminSeller extends Component {
         endpoint += "fromDate=" + fromDate + "&toDate=" + toDate;
         break;
     }
-    // if (filterBy === "userName") {
-    //   endpoint += "userName=" + searchField;
-    // } else if (filterBy === "userCode") {
-    //   endpoint += "userCode=" + searchField;
-    // } else if (filterBy === "status") {
-    //   endpoint += "status=" + status;
-    // } else if (filterBy === "date") {
-    //   endpoint += "fromDate=" + fromDate + "&toDate=" + toDate;
-    // }
     this.getSellerWithFilter(endpoint);
     this.setState({
       currentPage: 1,
@@ -242,7 +159,7 @@ class AdminSeller extends Component {
         page: Math.ceil(res.data.qty / 6),
       });
     });
-    this.setState({ searchingStatus: true, querySearch: query });
+    this.setState({ querySearch: query });
   };
   setFilterValue = (e) => {
     const { name, value } = e.target;
@@ -264,46 +181,33 @@ class AdminSeller extends Component {
       [name]: value,
     });
   };
-  resetData = () => {
-    this.getAllSeller(0);
-    this.countSellerByStatus("all");
-    this.setState({
-      searchingStatus: false,
-    });
-  };
+
   rejectSeller = (id) => {
-    const { querySearch } = this.props;
-    axios
-      .delete("http://localhost:8080/api/user/" + id)
-      .then((response) => {
-        if (response.status === 200) {
-          alert("Succesfully reject seller");
-          this.getSellerWithFilter(
-            "http://localhost:8080/api/user/filter?status="
-          );
-        }
-      })
-      .catch((errorResponse) => {
-        console.log("erroooor", errorResponse);
-        // console.log(e);
-        if (errorResponse.response !== undefined) {
-          alert(errorResponse.response.data);
-        }
-      });
+    let choise = window.confirm(
+      "Are you sure to reject the seller? rejected account will be deleted permanently"
+    );
+    if (choise)
+      axios
+        .delete("http://localhost:8080/api/user/" + id)
+        .then((response) => {
+          if (response.status === 200) {
+            alert("Succesfully reject seller");
+            this.getSellerWithFilter(
+              "http://localhost:8080/api/user/filter?status="
+            );
+          }
+        })
+        .catch((errorResponse) => {
+          console.log("erroooor", errorResponse);
+
+          if (errorResponse.response !== undefined) {
+            alert(errorResponse.response.data);
+          }
+        });
   };
   render() {
-    const { buttonAdminStat, classes, history, toogleMenu } = this.props;
-    const {
-      listSeller,
-      statusNow,
-      page,
-      currentPage,
-      filterStatus,
-      filterRole,
-      filterBy,
-      // currentPage,
-      status,
-    } = this.state;
+    const { classes, history } = this.props;
+    const { listSeller, page, currentPage, filterBy, status } = this.state;
     let buttonGo = (
       <Button
         size="small"
@@ -380,14 +284,9 @@ class AdminSeller extends Component {
         direction="row"
         justify="space-between"
         alignItems="center"
-        style={{ margin: 0 }}
       >
         <Grid container item xs={12}>
-          <Menu
-            history={history}
-            toogleMenu={toogleMenu}
-            buttonAdminStat={buttonAdminStat}
-          />
+          <Menu history={history} />
         </Grid>
         <Grid
           container
@@ -414,33 +313,25 @@ class AdminSeller extends Component {
               </Select>
             </FormControl>
           </Grid>
-
           {formFilter}
         </Grid>
 
-        <Grid container item xs={12} style={{ minHeight: "70vh" }}>
-          {listSeller.map((user, i) => {
-            return (
-              <Grid
-                item
-                xs={4}
-                className={classes.margin}
-                key={i}
-                // align="center"
-              >
-                <SellerCard
-                  idx={i}
-                  user={user}
-                  history={history}
-                  toggleStatus={this.toogleStatus}
-                  onChange={this.setQty}
-                  statusNow={statusNow}
-                  editQty={this.editQty}
-                  rejectSeller={this.rejectSeller}
-                />
-              </Grid>
-            );
-          })}
+        <Grid container item xs={12} style={{ minHeight: "73vh" }}>
+          {listSeller.length > 0 &&
+            listSeller.map((user, i) => {
+              return (
+                <Grid item xs={4} className={classes.margin} key={i}>
+                  <SellerCard
+                    idx={i}
+                    user={user}
+                    history={history}
+                    toggleStatus={this.toogleStatus}
+                    editQty={this.editQty}
+                    rejectSeller={this.rejectSeller}
+                  />
+                </Grid>
+              );
+            })}
         </Grid>
 
         <Grid container item xs={12}>

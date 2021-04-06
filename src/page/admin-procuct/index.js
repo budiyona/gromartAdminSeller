@@ -50,15 +50,7 @@ class AdminProduct extends Component {
         },
       ],
 
-      // filterSwitch: false,
-      // filterByStatus: false,
-      // filterByCode: false,
-      // filterByName: false,
-      // filterByDate: false,
-      // statusFilter: "",
-
       searchField: "",
-      // searchingStatus: false,
 
       fromDate: "",
       toDate: "",
@@ -78,22 +70,14 @@ class AdminProduct extends Component {
 
   changePage = (event, page) => {
     const { querySearch } = this.state;
-    console.log("changePage");
     let offset = (page - 1) * 6;
     this.getProductWithFilter(querySearch, offset);
     this.setState({
       currentPage: page,
     });
   };
-  toogleFilter = (buttonName) => {
-    console.log(buttonName);
-    this.setState({
-      [buttonName]: !this.state[buttonName],
-    });
-  };
+
   setFilterValue = (e) => {
-    console.log(e.target.value);
-    console.log(e.target.name);
     const { name, value } = e.target;
     if (name === "filterBy") {
       this.setState({
@@ -125,7 +109,7 @@ class AdminProduct extends Component {
     } else if (filterBy === "date") {
       endpoint += "fromDate=" + fromDate + "&toDate=" + toDate;
     }
-    console.log(endpoint);
+
     this.getProductWithFilter(endpoint);
     this.setState({
       currentPage: 1,
@@ -144,7 +128,6 @@ class AdminProduct extends Component {
   };
 
   render() {
-    // console.log(this.state);
     const { history, classes } = this.props;
     const { listProduct, currentPage, page, filterBy, status } = this.state;
     let buttonGo = (
@@ -255,8 +238,8 @@ class AdminProduct extends Component {
 
           {formFilter}
         </Grid>
-        <Grid container item xs={12} spacing={2}>
-          {listProduct &&
+        <Grid container item xs={12} spacing={2} style={{ minHeight: "73vh" }}>
+          {listProduct.length > 0 &&
             listProduct.map((prod, i) => (
               <Grid item xs={4} key={i} className={classes.margin}>
                 <ProductCard product={prod}></ProductCard>

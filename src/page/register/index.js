@@ -18,8 +18,8 @@ import {
 } from "@material-ui/core";
 
 import { withStyles } from "@material-ui/core/styles";
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import Visibility from "@material-ui/icons/Visibility";
+import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import { Copyright } from "../../component";
 import axios from "axios";
@@ -47,8 +47,8 @@ const useStyles = (theme) => ({
     margin: theme.spacing(2, 0, 2),
   },
   flexContainer: {
-    display: 'flex'
-  }
+    display: "flex",
+  },
 });
 
 class Register extends Component {
@@ -68,7 +68,7 @@ class Register extends Component {
 
       errorMsg: "",
       showRePassword: false,
-      showPassword: false
+      showPassword: false,
     };
   }
   setValue = (e) => {
@@ -179,7 +179,9 @@ class Register extends Component {
     axios
       .post("http://localhost:8080/api/user", user)
       .then((res) => {
-        res.status === 200 && alert("congratulations, your account has been successfully created."); this.props.history.push("/login");
+        res.status === 200 &&
+          alert("congratulations, your account has been successfully created.");
+        this.props.history.push("/login");
       })
       .catch((e) => {
         if (e.response !== undefined) {
@@ -191,9 +193,9 @@ class Register extends Component {
     console.log(name);
     console.log(this.state[name]);
     this.setState({
-      [name]: !this.state[name]
-    })
-  }
+      [name]: !this.state[name],
+    });
+  };
   render() {
     const { classes, isLogin, user } = this.props;
     const {
@@ -220,26 +222,30 @@ class Register extends Component {
       );
     };
     return (
-      <div className={classes.flexContainer}
+      <div
+        className={classes.flexContainer}
         style={{
           backgroundImage: `url('${productImg}')`,
           backgroundRepeat: "no-repeat",
-          backgroundSize: "cover"
-        }}>
+          backgroundSize: "cover",
+        }}
+      >
         <Container component="main" maxWidth="sm" style={{ margin: "auto" }}>
-          <Paper elevation={3}
+          <Paper
+            elevation={3}
             style={{
               borderRadius: "10px",
               paddingTop: "15px",
-              paddingBottom: "15px"
-            }}>
+              paddingBottom: "15px",
+            }}
+          >
             <div className={classes.paper}>
               <Avatar className={classes.avatar}>
                 <LockOutlinedIcon />
               </Avatar>
               <Typography component="h5" variant="h5">
                 Register
-            </Typography>
+              </Typography>
 
               {error() ? (
                 <Box style={{ height: "10px" }} mt={2}>
@@ -296,45 +302,32 @@ class Register extends Component {
                       error={errorEmail}
                     />
                   </Grid>
-                  {/* <Grid item xs={12}>
-                    <TextField
-                      size="small"
-                      required
-                      fullWidth
-                      name="password"
-                      label="Password"
-                      type="password"
-                      onChange={(e) => this.setValue(e)}
-                      error={errorPassword}
-                    />
-                  </Grid>
+
                   <Grid item xs={12}>
-                    <TextField
-                      size="small"
-                      required
+                    <FormControl
                       fullWidth
-                      name="repassword"
-                      label="Reenter Password"
-                      type="password"
-                      onChange={(e) => this.setValue(e)}
-                      error={errorRepassword}
-                    />
-                  </Grid> */}
-                  <Grid item xs={12}>
-                    <FormControl fullWidth required style={{ marginBottom: "10px" }}>
-                      <InputLabel >Password</InputLabel>
+                      required
+                      style={{ marginBottom: "10px" }}
+                    >
+                      <InputLabel>Password</InputLabel>
                       <Input
                         name="password"
-                        type={this.state.showPassword ? 'text' : 'password'}
+                        type={this.state.showPassword ? "text" : "password"}
                         onChange={(e) => this.setValue(e)}
                         endAdornment={
                           <InputAdornment position="end">
                             <IconButton
                               aria-label="toggle password visibility"
-                              onClick={() => this.tooglePassword("showPassword")}
+                              onClick={() =>
+                                this.tooglePassword("showPassword")
+                              }
                               edge="end"
                             >
-                              {this.state.showPassword ? <Visibility /> : <VisibilityOff />}
+                              {this.state.showPassword ? (
+                                <Visibility />
+                              ) : (
+                                <VisibilityOff />
+                              )}
                             </IconButton>
                           </InputAdornment>
                         }
@@ -344,21 +337,30 @@ class Register extends Component {
                     </FormControl>
                   </Grid>
                   <Grid item xs={12}>
-                    <FormControl fullWidth required style={{ marginBottom: "10px" }}>
-                      <InputLabel >Password</InputLabel>
+                    <FormControl
+                      fullWidth
+                      required
+                      style={{ marginBottom: "10px" }}
+                    >
+                      <InputLabel>Password</InputLabel>
                       <Input
                         name="repassword"
-
-                        type={this.state.showRePassword ? 'text' : 'password'}
+                        type={this.state.showRePassword ? "text" : "password"}
                         onChange={(e) => this.setValue(e)}
                         endAdornment={
                           <InputAdornment position="end">
                             <IconButton
                               aria-label="toggle password visibility"
-                              onClick={() => this.tooglePassword("showRePassword")}
+                              onClick={() =>
+                                this.tooglePassword("showRePassword")
+                              }
                               edge="end"
                             >
-                              {this.state.showRePassword ? <Visibility /> : <VisibilityOff />}
+                              {this.state.showRePassword ? (
+                                <Visibility />
+                              ) : (
+                                <VisibilityOff />
+                              )}
                             </IconButton>
                           </InputAdornment>
                         }
@@ -376,7 +378,7 @@ class Register extends Component {
                   className={classes.submit}
                 >
                   Register
-              </Button>
+                </Button>
                 <Grid container justify="flex-end">
                   <Grid item>
                     <Link
@@ -385,7 +387,7 @@ class Register extends Component {
                       onClick={() => this.props.history.push("/login")}
                     >
                       Already have an account? Login
-                  </Link>
+                    </Link>
                   </Grid>
                 </Grid>
               </form>

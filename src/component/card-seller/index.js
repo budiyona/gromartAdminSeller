@@ -4,7 +4,6 @@ import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardMedia from "@material-ui/core/CardMedia";
 import CardActions from "@material-ui/core/CardActions";
-import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import { blue, green, red } from "@material-ui/core/colors";
@@ -13,7 +12,6 @@ import person from "../../static/person.jpg";
 import moment from "moment";
 import {
   Button,
-  CardContent,
   Dialog,
   DialogActions,
   DialogContent,
@@ -47,7 +45,6 @@ const useStyles = () => ({
     color: blue[500],
   },
   miniPadding: {
-    // backgroundColor: "black"
     padding: 12,
   },
 });
@@ -89,25 +86,29 @@ class SellerCard extends Component {
       [name]: value,
     });
   };
-
   saveEdit = () => {
     const { idx, editQty } = this.props;
-    const { summary } = this.state;
-    editQty(idx, summary.active);
-    this.toggleModal();
+    const { summary, currentLimit } = this.state;
+    editQty(idx, summary.active, currentLimit);
+    this.toggleModal("modal");
+    this.resetLimit();
   };
-
+  resetLimit = () => {
+    this.setState({
+      currentLimit: 0,
+    });
+  };
   render() {
+    console.log(this.state);
     const {
       classes,
       toggleStatus,
       user,
       history,
       idx,
-      onChange,
       rejectSeller,
     } = this.props;
-    const { summary, modal, currentlimit, modalApproval } = this.state;
+    const { summary, modal, currentLimit, modalApproval } = this.state;
     return (
       <Card className={classes.root}>
         <CardHeader
@@ -130,7 +131,6 @@ class SellerCard extends Component {
 
         <CardActions disableSpacing>
           <div style={{ display: "flex", alignItems: "center", width: "50%" }}>
-            {/* <IconButton onClick={onClick} aria-label="share" size="small"> */}
             <IconButton
               onClick={
                 user.status === "requested"
@@ -157,7 +157,10 @@ class SellerCard extends Component {
               style={{ display: "flex", alignItems: "center", width: "50%" }}
             >
               <IconButton
-                onClick={() => this.toggleModal("modal")}
+                onClick={() => {
+                  this.getSellerSumary(user.userCode);
+                  this.toggleModal("modal");
+                }}
                 aria-label="share"
                 size="small"
               >
@@ -171,6 +174,7 @@ class SellerCard extends Component {
           open={modal}
           onClose={() => {
             this.setState({ modal: false });
+            this.resetLimit();
           }}
           aria-labelledby="form-dialog-title"
           maxWidth="xs"
@@ -183,14 +187,14 @@ class SellerCard extends Component {
             <Grid container xs={12} spacing={3}>
               <Grid item xs={3}>
                 <TextField
-                  value={currentlimit}
+                  value={currentLimit}
                   size="small"
                   margin="dense"
-                  name="currentlimit"
+                  name="currentLimit"
                   label="Limit"
                   type="number"
                   fullWidth
-                  onChange={(e) => onChange(e, idx)}
+                  onChange={(e) => this.changeLimit(e)}
                   InputLabelProps={{
                     shrink: true,
                   }}
@@ -244,7 +248,13 @@ class SellerCard extends Component {
             </Grid>
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => this.toggleModal("modal")} color="primary">
+            <Button
+              onClick={() => {
+                this.toggleModal("modal");
+                this.resetLimit();
+              }}
+              color="primary"
+            >
               Cancel
             </Button>
             <Button onClick={this.saveEdit} color="primary">
