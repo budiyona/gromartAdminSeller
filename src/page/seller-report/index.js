@@ -20,7 +20,7 @@ import { connect } from "react-redux";
 import Pdf from "react-to-pdf";
 import { CSVLink } from "react-csv";
 import Pagination from "@material-ui/lab/Pagination";
-// import {  } from 'react-scroll/';
+import { scroller } from "react-scroll";
 
 const useStyles = (theme) => ({
   margin: {
@@ -88,12 +88,12 @@ class SellerReport extends Component {
   }
   changePage = (event, page) => {
     console.log("changePage " + page);
-
-    // let offset = (page - 1) * 6;
-    // this.setState({
-    //   offset,
-    //   currentPage: page,
-    // });
+    scroller.scrollTo("page" + page, {
+      duration: 1000,
+      delay: 100,
+      smooth: true,
+      containerId: "ContainerElementID",
+    });
   };
   toogleFilter = (buttonName) => {
     console.log(buttonName);
@@ -413,6 +413,7 @@ class SellerReport extends Component {
         >
           <Grid container item xs={12}>
             <GridList
+              id="ContainerElementID"
               // cellHeight={270}
               className={classes.gridList}
               style={{ width: "100%", height: 450 }}
