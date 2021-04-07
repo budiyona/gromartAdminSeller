@@ -63,14 +63,12 @@ class SellerHome extends Component {
     this.getExpensiveProduct();
   };
   getSellerSumary = () => {
-    // console.log("iddd", id);
     axios
       .get(
         "http://localhost:8080/api/product/seller-summary?id=" +
           this.props.user.userCode
       )
       .then((res) => {
-        // console.log("dateget", res.data.limit);
         this.setState({
           summary: res.data,
         });
@@ -78,22 +76,12 @@ class SellerHome extends Component {
   };
 
   render() {
-    console.log("cehapes", this.state.cheapestProd);
-    const {
-      expensiveProd,
-      cheapestProd,
-
-      summary,
-    } = this.state;
-    const { buttonAdminStat, history, toogleMenu, classes } = this.props;
+    const { expensiveProd, cheapestProd, summary } = this.state;
+    const { history, classes } = this.props;
     return (
       <Grid container direction="row" justify="space-between">
         <Grid container item xs={12}>
-          <Menu
-            history={history}
-            toogleMenu={toogleMenu}
-            buttonAdminStat={buttonAdminStat}
-          ></Menu>
+          <Menu history={history}></Menu>
         </Grid>
 
         <Grid container item xs={12} spacing={3}>
@@ -103,11 +91,9 @@ class SellerHome extends Component {
             xs={12}
             spacing={3}
             className={classes.cardCount}
-            // direction="column"
           >
             <Grid item xs={3}>
               <DasboardTitle
-                // pointer
                 fullwidth
                 color="info"
                 icon={<GradeIcon fontSize="inherit" />}
@@ -116,7 +102,6 @@ class SellerHome extends Component {
             </Grid>
             <Grid item xs={3}>
               <DasboardTitle
-                // pointer
                 fullwidth
                 color="success"
                 icon={<GradeIcon fontSize="inherit" />}
@@ -125,7 +110,6 @@ class SellerHome extends Component {
             </Grid>
             <Grid item xs={3}>
               <DasboardTitle
-                // pointer
                 fullwidth
                 color="warning"
                 icon={<GradeIcon fontSize="inherit" />}
@@ -134,7 +118,6 @@ class SellerHome extends Component {
             </Grid>
             <Grid item xs={3}>
               <DasboardTitle
-                // pointer
                 fullwidth
                 color="error"
                 icon={<GradeIcon fontSize="inherit" />}
@@ -143,7 +126,6 @@ class SellerHome extends Component {
             </Grid>
             <Grid item xs={12}>
               <DasboardTitle
-                // pointer
                 fullwidth
                 color="warning"
                 icon={<GradeIcon fontSize="inherit" />}
@@ -162,7 +144,6 @@ class SellerHome extends Component {
               ))}
             <Grid item xs={12}>
               <DasboardTitle
-                // pointer
                 fullwidth
                 color="warning"
                 icon={<GradeIcon fontSize="inherit" />}

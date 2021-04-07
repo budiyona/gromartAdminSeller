@@ -31,6 +31,7 @@ class App extends Component {
 
   render() {
     let isAdmin = this.props.userCode.includes("ADMIN");
+    let isSeller = this.props.userCode.includes("SELLER");
 
     let adminPage = [];
     adminPage.push(
@@ -211,7 +212,9 @@ class App extends Component {
               return <Login history={history}></Login>;
             }}
           />
-          {isAdmin ? adminPage.map((e) => e) : sellerPage.map((e) => e)}
+          {/* {isAdmin ? adminPage.map((e) => e) : sellerPage.map((e) => e)} */}
+          {isAdmin && adminPage.map((e) => e)}
+          {isSeller && sellerPage.map((e) => e)}
           <Route
             component={() => {
               let history = useHistory();

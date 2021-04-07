@@ -14,10 +14,9 @@ import {
 import axios from "axios";
 import ReactToPrint from "react-to-print";
 import React, { Component } from "react";
-import { Menu, PaginationControlled, TableProduct } from "../../component";
+import { Menu, TableProduct } from "../../component";
 import { red } from "@material-ui/core/colors";
 import { connect } from "react-redux";
-import Pdf from "react-to-pdf";
 import { CSVLink } from "react-csv";
 import Pagination from "@material-ui/lab/Pagination";
 import { scroller } from "react-scroll";
@@ -43,26 +42,13 @@ const useStyles = (theme) => ({
     display: "none",
   },
 });
-const ref = React.createRef();
+// const ref = React.createRef();
 
 class SellerReport extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      listProduct: [
-        {
-          productCode: "",
-          productName: "",
-          price: 0,
-          stock: 0,
-          description: "",
-          seller: {
-            userCode: "",
-            userName: "",
-          },
-        },
-      ],
-      // productPage: 0,
+      listProduct: [],
       qty: 0,
 
       status: "all",
@@ -160,16 +146,7 @@ class SellerReport extends Component {
   render() {
     // console.log(this.state);
     const { history, classes, user } = this.props;
-    const {
-      listProduct,
-      qty,
-      status,
-      filterBy,
-      offset,
-      currentPage,
-      count,
-      page,
-    } = this.state;
+    const { listProduct, status, filterBy, count, page } = this.state;
     const header = [
       { label: "Product Code", key: "productCode" },
       { label: "Product Name", key: "productName" },

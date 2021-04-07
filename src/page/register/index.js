@@ -11,7 +11,6 @@ import {
   InputAdornment,
   InputLabel,
   Link,
-  OutlinedInput,
   Paper,
   TextField,
   Typography,
@@ -210,15 +209,6 @@ class Register extends Component {
       }
       return <Redirect to="/seller/home" />;
     }
-    let error = () => {
-      return (
-        errorEmail ||
-        errorFullname ||
-        errorPassword ||
-        errorRepassword ||
-        errorPhone
-      );
-    };
     return (
       <div
         className={classes.flexContainer}
@@ -245,7 +235,11 @@ class Register extends Component {
                 Register
               </Typography>
 
-              {error() ? (
+              {errorEmail ||
+              errorFullname ||
+              errorPassword ||
+              errorRepassword ||
+              errorPhone ? (
                 <Box style={{ height: "10px" }} mt={2}>
                   <Typography variant="caption" color="error" align="center">
                     {errorMsg}

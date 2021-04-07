@@ -33,19 +33,7 @@ class AdminProduct extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      listProduct: [
-        {
-          productCode: "",
-          productName: "",
-          price: 0,
-          stock: 0,
-          description: "",
-          seller: {
-            userCode: "",
-            userName: "",
-          },
-        },
-      ],
+      listProduct: [],
 
       searchField: "",
 
@@ -108,6 +96,8 @@ class AdminProduct extends Component {
         break;
       case "date":
         endpoint += "fromDate=" + fromDate + "&toDate=" + toDate;
+        break;
+      default:
         break;
     }
     this.getProductWithFilter(endpoint);

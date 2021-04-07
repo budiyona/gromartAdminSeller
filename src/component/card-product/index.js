@@ -1,17 +1,20 @@
 import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
-import Card from "@material-ui/core/Card";
-import CardHeader from "@material-ui/core/CardHeader";
-import CardMedia from "@material-ui/core/CardMedia";
-import CardActions from "@material-ui/core/CardActions";
-import IconButton from "@material-ui/core/IconButton";
-import Typography from "@material-ui/core/Typography";
+import {
+  Card,
+  CardHeader,
+  CardMedia,
+  CardActions,
+  Typography,
+  IconButton,
+  Tooltip,
+} from "@material-ui/core";
 import { blue, green, red } from "@material-ui/core/colors";
 import productImg from "../../static/product.jpg";
 import { connect } from "react-redux";
 import "./style.css";
-import { Tooltip } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
+import EditIcon from "@material-ui/icons/Edit";
 const useStyles = () => ({
   root: {
     maxWidth: 248,
@@ -45,20 +48,6 @@ class ProductCard extends Component {
       status: ["requested", "active", "inactive"],
     };
   }
-  status = () => {
-    const { status, statusNow } = this.state;
-    console.log("toogle status");
-    console.log(statusNow);
-    let newStatusIndex = status.findIndex((el) => statusNow === el);
-    if (newStatusIndex >= 2) {
-      newStatusIndex = 0;
-    } else {
-      newStatusIndex++;
-    }
-    this.setState({
-      statusNow: status[newStatusIndex],
-    });
-  };
 
   render() {
     const { classes, product, user, history, deleteProductById } = this.props;
@@ -82,6 +71,7 @@ class ProductCard extends Component {
             )
           }
         />
+
         <CardMedia
           className={
             user.userCode.includes("ADMIN")
@@ -99,8 +89,31 @@ class ProductCard extends Component {
                   })
           }
         />
+
         <CardActions disableSpacing>
-          <Typography>Rp. {product.price},00</Typography>
+          <div style={{ width: "50%" }}>
+            <Typography>Rp. {product.price},00</Typography>
+          </div>
+          {!user.userCode.includes("ADMIN") && (
+            <div
+              style={{ width: "50%", textAlign: "right", paddingRight: "10px" }}
+            >
+              <Tooltip title="Edit">
+                <IconButton
+                  style={{ padding: "0px" }}
+                  color="primary"
+                  onClick={() =>
+                    history.push({
+                      pathname: "/seller/product/update",
+                      state: { idProduct: product.productCode },
+                    })
+                  }
+                >
+                  <EditIcon />
+                </IconButton>
+              </Tooltip>
+            </div>
+          )}
         </CardActions>
       </Card>
     );

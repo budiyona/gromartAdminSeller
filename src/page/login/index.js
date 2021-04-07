@@ -21,8 +21,8 @@ import {
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import axios from "axios";
 import { connect } from "react-redux";
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import Visibility from "@material-ui/icons/Visibility";
+import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import productImg from "../../static/bg.jpg";
 const useStyles = (theme) => ({
   paper: {
@@ -43,8 +43,8 @@ const useStyles = (theme) => ({
     margin: theme.spacing(3, 0, 2),
   },
   flexContainer: {
-    display: 'flex'
-  }
+    display: "flex",
+  },
 });
 
 class Login extends Component {
@@ -54,7 +54,7 @@ class Login extends Component {
       isVerified: false,
       email: "",
       password: "",
-      showPassword: false
+      showPassword: false,
     };
   }
   recaptchaLoaded = () => {
@@ -70,15 +70,15 @@ class Login extends Component {
   doLogin = (e) => {
     e.preventDefault();
     console.log("LOGIN");
-    const {email, password}= this.state
+    const { email, password } = this.state;
     if (this.state.isVerified) {
       // console.log(email,password, this.state);
       axios
         .post(
           "http://localhost:8080/api/login?email=" +
-          email +
-          "&password=" +
-          password
+            email +
+            "&password=" +
+            password
         )
         .then((res) => {
           let payload = {
@@ -103,7 +103,7 @@ class Login extends Component {
     }
   };
   setValue = (e) => {
-    const {name, value}=e.target
+    const { name, value } = e.target;
     // console.log(name, value);
     this.setState({
       [name]: value,
@@ -111,41 +111,46 @@ class Login extends Component {
   };
   tooglePassword = () => {
     this.setState({
-      showPassword: !this.state.showPassword
-    })
-  }
+      showPassword: !this.state.showPassword,
+    });
+  };
   render() {
     const { classes, isLogin, user } = this.props;
     if (isLogin) {
       if (user.userCode.includes("ADMIN")) {
         return <Redirect to="/admin/home" />;
       }
-      return <Redirect to="/seller/home" />;
+      if (user.userCode.includes("SELLER")) {
+        return <Redirect to="/seller/home" />;
+      }
     }
     return (
-      <div className={classes.flexContainer}
+      <div
+        className={classes.flexContainer}
         style={{
           backgroundImage: `url('${productImg}')`,
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
-
         }}
       >
-        <Container component="main" maxWidth="xs"
+        <Container
+          component="main"
+          maxWidth="xs"
           style={{
             margin: "auto",
             backgroundColor: "white",
             borderRadius: "10px",
             paddingTop: "15px",
-            paddingBottom: "15px"
-          }}>
+            paddingBottom: "15px",
+          }}
+        >
           <div className={classes.paper}>
             <Avatar className={classes.avatar}>
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
               Login
-          </Typography>
+            </Typography>
             <form className={classes.form} noValidate onSubmit={this.doLogin}>
               <TextField
                 required
@@ -159,11 +164,15 @@ class Login extends Component {
                 autoFocus
                 onChange={(e) => this.setValue(e)}
               />
-              <FormControl variant="outlined" fullWidth style={{ marginBottom: "10px" }}>
-                <InputLabel >Password</InputLabel>
+              <FormControl
+                variant="outlined"
+                fullWidth
+                style={{ marginBottom: "10px" }}
+              >
+                <InputLabel>Password</InputLabel>
                 <OutlinedInput
                   name="password"
-                  type={this.state.showPassword ? 'text' : 'password'}
+                  type={this.state.showPassword ? "text" : "password"}
                   onChange={(e) => this.setValue(e)}
                   endAdornment={
                     <InputAdornment position="end">
@@ -172,14 +181,18 @@ class Login extends Component {
                         onClick={this.tooglePassword}
                         edge="end"
                       >
-                        {this.state.showPassword ? <Visibility /> : <VisibilityOff />}
+                        {this.state.showPassword ? (
+                          <Visibility />
+                        ) : (
+                          <VisibilityOff />
+                        )}
                       </IconButton>
                     </InputAdornment>
                   }
                   labelWidth={100}
                 />
               </FormControl>
-              <div style={{ display: 'flex' }}>
+              <div style={{ display: "flex" }}>
                 <div style={{ margin: "auto" }}>
                   <Recaptcha
                     sitekey="6Lfg3W0aAAAAAH_wKiduCg2ecTcyehEFQVpAf66N"
@@ -198,7 +211,7 @@ class Login extends Component {
                 className={classes.submit}
               >
                 LogIn
-            </Button>
+              </Button>
               <Grid container>
                 <Grid item xs></Grid>
                 <Grid item>

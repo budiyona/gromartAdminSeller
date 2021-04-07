@@ -13,7 +13,7 @@ import {
 import axios from "axios";
 import { Menu, PaginationControlled, ProductCard } from "../../component";
 import React, { Component } from "react";
-import { blue, green, red } from "@material-ui/core/colors";
+import { blue, red } from "@material-ui/core/colors";
 import { connect } from "react-redux";
 
 const useStyles = (theme) => ({
@@ -33,15 +33,14 @@ class SellerProduct extends Component {
     super(props);
     this.state = {
       products: [],
-      target: "",
-      showClear: false,
+      searchField: "",
 
-      userName: "",
-      email: "",
+      fromDate: "",
+      toDate: "",
 
-      searchingStatus: false,
-      page: 0,
+      querySearch: "",
       filterBy: "all",
+      page: 0,
       currentPage: 1,
       status: "all",
     };
@@ -76,22 +75,6 @@ class SellerProduct extends Component {
     });
   };
 
-  setTarget = (e) => {
-    console.log(e.target.value);
-    const { value } = e.target;
-    let clear = false;
-    this.setState({ target: value });
-    value.length > 0 && (clear = true);
-
-    this.setState({ showClear: clear });
-  };
-  clearButton = () => {
-    this.setState({
-      target: "",
-      showClear: false,
-      searchingStatus: false,
-    });
-  };
   getProductWithFilter = (query, offset = 0) => {
     let queryOffset = "&offset=" + offset;
     axios.get(query + queryOffset).then((res) => {
@@ -99,23 +82,31 @@ class SellerProduct extends Component {
       this.setState({
         products: res.data.product,
         page: Math.ceil(res.data.qty / 6),
+        querySearch: query,
       });
     });
-    this.setState({ querySearch: query });
   };
   doSearch = () => {
     const { user } = this.props;
     const { fromDate, toDate, filterBy, searchField, status } = this.state;
     let endpoint =
       "http://localhost:8080/api/product/seller/filter/" + user.userCode + "?";
-    if (filterBy === "productName") {
-      endpoint += "productName=" + searchField;
-    } else if (filterBy === "productCode") {
-      endpoint += "productCode=" + searchField;
-    } else if (filterBy === "status") {
-      endpoint += "status=" + status;
-    } else if (filterBy === "date") {
-      endpoint += "fromDate=" + fromDate + "&toDate=" + toDate;
+
+    switch (filterBy) {
+      case "productName":
+        endpoint += "productName=" + searchField;
+        break;
+      case "productCode":
+        endpoint += "productCode=" + searchField;
+        break;
+      case "status":
+        endpoint += "status=" + status;
+        break;
+      case "date":
+        endpoint += "fromDate=" + fromDate + "&toDate=" + toDate;
+        break;
+      default:
+        break;
     }
     console.log(endpoint);
     this.getProductWithFilter(endpoint);
@@ -125,19 +116,9 @@ class SellerProduct extends Component {
   };
   changePage = (event, page) => {
     console.log("changePage", page);
-    const { user } = this.props;
-    const { searchingStatus, querySearch } = this.state;
+    const { querySearch } = this.state;
     let offset = (page - 1) * 6;
     this.getProductWithFilter(querySearch, offset);
-    if (searchingStatus) {
-    } else {
-      this.getProductWithFilter(
-        "http://localhost:8080/api/product/seller/filter/" +
-          user.userCode +
-          "?",
-        offset
-      );
-    }
     this.setState({
       currentPage: page,
     });
@@ -162,7 +143,7 @@ class SellerProduct extends Component {
     }
   };
   render() {
-    const { buttonAdminStat, history, toogleMenu, classes } = this.props;
+    const { history, classes } = this.props;
     const { products, currentPage, page, filterBy, status } = this.state;
     console.log(this.state);
     let buttonGo = (
@@ -241,11 +222,7 @@ class SellerProduct extends Component {
         alignItems="center"
       >
         <Grid container item xs={12}>
-          <Menu
-            history={history}
-            toogleMenu={toogleMenu}
-            buttonAdminStat={buttonAdminStat}
-          ></Menu>
+          <Menu history={history}></Menu>
         </Grid>
         <Grid
           container

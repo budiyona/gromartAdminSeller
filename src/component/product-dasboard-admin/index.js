@@ -16,9 +16,6 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     width: "55%",
   },
-  content: {
-    flex: "1 0 auto",
-  },
   cover: {
     width: "45%",
   },
@@ -30,7 +27,7 @@ export default function ProductDasboard(props) {
   return (
     <Card className={classes.root}>
       <div className={classes.details}>
-        <CardContent className={classes.content}>
+        <CardContent>
           <Typography variant="h6">{props.title}</Typography>
           <Typography variant="caption" color="textSecondary">
             Rp.{props.price}

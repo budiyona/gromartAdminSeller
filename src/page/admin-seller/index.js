@@ -120,7 +120,7 @@ class AdminSeller extends Component {
 
   changePage = (event, page) => {
     console.log("changePage");
-    const { searchingStatus, querySearch } = this.state;
+    const { querySearch } = this.state;
     let offset = (page - 1) * 6;
     this.getSellerWithFilter(querySearch, offset);
     this.setState({
@@ -143,6 +143,8 @@ class AdminSeller extends Component {
         break;
       case "date":
         endpoint += "fromDate=" + fromDate + "&toDate=" + toDate;
+        break;
+      default:
         break;
     }
     this.getSellerWithFilter(endpoint);

@@ -166,8 +166,7 @@ class UserInfo extends Component {
   };
   doEditProfile = () => {
     const { fullname, phone, email, password } = this.state;
-    const { user, doLogout } = this.props;
-    // let date = moment(new Date()).format("YYYY-MM-DD HH:MM:SS");
+    const { user } = this.props;
     let userUpdate = {
       userName: fullname,
       phone: phone,
@@ -177,8 +176,6 @@ class UserInfo extends Component {
     axios
       .put("http://localhost:8080/api/user/" + user.userCode, userUpdate)
       .then((res) => {
-        // res.status === 200 && this.props.history.push("/login");
-        //pagil reducer logout
         if (res.status === 200) {
           alert("Update Success");
         }
@@ -266,7 +263,7 @@ class UserInfo extends Component {
     this.props.history.push("/login");
   };
   render() {
-    const { buttonAdminStat, history, toogleMenu, classes } = this.props;
+    const { history, classes } = this.props;
     const {
       errorEmail,
       errorFullname,
@@ -295,11 +292,7 @@ class UserInfo extends Component {
         alignItems="center"
       >
         <Grid container item xs={12}>
-          <Menu
-            history={history}
-            toogleMenu={toogleMenu}
-            buttonAdminStat={buttonAdminStat}
-          ></Menu>
+          <Menu history={history}></Menu>
         </Grid>
         <Grid container item xs={12}>
           <Grid container item xs={12}>

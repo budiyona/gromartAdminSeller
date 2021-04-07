@@ -13,8 +13,6 @@ class TableProduct extends Component {
     this.state = {};
   }
   render() {
-    const { rows } = this.state;
-    // console.log("rowwss", rows);
     const { listProduct, page, user } = this.props;
     return (
       <>
@@ -36,7 +34,6 @@ class TableProduct extends Component {
             : {page.pageNow} of {page.pageTotal}
           </h6>
         </div>
-        {/* <hr /> */}
         <table>
           <thead>
             <tr>
@@ -52,7 +49,6 @@ class TableProduct extends Component {
           <tbody>
             {listProduct.length > 0 &&
               listProduct.map((product, key) => {
-                // console.log(row);
                 return (
                   <tr key={key}>
                     <td>{key + 1}</td>
@@ -69,50 +65,6 @@ class TableProduct extends Component {
         </table>
       </>
     );
-    // return (
-    //   <TableContainer component={Paper}>
-    //     <Table
-    //       className={classes.table}
-    //       size="small"
-    //       aria-label="a dense table"
-    //     >
-    //       <caption>
-    //         page {page.pageNow} of {page.pageTotal} (
-    //         {moment(Date()).format("YYYY-MM-DD, H:mm:ss")})
-    //       </caption>
-    //       <TableHead>
-    //         <TableRow>
-    //           <TableCell> # </TableCell>
-    //           <TableCell> Code </TableCell>
-    //           <TableCell> Name </TableCell>
-    //           <TableCell align="right">Price</TableCell>
-    //           <TableCell>Description</TableCell>
-    //           <TableCell>Status</TableCell>
-    //           <TableCell>Created Date</TableCell>
-    //         </TableRow>
-    //       </TableHead>
-    //       <TableBody>
-    //         {listProduct.length > 0 &&
-    //           listProduct.map((product, key) => {
-    //             // console.log(row);
-    //             return (
-    //               <TableRow key={key}>
-    //                 <TableCell component="th" scope="row">
-    //                   {key + 1}
-    //                 </TableCell>
-    //                 <TableCell>{product.productCode}</TableCell>
-    //                 <TableCell>{product.productName}</TableCell>
-    //                 <TableCell align="right">{product.price}</TableCell>
-    //                 <TableCell>{product.description}</TableCell>
-    //                 <TableCell>{product.status}</TableCell>
-    //                 <TableCell>{product.createdDate}</TableCell>
-    //               </TableRow>
-    //             );
-    //           })}
-    //       </TableBody>
-    //     </Table>
-    //   </TableContainer>
-    // );
   }
 }
 
