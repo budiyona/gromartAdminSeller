@@ -88,6 +88,7 @@ class ProductCard extends Component {
                     state: { idProduct: product.productCode },
                   })
           }
+          title={product.description}
         />
 
         <CardActions disableSpacing>

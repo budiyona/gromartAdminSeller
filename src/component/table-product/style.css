@@ -16,6 +16,9 @@ h6 {
   margin-bottom: 5px;
   margin-top: 5px;
 }
+td {
+  font-size: 11px;
+}
 
 .inline {
   display: inline-block;
@@ -23,4 +26,23 @@ h6 {
 }
 .field {
   display: flex;
+}
+.index-number {
+  width: 10px;
+}
+.code {
+  width: 50px;
+}
+.name {
+  width: 150px;
+}
+.price {
+  width: 100px;
+}
+.description {
+  width: 200px;
+}
+.status {
+  width: 50px;
+  text-align: center;
 }

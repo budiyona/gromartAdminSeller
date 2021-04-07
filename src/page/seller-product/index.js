@@ -275,7 +275,6 @@ class SellerProduct extends Component {
               </Select>
             </FormControl>
           </Grid>
-
           {formFilter}
         </Grid>
 

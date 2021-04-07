@@ -6,7 +6,7 @@ import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
 import product from "../../static/product.jpg";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     display: "flex",
   },
@@ -16,13 +16,12 @@ const useStyles = makeStyles((theme) => ({
     width: "70%",
   },
   cover: {
-    width: 100,
+    width: "30%",
   },
 }));
 
 export default function ProductDasboardSeller(props) {
   const classes = useStyles();
-
   return (
     <Card className={classes.root}>
       <div className={classes.details}>
@@ -33,11 +32,7 @@ export default function ProductDasboardSeller(props) {
           </Typography>
         </CardContent>
       </div>
-      <CardMedia
-        className={classes.cover}
-        image={product}
-        title="Live from space album cover"
-      />
+      <CardMedia className={classes.cover} image={product} />
     </Card>
   );
 }

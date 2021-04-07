@@ -2,6 +2,7 @@ import { withStyles } from "@material-ui/core";
 import moment from "moment";
 import React, { Component } from "react";
 import "./style.css";
+import { formatToRupiah } from "../../util";
 const useStyles = () => ({
   table: {
     // border: "1px solid black",
@@ -51,12 +52,12 @@ class TableProduct extends Component {
               listProduct.map((product, key) => {
                 return (
                   <tr key={key}>
-                    <td>{key + 1}</td>
-                    <td>{product.productCode}</td>
-                    <td>{product.productName}</td>
-                    <td align="right">{product.price}</td>
-                    <td>{product.description}</td>
-                    <td>{product.status}</td>
+                    <td className="index-number">{key + 1}</td>
+                    <td className="code">{product.productCode}</td>
+                    <td className="name">{product.productName}</td>
+                    <td className="price">{formatToRupiah(product.price)}</td>
+                    <td className="description">{product.description}</td>
+                    <td className="status">{product.status}</td>
                     <td>{product.createdDate}</td>
                   </tr>
                 );

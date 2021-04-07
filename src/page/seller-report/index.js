@@ -9,6 +9,7 @@ import {
   MenuItem,
   Select,
   TextField,
+  Typography,
   withStyles,
 } from "@material-ui/core";
 import axios from "axios";
@@ -42,14 +43,12 @@ const useStyles = (theme) => ({
     display: "none",
   },
 });
-// const ref = React.createRef();
-
 class SellerReport extends Component {
   constructor(props) {
     super(props);
     this.state = {
       listProduct: [],
-      qty: 0,
+      page: 0,
 
       status: "all",
 
@@ -60,7 +59,6 @@ class SellerReport extends Component {
 
       filterBy: "all",
       querySearch: "",
-      offset: 0,
       currentPage: 1,
     };
   }
@@ -79,6 +77,9 @@ class SellerReport extends Component {
       delay: 100,
       smooth: true,
       containerId: "ContainerElementID",
+    });
+    this.setState({
+      currentPage: page,
     });
   };
   toogleFilter = (buttonName) => {
@@ -128,25 +129,23 @@ class SellerReport extends Component {
   };
   getProductWithFilter = (query) => {
     axios.get(query).then((res) => {
-      // console.log("data get", res.data);
       this.setState({
         listProduct: res.data.product,
-        qty: res.data.qty,
+        page: Math.ceil(res.data.qty / 6),
+        querySearch: query,
       });
     });
-    this.setState({ querySearch: query });
-  };
-  resetData = () => {
-    this.getProductWithFilter(
-      "http://localhost:8080/api/product/report/" +
-        this.props.user.userCode +
-        "?"
-    );
   };
   render() {
-    // console.log(this.state);
     const { history, classes, user } = this.props;
-    const { listProduct, status, filterBy, count, page } = this.state;
+    const {
+      listProduct,
+      status,
+      filterBy,
+      currentPage,
+      page,
+      searchField,
+    } = this.state;
     const header = [
       { label: "Product Code", key: "productCode" },
       { label: "Product Name", key: "productName" },
@@ -190,6 +189,7 @@ class SellerReport extends Component {
               placeholder="search"
               style={{ height: "29px" }}
               name="searchField"
+              value={searchField}
               onChange={(e) => this.setFilterValue(e)}
             />
           </Grid>
@@ -244,19 +244,16 @@ class SellerReport extends Component {
     let dataToDisplay = [];
     let i = 0;
     while (i < maxPaper) {
-      // console.log("max", maxPaper);
       dataToDisplay.push(
         <Box
           name={"page" + (i + 1)}
           border={1}
           style={{
-            width: "807.7007874px",
-            height: "1050.019685px",
-            marginLeft: "auto",
-            marginRight: "auto",
+            width: "811px",
+            height: "1055px",
             marginTop: "0px",
             boxSizing: "border-box",
-            // marginBottom: "10px",
+            backgroundColor: "white",
           }}
         >
           <div
@@ -340,8 +337,13 @@ class SellerReport extends Component {
             </Button>
           </Grid>
 
-          <Grid item xs={3}>
-            <Pagination count={count} page={page} onChange={this.changePage} />
+          <Grid item xs={3} style={{ display: "flex", alignItems: "center" }}>
+            <Typography>Page : </Typography>
+            <Pagination
+              count={page}
+              page={currentPage}
+              onChange={this.changePage}
+            />
           </Grid>
 
           <Grid item xs={4} align="right">
@@ -383,18 +385,21 @@ class SellerReport extends Component {
           justify="space-between"
           alignItems="flex-start"
           style={{
-            backgroundColor: "white",
+            // backgroundColor: "white",
             padding: "20px",
             borderRadius: "10px",
+            backgroundColor: "rgba(238, 238, 238,0.8)",
           }}
         >
           <Grid container item xs={12}>
             <GridList
               id="ContainerElementID"
-              // cellHeight={270}
               className={classes.gridList}
-              style={{ width: "100%", height: 450 }}
-              // align="center"
+              style={{
+                width: "100%",
+                height: 450,
+                overflowX: "hidden",
+              }}
               cols={3}
             >
               <div ref={(el) => (this.componentRef = el)}>
