@@ -31,8 +31,6 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestParam String email, String password) {
-//        System.out.println("email"+email+"   "+userService.isEmailExist(email));
-
         if (userService.isEmailExist(email) && userService.isUserActive(email)) {
             User target = userService.login(email);
             if (target.getPassword().equals(password)) {
@@ -60,24 +58,9 @@ public class UserController {
         }
     }
 
-
     @GetMapping("/user/count-seller")
     public ResponseEntity<?> getNumberOfSeller(@RequestParam String status) {
-        switch (status) {
-            case "active":
-            case "inactive":
-            case "requested":
-                return new ResponseEntity<>(
-                        userService.countSeller("and status = '" + status + "'"),
-                        HttpStatus.OK);
-            case "all":
-                return new ResponseEntity<>(
-                        userService.countSeller(""),
-                        HttpStatus.OK);
-            default:
-                return new ResponseEntity<>("request not found",
-                        HttpStatus.BAD_REQUEST);
-        }
+        return new ResponseEntity<>(userService.countSeller(status), HttpStatus.OK);
     }
 
     @GetMapping("/user/seller")
@@ -87,34 +70,23 @@ public class UserController {
 
     @PutMapping("/user/status")
     public ResponseEntity<?> updateStatus(@RequestParam String id, String status, String idAdmin) {
-        int result = userService.updateStatus(id, status, idAdmin);
-        if (result >= 1) {
-            return new ResponseEntity<>("Update Success id =" + id + " status = " + status, HttpStatus.OK);
-        }
-        return new ResponseEntity<>("update failed", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(userService.updateStatus(id, status, idAdmin) +
+                " user status successfully updated", HttpStatus.OK);
     }
 
     @PutMapping("/user/product-limit")
     public ResponseEntity<?> updateProductQty(@RequestParam String id, int limitProduct, String idAdmin) {
-        int result = userService.updateProductQty(id, limitProduct, idAdmin);
-
-        return new ResponseEntity<>("ok", HttpStatus.OK);
+        return new ResponseEntity<>(userService.updateProductQty(id, limitProduct, idAdmin) +
+                " user limit successfully updated", HttpStatus.OK);
     }
 
     @PutMapping("/user/{id}")
     public ResponseEntity<?> updateUser(@PathVariable String id, @Valid @RequestBody User user, Errors error) {
-//        System.out.println("idddddddddddddddddddddddddd"+id);
-//        return new ResponseEntity<>("User Not Found", HttpStatus.OK);
         if (error.hasErrors()) {
             return new ResponseEntity<>(error.getFieldError().getDefaultMessage(), HttpStatus.BAD_REQUEST);
         } else {
             if (userService.isExist(id)) {
                 User dbUser = userService.findById(id);
-//                System.out.println(!userService.isPhoneExist(user.getPhone()));
-//                System.out.println(!userService.isPhoneExist(user.getPhone()));
-//                System.out.println(dbUser.getUserName().equals(user.getUserName()));
-//                System.out.println(dbUser.getPhone().equals(user.getPhone()));
-//
                 if (!userService.isEmailExist(user.getEmail()) || dbUser.getEmail().equals(user.getEmail())) {
                     if (!userService.isPhoneExist(user.getPhone()) || dbUser.getPhone().equals(user.getPhone())) {
                         if (dbUser.getPassword().equals(user.getPassword())) {
@@ -141,21 +113,19 @@ public class UserController {
     }
 
     @PutMapping("/user/change-password")
-    public ResponseEntity<?> changeUserPassword(@RequestParam String id,
-                                                String oldPassword,
-                                                String newPassword,
-                                                String newPassword2) {
+    public ResponseEntity<?> changeUserPassword(@RequestParam Map<String, String> params) {
+        String id = params.get("id");
+        String oldPassword = params.get("oldPassword");
+        String newPassword = params.get("newPassword");
+        String newPassword2 = params.get("newPassword2");
+        System.out.println(params);
+
         if (userService.isExist(id)) {
             boolean cekPassword = userService.findById(id).getPassword().equals(oldPassword);
             if (cekPassword) {
                 if (newPassword.equals(newPassword2)) {
-                    int changePassword = userService.changePassword(id, newPassword);
-                    if (changePassword == 1) {
-                        return new ResponseEntity<>("Success Change Password", HttpStatus.OK);
-                    } else {
-                        return new ResponseEntity<>("password has not changed", HttpStatus.OK);
-                    }
-
+                    userService.changePassword(id, newPassword);
+                    return new ResponseEntity<>("Success Change Password", HttpStatus.OK);
                 } else {
                     return new ResponseEntity<>("new Password verification did not match", HttpStatus.BAD_REQUEST);
                 }
@@ -165,8 +135,9 @@ public class UserController {
         }
         return new ResponseEntity<>("Account Not Found", HttpStatus.NOT_FOUND);
     }
+
     @DeleteMapping("/user/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable("id") String id){
-        return new ResponseEntity<>(userService.delete(id)+" User Successfully Deleted", HttpStatus.OK);
+    public ResponseEntity<?> deleteUser(@PathVariable("id") String id) {
+        return new ResponseEntity<>(userService.delete(id) + " User Successfully Deleted", HttpStatus.OK);
     }
 }

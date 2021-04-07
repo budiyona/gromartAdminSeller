@@ -43,7 +43,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
     @Override
     public boolean isEmailExist(String email) {
-        String query = "select count(*) from user where email=?";
+        String query = "select count(*) from user where email=? and status != 'disabled'";
 
         int count = jdbcTemplate.queryForObject(query, Integer.class, email);
 
@@ -86,7 +86,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public boolean isPhoneExist(String phone) {
-        String query = "select count(*) from user where phone=?";
+        String query = "select count(*) from user where phone=? and status != 'disabled'";
         int count = jdbcTemplate.queryForObject(query, Integer.class, phone);
         if (count == 1) {
             return true;
@@ -108,7 +108,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User login(String email) {
-        String query = "select * from user where email = ?";
+        String query = "select * from user where email = ? and status != 'disabled'";
         try {
             User target = jdbcTemplate.queryForObject(query, (resultSet, i) ->
                             new User(
@@ -127,14 +127,14 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public int countSeller(String condition) {
         return jdbcTemplate.queryForObject(
-                "select count(*) from user where userCode like 'seller%' " + condition,
+                "select count(*) from user where userCode like 'seller%' and status != 'disabled'" + condition,
                 Integer.class);
     }
 
     @Override
     public List<User> getSeller(int offset) {
         return jdbcTemplate.query(
-                "select * from user where userCode like 'seller%' order by status desc limit 6 offset ?",
+                "select * from user where userCode like 'seller%' and status != 'disabled' order by status desc limit 6 offset ?",
                 (rs, i) -> new User(
                         rs.getString("userCode"),
                         rs.getString("userName"),
@@ -184,14 +184,14 @@ public class UserRepositoryImpl implements UserRepository {
 
             map.put("qty",
                     jdbcTemplate.queryForObject(
-                            "select count(*) from (select * from user where userCode like 'seller%') u " + conditionQty,
+                            "select count(*) from (select * from user where userCode like 'seller%' and status != 'disabled') u " + conditionQty,
                             Integer.class)
             );
         } catch (Exception e) {
             e.printStackTrace();
         }
         map.put("seller", jdbcTemplate.query(
-                "select * from (select * from user where userCode like 'seller%') u " + conditionObj ,
+                "select * from (select * from user where userCode like 'seller%' and status != 'disabled') u " + conditionObj ,
                 (rs, i) -> new User(
                         rs.getString("userCode"),
                         rs.getString("userName"),
@@ -226,6 +226,6 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public int delete(String id) {
-        return jdbcTemplate.update("delete from user where userCode=?",id);
+        return jdbcTemplate.update("update user set status = 'disabled' where userCode = ?",id);
     }
 }

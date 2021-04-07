@@ -3,6 +3,8 @@ package com.nextsoft.gromart.service;
 import com.nextsoft.gromart.model.User;
 import com.nextsoft.gromart.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -47,7 +49,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int countSeller(String condition) {
+    public int countSeller(String status) {
+        String condition = "";
+        switch (status) {
+            case "active":
+            case "inactive":
+            case "requested":
+                condition = "and status = '" + status + "'";
+                break;
+            default:
+                break;
+        }
         return userRepository.countSeller(condition);
     }
 
@@ -103,19 +115,19 @@ public class UserServiceImpl implements UserService {
         }
 
         if (paramsFilter.containsKey("userName")) {
-            condition ="where userName like '%" + paramsFilter.get("userName") + "%'";
+            condition = "where userName like '%" + paramsFilter.get("userName") + "%'";
         }
         if (paramsFilter.containsKey("userCode")) {
-            condition ="where userCode like '%" + paramsFilter.get("userCode") + "%'";
+            condition = "where userCode like '%" + paramsFilter.get("userCode") + "%'";
 
         }
         if (paramsFilter.containsKey("fromDate") && paramsFilter.containsKey("toDate")) {
-            condition ="where  date(createdDate) between '" + paramsFilter.get("fromDate") + "'" +
+            condition = "where  date(createdDate) between '" + paramsFilter.get("fromDate") + "'" +
                     " and '" + paramsFilter.get("toDate") + "'";
 
         }
         System.out.println(condition);
-        return userRepository.filterUser(condition, condition +sort+ limit);
+        return userRepository.filterUser(condition, condition + sort + limit);
     }
 
     @Override

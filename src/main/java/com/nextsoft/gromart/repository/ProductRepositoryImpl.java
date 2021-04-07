@@ -180,6 +180,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public Map<String, Integer> getSellerSummary(String id) {
+        Map<String, Integer> map = new HashMap<>();
         return jdbcTemplate.queryForObject("select " +
                         "u.productLimit as 'limit', " +
                         "sum(case when p.status = 'active' then 1 else 0 end) as 'active', " +
@@ -188,12 +189,13 @@ public class ProductRepositoryImpl implements ProductRepository {
                         "from product p " +
                         "join user u on p.userCode = u.userCode " +
                         "where p.userCode =?",
-                (rs, rowNum) -> Stream.of(new Object[][]{
-                        {"active", rs.getInt("active")},
-                        {"inactive", rs.getInt("inactive")},
-                        {"all", rs.getInt("all")},
-                        {"limit", rs.getInt("limit")},
-                }).collect(Collectors.toMap(data -> (String) data[0], data -> (Integer) data[1])), id
+                (rs, rowNum) -> {
+                    map.put("active", rs.getInt("active"));
+                    map.put("inactive", rs.getInt("inactive"));
+                    map.put("all", rs.getInt("all"));
+                    map.put("limit", rs.getInt("limit"));
+                    return map;
+                }, id
         );
     }
 
@@ -307,7 +309,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public int deleteProduct(String id) {
-        return jdbcTemplate.update("delete from product where productCode = ? ",id);
+        return jdbcTemplate.update("delete from product where productCode = ? ", id);
     }
 
     @Override
@@ -315,7 +317,7 @@ public class ProductRepositoryImpl implements ProductRepository {
         //select * from product p join user u on p.userCode = u.userCode where p.userCode ='SELLER-2021-03-05-01' order by price desc
         System.out.println(id);
         return jdbcTemplate.query(
-                "select * from product p join user u on p.userCode = u.userCode where p.userCode = ? order by price "+sort +" limit 3",
+                "select * from product p join user u on p.userCode = u.userCode where p.userCode = ? order by price " + sort + " limit 3",
                 (rs, i) -> new Product(
                         rs.getString("productCode"),
                         rs.getString("productName"),
@@ -328,6 +330,6 @@ public class ProductRepositoryImpl implements ProductRepository {
                                 rs.getString("userCode"),
                                 rs.getString("userName")
                         )
-                ),id);
+                ), id);
     }
 }
