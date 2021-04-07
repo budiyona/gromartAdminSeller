@@ -22,11 +22,6 @@ public class ProductController {
     @Autowired
     UserService userService;
 
-    @GetMapping("/product")
-    public ResponseEntity<?> getAll(@RequestParam String offset) {
-        return new ResponseEntity<>(productService.findAllProduct(offset), HttpStatus.OK);
-    }
-
     @GetMapping("/product/cheapest")
     public ResponseEntity<List<Product>> getCheapestProduct() {
         return new ResponseEntity<>(productService.getCheapestProduct(), HttpStatus.OK);
@@ -59,22 +54,14 @@ public class ProductController {
         return new ResponseEntity<>(productService.getProductOfSeller(id, "cheapest"), HttpStatus.OK);
     }
 
-    //find product by seller id
     @GetMapping("/product/seller")
     public ResponseEntity<?> getProductBySeller(@RequestParam String id, String offset) {
         return new ResponseEntity<>(productService.findBySeller(id, offset), HttpStatus.OK);
     }
 
-    //filter product on specific Seller
     @GetMapping("/product/seller/filter/{id}")
     public ResponseEntity<?> filterProductBasedOnSeller(@PathVariable String id, @RequestParam Map<String, String> paramsFilter) {
         return new ResponseEntity<>(productService.filterProductOnSeller(id, paramsFilter), HttpStatus.OK);
-    }
-
-    //test api status
-    @GetMapping("/test")
-    public ResponseEntity<?> testConnection() {
-        return new ResponseEntity<>(productService.findById("hello"), HttpStatus.OK);
     }
 
     @GetMapping("/product/seller-summary")

@@ -21,10 +21,10 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public Product findById(String id) {
-        Product product = new Product();
+        Product product;
         try {
             product = jdbcTemplate.queryForObject(
-                    "select * from product where productCode = ?",
+                    "select * from product where status != 'disabled' and productCode = ?",
                     (rs, rowNum) -> new Product(
                             rs.getString("productCode"),
                             rs.getString("productName"),
@@ -48,10 +48,10 @@ public class ProductRepositoryImpl implements ProductRepository {
         Map<String, Object> map = new HashMap<>();
 
         map.put("qty", jdbcTemplate.queryForObject(
-                "select count(*) from product p join user u on p.userCode = u.userCode where p.userCode=?",
+                "select count(*) from product p join user u on p.userCode = u.userCode where p.status != 'disabled' and p.userCode=?",
                 Integer.class, id));
         map.put("product", jdbcTemplate.query(
-                "select * from product p join user u on p.userCode = u.userCode where p.userCode=? limit 6 offset " + offset,
+                "select * from product p join user u on p.userCode = u.userCode where p.status != 'disabled' and p.userCode=? limit 6 offset " + offset,
                 (rs, i) -> new Product(
                         rs.getString("productCode"),
                         rs.getString("productName"),
@@ -70,34 +70,9 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public Map<String, Object> findAllProduct(String offset) {
-        Map<String, Object> map = new HashMap<>();
-
-        map.put("qty", countProductByStatus(" "));
-
-        map.put("product", jdbcTemplate.query(
-                "select * from product p join user u on p.userCode = u.userCode limit 6 offset " + offset,
-                (rs, i) -> new Product(
-                        rs.getString("productCode"),
-                        rs.getString("productName"),
-                        rs.getDouble("price"),
-                        rs.getInt("stock"),
-                        rs.getString("description"),
-                        rs.getString("createdDate"),
-                        rs.getString("status"),
-                        new User(
-                                rs.getString("userCode"),
-                                rs.getString("userName")
-                        )
-                )
-        ));
-        return map;
-    }
-
-    @Override
     public List<Product> getCheapestProduct() {
         List<Product> products = jdbcTemplate.query(
-                "select * from product p join user u on p.userCode = u.userCode order by price asc ",
+                "select * from product p join user u on p.userCode = u.userCode where p.status != 'disabled' order by price asc ",
                 (rs, i) -> new Product(
                         rs.getString("productCode"),
                         rs.getString("productName"),
@@ -120,7 +95,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     @Override
     public List<Product> getMostExpensiveProduct() {
         List<Product> products = jdbcTemplate.query(
-                "select * from product p join user u on p.userCode = u.userCode order by price desc ",
+                "select * from product p join user u on p.userCode = u.userCode where p.status != 'disabled' order by price desc ",
                 (rs, i) -> new Product(
                         rs.getString("productCode"),
                         rs.getString("productName"),
@@ -174,7 +149,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     @Override
     public int countProductByStatus(String status) {
         return jdbcTemplate.queryForObject(
-                "select count(*) from product  where status like '" + status + "%'",
+                "select count(*) from product  where status != 'disabled' and status like '" + status + "%'",
                 Integer.class);
     }
 
@@ -185,7 +160,7 @@ public class ProductRepositoryImpl implements ProductRepository {
                         "u.productLimit as 'limit', " +
                         "sum(case when p.status = 'active' then 1 else 0 end) as 'active', " +
                         "sum(case when p.status='inactive' then 1 else 0 end) as 'inactive', " +
-                        "count(*) as 'all' " +
+                        "sum(case when p.status != 'disabled' then 1 else 0 end) as 'all' " +
                         "from product p " +
                         "join user u on p.userCode = u.userCode " +
                         "where p.userCode =?",
@@ -197,36 +172,6 @@ public class ProductRepositoryImpl implements ProductRepository {
                     return map;
                 }, id
         );
-    }
-
-    @Override
-    public Map<String, Object> filterProductOnSeller(String id, String target, int offset) {
-        Map<String, Object> map = new HashMap<>();
-        try {
-
-            map.put("qty",
-                    jdbcTemplate.queryForObject(
-                            "select count(*) from product p  where userCode = '" + id +
-                                    "' and (productCode like '%" + target + "%' or productName like '%" + target + "%')",
-                            Integer.class)
-            );
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        map.put("product", jdbcTemplate.query(
-                "select * from product p  where userCode = '" + id +
-                        "' and (productCode like '%" + target + "%' or productName like '%" + target + "%') " +
-                        "limit 6 offset " + offset,
-                (rs, i) -> new Product(
-                        rs.getString("productCode"),
-                        rs.getString("productName"),
-                        rs.getDouble("price"),
-                        rs.getInt("stock"),
-                        rs.getString("description"),
-                        rs.getString("createdDate")
-                )
-        ));
-        return map;
     }
 
     @Override
@@ -243,7 +188,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 
         try {
             int count = jdbcTemplate.queryForObject(
-                    "select count(*) from product p where userCode = ? and date(createdDate) = date(now())",
+                    "select count(*) from product p where status != 'disabled' and userCode = ? and date(createdDate) = date(now())",
                     Integer.class,
                     idSeller);
             String prefix = String.format("%02d", count + 1);
@@ -251,7 +196,7 @@ public class ProductRepositoryImpl implements ProductRepository {
             product.setProductCode(sellerCode + productCode + prefix);
             System.out.println(prefix);
         } catch (Exception e) {
-            System.out.println("errrot" + e.getMessage());
+            System.out.println("error" + e.getMessage());
         }
 
         return jdbcTemplate.update("insert into product " +
@@ -270,7 +215,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     @Override
     public boolean isProductNameExist(String idSeller, String productName) {
         int count = jdbcTemplate.queryForObject(
-                "select count(*) from product p where userCode = ? and productName = ?",
+                "select count(*) from product p where p.status != 'disabled' and userCode = ? and productName = ?",
                 Integer.class, idSeller, productName);
         if (count == 1) {
             return true;
@@ -309,7 +254,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public int deleteProduct(String id) {
-        return jdbcTemplate.update("delete from product where productCode = ? ", id);
+        return jdbcTemplate.update("update product set status = 'disabled' where productCode = ? ", id);
     }
 
     @Override
@@ -317,7 +262,7 @@ public class ProductRepositoryImpl implements ProductRepository {
         //select * from product p join user u on p.userCode = u.userCode where p.userCode ='SELLER-2021-03-05-01' order by price desc
         System.out.println(id);
         return jdbcTemplate.query(
-                "select * from product p join user u on p.userCode = u.userCode where p.userCode = ? order by price " + sort + " limit 3",
+                "select * from product p join user u on p.userCode = u.userCode where p.status != 'disabled' and p.userCode = ? order by price " + sort + " limit 3",
                 (rs, i) -> new Product(
                         rs.getString("productCode"),
                         rs.getString("productName"),

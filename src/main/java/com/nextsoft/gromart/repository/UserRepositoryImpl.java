@@ -1,6 +1,5 @@
 package com.nextsoft.gromart.repository;
 
-import com.nextsoft.gromart.model.Product;
 import com.nextsoft.gromart.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;

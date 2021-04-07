@@ -28,11 +28,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Map<String, Object> findAllProduct(String offset) {
-        return productRepository.findAllProduct(offset);
-    }
-
-    @Override
     public List<Product> getCheapestProduct() {
         return productRepository.getCheapestProduct();
     }
@@ -45,7 +40,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Map<String, Object> filterProduct(Map<String, String> paramsFilter) {
         Map<String, Object> map = new HashMap<>();
-        String condition = "";
+        String condition = "where p.status != 'disabled' and ";
         String limit = " limit 6 offset ";
         if (paramsFilter.containsKey("offset")) {
             limit += paramsFilter.get("offset");
@@ -57,7 +52,7 @@ public class ProductServiceImpl implements ProductService {
             switch ((String) paramsFilter.get("status")) {
                 case "active":
                 case "inactive":
-                    condition = "where p.status='" + paramsFilter.get("status") + "'";
+                    condition += "p.status='" + paramsFilter.get("status") + "'";
                     break;
                 default:
                     break;
@@ -65,14 +60,14 @@ public class ProductServiceImpl implements ProductService {
         }
 
         if (paramsFilter.containsKey("productName")) {
-            condition = "where productName like '%" + paramsFilter.get("productName") + "%'";
+            condition += " productName like '%" + paramsFilter.get("productName") + "%'";
         }
         if (paramsFilter.containsKey("productCode")) {
-            condition = "where productCode like '%" + paramsFilter.get("productCode") + "%'";
+            condition += " productCode like '%" + paramsFilter.get("productCode") + "%'";
 
         }
         if (paramsFilter.containsKey("fromDate") && paramsFilter.containsKey("toDate")) {
-            condition = "where date(p.createdDate) between '" + paramsFilter.get("fromDate") + "'" +
+            condition += " date(p.createdDate) between '" + paramsFilter.get("fromDate") + "'" +
                     " and '" + paramsFilter.get("toDate") + "'";
 
         }
@@ -102,7 +97,7 @@ public class ProductServiceImpl implements ProductService {
     public Map<String, Object> filterProductOnSeller(String id, Map<String, String> paramsFilter) {
         //status, productName, productCode, fromDate, toDate, offset
         Map<String, Object> map = new HashMap<>();
-        String condition = "where p.userCode = '" + id + "'";
+        String condition = "where p.status != 'disabled' and p.userCode = '" + id + "'";
         String limit = " limit 6 offset ";
         ArrayList<String> arrayCondition = new ArrayList<>();
         if (paramsFilter.containsKey("offset")) {
@@ -169,15 +164,8 @@ public class ProductServiceImpl implements ProductService {
     public Map<String, Object> productReport(String id, Map<String, String> paramsFilter) {
         //status, productName, productCode, fromDate, toDate, offset
         Map<String, Object> map = new HashMap<>();
-        String condition = "where p.userCode = '" + id + "'";
-//        String limit = " limit 6 offset ";
+        String condition = "where p.status != 'disabled' and p.userCode = '" + id + "'";
         ArrayList<String> arrayCondition = new ArrayList<>();
-//        if (paramsFilter.containsKey("offset")) {
-//            limit += paramsFilter.get("offset");
-//        } else {
-//            limit = "";
-//        }
-
         if (paramsFilter.containsKey("status")) {
             switch ((String) paramsFilter.get("status")) {
                 case "active":
@@ -207,8 +195,6 @@ public class ProductServiceImpl implements ProductService {
         } else {
             condition += String.join(" and ", arrayCondition);
         }
-//        System.out.println(condition);
-//        System.out.println(params.get("field").equals("userName"));
         return productRepository.filterProduct(condition, condition);
 
     }

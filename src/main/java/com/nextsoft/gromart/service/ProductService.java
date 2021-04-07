@@ -8,7 +8,6 @@ import java.util.Map;
 public interface ProductService {
     Product findById(String id);
     Map<String , Object> findBySeller(String id, String offset);
-    Map<String , Object> findAllProduct(String offset);
     List<Product> getCheapestProduct();
     List<Product> getMostExpensiveProduct();
     Map<String , Object> filterProduct(Map<String, String> params);
