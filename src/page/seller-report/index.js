@@ -5,6 +5,7 @@ import {
   FormControl,
   Grid,
   GridList,
+  GridListTile,
   Input,
   MenuItem,
   Select,
@@ -16,7 +17,7 @@ import axios from "axios";
 import ReactToPrint from "react-to-print";
 import React, { Component } from "react";
 import { Menu, TableProduct } from "../../component";
-import { red } from "@material-ui/core/colors";
+import { blue, red } from "@material-ui/core/colors";
 import { connect } from "react-redux";
 import { CSVLink } from "react-csv";
 import Pagination from "@material-ui/lab/Pagination";
@@ -126,6 +127,15 @@ class SellerReport extends Component {
     }
     console.log(endpoint);
     this.getProductWithFilter(endpoint);
+    this.setState({
+      currentPage: 1,
+    });
+    scroller.scrollTo("page1", {
+      duration: 500,
+      delay: 100,
+      smooth: true,
+      containerId: "ContainerElementID",
+    });
   };
   getProductWithFilter = (query) => {
     axios.get(query).then((res) => {
@@ -171,14 +181,16 @@ class SellerReport extends Component {
       filename: "data.csv",
     };
     let buttonGo = (
-      <Button
-        size="small"
-        variant="contained"
-        className={classes.buttonRed}
-        onClick={this.doSearch}
-      >
-        Go
-      </Button>
+      <Grid item xs={2}>
+        <Button
+          size="small"
+          variant="contained"
+          color="primary"
+          onClick={this.doSearch}
+        >
+          Go
+        </Button>
+      </Grid>
     );
     let formFilter;
     if (filterBy === "productName" || filterBy === "productCode") {
@@ -219,20 +231,28 @@ class SellerReport extends Component {
     } else if (filterBy === "date") {
       formFilter = (
         <>
-          <TextField
-            type="date"
-            name="fromDate"
-            onChange={(e) => this.setFilterValue(e)}
-          ></TextField>
-          <Box ml={2} mr={2}>
-            to
-          </Box>
-          <TextField
-            type="date"
-            name="toDate"
-            onChange={(e) => this.setFilterValue(e)}
-            style={{ marginRight: "12px" }}
-          ></TextField>
+          <Grid item>
+            <TextField
+              type="date"
+              name="fromDate"
+              size="small"
+              onChange={(e) => this.setFilterValue(e)}
+            />
+          </Grid>
+          <Grid item>
+            <Box ml={2} mr={2}>
+              to
+            </Box>
+          </Grid>
+          <Grid item>
+            <TextField
+              type="date"
+              name="toDate"
+              size="small"
+              onChange={(e) => this.setFilterValue(e)}
+              style={{ marginRight: "12px" }}
+            />
+          </Grid>
           {buttonGo}
         </>
       );
@@ -249,8 +269,8 @@ class SellerReport extends Component {
           name={"page" + (i + 1)}
           border={1}
           style={{
-            width: "811px",
-            height: "1055px",
+            width: "821px",
+            height: "1065px",
             marginTop: "0px",
             boxSizing: "border-box",
             backgroundColor: "white",
@@ -280,56 +300,17 @@ class SellerReport extends Component {
     }
 
     return (
-      <Grid
-        container
-        direction="row"
-        justify="space-between"
-        alignItems="center"
-      >
-        <Grid container item xs={12}>
+      <Grid container justify="center" alignItems="center" spacing={2}>
+        <Grid item xs={12}>
           <Menu history={history}></Menu>
         </Grid>
-        <Grid
-          container
-          item
-          xs={12}
-          justify="flex-start"
-          alignItems="center"
-          className={classes.margin}
-          spacing={3}
-        >
-          <Grid item xs={3}>
-            <FormControl className={classes.formControl} size="small">
-              <Select
-                size="small"
-                value={filterBy}
-                name="filterBy"
-                onChange={(e) => this.setFilterValue(e)}
-              >
-                <MenuItem value="all">Filter</MenuItem>
-                <MenuItem value="productName">Name</MenuItem>
-                <MenuItem value="productCode">Code</MenuItem>
-                <MenuItem value="status">Status</MenuItem>
-                <MenuItem value="date">Date</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
 
-          {formFilter}
-        </Grid>
-        <Grid
-          container
-          direction="row"
-          justify="space-between"
-          alignItems="flex-end"
-          spacing={2}
-          className={classes.margin}
-        >
-          <Grid item xs={3}>
+        <Grid container item xs={12} justify="space-between">
+          <Grid item xs={2}>
             <Button
               size="small"
               variant="contained"
-              color="primary"
+              color="secondary"
               disableElevation
               onClick={() => history.push("/seller/product")}
             >
@@ -337,16 +318,27 @@ class SellerReport extends Component {
             </Button>
           </Grid>
 
-          <Grid item xs={3} style={{ display: "flex", alignItems: "center" }}>
-            <Typography>Page : </Typography>
-            <Pagination
-              count={page}
-              page={currentPage}
-              onChange={this.changePage}
-            />
+          <Grid container item xs={8} justify="flex-start" spacing={3}>
+            <Grid item xs={3}>
+              <FormControl className={classes.formControl} size="small">
+                <Select
+                  size="small"
+                  value={filterBy}
+                  name="filterBy"
+                  onChange={(e) => this.setFilterValue(e)}
+                >
+                  <MenuItem value="all">Filter</MenuItem>
+                  <MenuItem value="productName">Name</MenuItem>
+                  <MenuItem value="productCode">Code</MenuItem>
+                  <MenuItem value="status">Status</MenuItem>
+                  <MenuItem value="date">Date</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            {formFilter}
           </Grid>
 
-          <Grid item xs={4} align="right">
+          <Grid item xs={2} style={{ textAlign: "right" }}>
             <ButtonGroup>
               <ReactToPrint
                 trigger={() => {
@@ -356,7 +348,6 @@ class SellerReport extends Component {
                       size="small"
                       variant="contained"
                       color="primary"
-                      disableElevation
                     >
                       PRINT TO PDF
                     </Button>
@@ -367,11 +358,13 @@ class SellerReport extends Component {
 
               <CSVLink {...csvExport} style={{ textDecoration: "none" }}>
                 <Button
-                  style={{ borderRadius: "0px 5px 5px 0px" }}
                   size="small"
                   variant="contained"
-                  color="secondary"
-                  disableElevation
+                  style={{
+                    borderRadius: "0px 5px 5px 0px",
+                    backgroundColor: blue[500],
+                    color: "white",
+                  }}
                 >
                   Export CSV
                 </Button>
@@ -379,33 +372,29 @@ class SellerReport extends Component {
             </ButtonGroup>
           </Grid>
         </Grid>
-        <Grid
-          container
-          direction="row"
-          justify="space-between"
-          alignItems="flex-start"
-          style={{
-            // backgroundColor: "white",
-            padding: "20px",
-            borderRadius: "10px",
-            backgroundColor: "rgba(238, 238, 238,0.8)",
-          }}
-        >
-          <Grid container item xs={12}>
-            <GridList
-              id="ContainerElementID"
-              className={classes.gridList}
+        <Grid container item xs={12} justify="center" alignItems="center">
+          <Grid item xs={8} style={{ backgroundColor: "white" }}>
+            <div
               style={{
-                width: "100%",
-                height: 450,
-                overflowX: "hidden",
+                display: "flex",
+                justifyContent: "space-around",
+                overflow: "hidden",
+                padding: "10px",
               }}
-              cols={3}
             >
-              <div ref={(el) => (this.componentRef = el)}>
-                {dataToDisplay.map((e) => e)}
-              </div>
-            </GridList>
+              <GridList
+                id="ContainerElementID"
+                style={{
+                  width: 860,
+                  height: 520,
+                }}
+                cols={1}
+              >
+                <div ref={(el) => (this.componentRef = el)}>
+                  {dataToDisplay.map((e) => e)}
+                </div>
+              </GridList>
+            </div>
           </Grid>
         </Grid>
       </Grid>

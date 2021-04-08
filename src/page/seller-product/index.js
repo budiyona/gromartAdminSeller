@@ -147,14 +147,16 @@ class SellerProduct extends Component {
     const { products, currentPage, page, filterBy, status } = this.state;
     console.log(this.state);
     let buttonGo = (
-      <Button
-        size="small"
-        variant="contained"
-        className={classes.buttonRed}
-        onClick={this.doSearch}
-      >
-        Go
-      </Button>
+      <Grid item xs={3}>
+        <Button
+          size="small"
+          variant="contained"
+          color="primary"
+          onClick={this.doSearch}
+        >
+          Go
+        </Button>
+      </Grid>
     );
     let formFilter;
     if (filterBy === "productName" || filterBy === "productCode") {
@@ -194,20 +196,28 @@ class SellerProduct extends Component {
     } else if (filterBy === "date") {
       formFilter = (
         <>
-          <TextField
-            type="date"
-            name="fromDate"
-            onChange={(e) => this.setFilterValue(e)}
-          ></TextField>
-          <Box ml={2} mr={2}>
-            to
-          </Box>
-          <TextField
-            type="date"
-            name="toDate"
-            onChange={(e) => this.setFilterValue(e)}
-            style={{ marginRight: "12px" }}
-          ></TextField>
+          <Grid item>
+            <TextField
+              type="date"
+              name="fromDate"
+              size="small"
+              onChange={(e) => this.setFilterValue(e)}
+            />
+          </Grid>
+          <Grid item>
+            <Box ml={2} mr={2}>
+              to
+            </Box>
+          </Grid>
+          <Grid item>
+            <TextField
+              type="date"
+              name="toDate"
+              size="small"
+              onChange={(e) => this.setFilterValue(e)}
+              style={{ marginRight: "12px" }}
+            />
+          </Grid>
           {buttonGo}
         </>
       );
@@ -215,13 +225,8 @@ class SellerProduct extends Component {
       formFilter = <Grid item xs={3}></Grid>;
     }
     return (
-      <Grid
-        container
-        direction="row"
-        justify="space-between"
-        alignItems="center"
-      >
-        <Grid container item xs={12}>
+      <Grid container justify="center">
+        <Grid item xs={12} className="bottom-spacing">
           <Menu history={history}></Menu>
         </Grid>
         <Grid
@@ -229,17 +234,15 @@ class SellerProduct extends Component {
           item
           xs={12}
           justify="flex-start"
-          alignItems="center"
-          className={classes.margin}
-          spacing={3}
+          className="bottom-spacing"
         >
-          <Grid item>
+          <Grid item xs={2}>
             <ButtonGroup>
               <Button
                 variant="contained"
                 color="primary"
                 size="small"
-                onClick={() => history.push("/seller/report")}
+                onClick={() => history.push("/seller/product/report")}
                 style={{ width: 100 }}
               >
                 Report
@@ -258,27 +261,28 @@ class SellerProduct extends Component {
               </Button>
             </ButtonGroup>
           </Grid>
-
-          <Grid item xs={2}>
-            <FormControl className={classes.formControl} size="small">
-              <Select
-                size="small"
-                value={filterBy}
-                name="filterBy"
-                onChange={(e) => this.setFilterValue(e)}
-              >
-                <MenuItem value="all">Filter</MenuItem>
-                <MenuItem value="productName">Name</MenuItem>
-                <MenuItem value="productCode">Code</MenuItem>
-                <MenuItem value="status">Status</MenuItem>
-                <MenuItem value="date">Date</MenuItem>
-              </Select>
-            </FormControl>
+          <Grid container item xs={10} spacing={3}>
+            <Grid item xs={3}>
+              <FormControl className={classes.formControl} size="small">
+                <Select
+                  size="small"
+                  value={filterBy}
+                  name="filterBy"
+                  onChange={(e) => this.setFilterValue(e)}
+                >
+                  <MenuItem value="all">Filter</MenuItem>
+                  <MenuItem value="productName">Name</MenuItem>
+                  <MenuItem value="productCode">Code</MenuItem>
+                  <MenuItem value="status">Status</MenuItem>
+                  <MenuItem value="date">Date</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            {formFilter}
           </Grid>
-          {formFilter}
         </Grid>
 
-        <Grid container item xs={12} style={{ minHeight: "70vh" }}>
+        <Grid container item xs={12} style={{ minHeight: "73vh" }}>
           {products.length > 0 &&
             products.map((product, i) => (
               <Grid item xs={4} key={i} className={classes.margin}>

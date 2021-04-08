@@ -22,6 +22,7 @@ import {
   UserInfo,
 } from "./page";
 import { connect } from "react-redux";
+import "./App.css";
 
 class App extends Component {
   constructor(props) {
@@ -40,11 +41,7 @@ class App extends Component {
         exact
         component={() => {
           let history = useHistory();
-          return (
-            <Container maxWidth="xl" spacing={3}>
-              <AdminHome history={history} />
-            </Container>
-          );
+          return <AdminHome history={history} />;
         }}
       />
     );
@@ -54,11 +51,7 @@ class App extends Component {
         exact
         component={() => {
           let history = useHistory();
-          return (
-            <Container maxWidth="xl" spacing={3}>
-              <AdminSeller history={history} />
-            </Container>
-          );
+          return <AdminSeller history={history} />;
         }}
       />
     );
@@ -68,11 +61,7 @@ class App extends Component {
         exact
         component={() => {
           let history = useHistory();
-          return (
-            <Container maxWidth="xl" spacing={3}>
-              <AdminProduct history={history} />
-            </Container>
-          );
+          return <AdminProduct history={history} />;
         }}
       />
     );
@@ -82,11 +71,7 @@ class App extends Component {
         exact
         component={() => {
           let history = useHistory();
-          return (
-            <Container maxWidth="xl" spacing={3}>
-              <UserInfo history={history} />
-            </Container>
-          );
+          return <UserInfo history={history} />;
         }}
       />
     );
@@ -97,11 +82,7 @@ class App extends Component {
         component={() => {
           let history = useHistory();
           const { id } = useParams();
-          return (
-            <Container maxWidth="xl" spacing={3}>
-              <AdminSellerDetail history={history} id={id} />
-            </Container>
-          );
+          return <AdminSellerDetail history={history} id={id} />;
         }}
       />
     );
@@ -113,11 +94,7 @@ class App extends Component {
         exact
         component={() => {
           let history = useHistory();
-          return (
-            <Container maxWidth="xl" spacing={3}>
-              <SellerHome history={history} />
-            </Container>
-          );
+          return <SellerHome history={history} />;
         }}
       />
     );
@@ -127,11 +104,7 @@ class App extends Component {
         exact
         component={() => {
           let history = useHistory();
-          return (
-            <Container maxWidth="xl" spacing={3}>
-              <SellerProduct history={history} />
-            </Container>
-          );
+          return <SellerProduct history={history} />;
         }}
       />
     );
@@ -141,25 +114,17 @@ class App extends Component {
         exact
         component={() => {
           let history = useHistory();
-          return (
-            <Container maxWidth="xl" spacing={3}>
-              <UserInfo history={history} />
-            </Container>
-          );
+          return <UserInfo history={history} />;
         }}
       />
     );
     sellerPage.push(
       <Route
-        path="/seller/report"
+        path="/seller/product/report"
         exact
         component={() => {
           let history = useHistory();
-          return (
-            <Container maxWidth="xl" spacing={3}>
-              <SellerReport history={history} />
-            </Container>
-          );
+          return <SellerReport history={history} />;
         }}
       />
     );
@@ -172,57 +137,56 @@ class App extends Component {
           const { toDo } = useParams();
 
           return (
-            <Container maxWidth="xl" spacing={3}>
-              <CreateProduct
-                history={history}
-                toDo={
-                  toDo === "create" ? "create" : toDo === "update" && "update"
-                }
-              />
-            </Container>
+            <CreateProduct
+              history={history}
+              toDo={
+                toDo === "create" ? "create" : toDo === "update" && "update"
+              }
+            />
           );
         }}
       />
     );
     return (
-      <Router>
-        <Switch>
-          <Route
-            path="/register"
-            exact
-            component={() => {
-              let history = useHistory();
-              return <Register history={history}></Register>;
-            }}
-          />
+      <Container maxWidth="xl" className="container">
+        <Router>
+          <Switch>
+            <Route
+              path="/register"
+              exact
+              component={() => {
+                let history = useHistory();
+                return <Register history={history}></Register>;
+              }}
+            />
 
-          <Route
-            path="/"
-            exact
-            component={() => {
-              let history = useHistory();
-              return <Login history={history}></Login>;
-            }}
-          />
-          <Route
-            path="/login"
-            exact
-            component={() => {
-              let history = useHistory();
-              return <Login history={history}></Login>;
-            }}
-          />
-          {/* {isAdmin ? adminPage.map((e) => e) : sellerPage.map((e) => e)} */}
-          {isAdmin && adminPage.map((e) => e)}
-          {isSeller && sellerPage.map((e) => e)}
-          <Route
-            component={() => {
-              let history = useHistory();
-              return <NotFound history={history}></NotFound>;
-            }}
-          />
-        </Switch>
-      </Router>
+            <Route
+              path="/"
+              exact
+              component={() => {
+                let history = useHistory();
+                return <Login history={history}></Login>;
+              }}
+            />
+            <Route
+              path="/login"
+              exact
+              component={() => {
+                let history = useHistory();
+                return <Login history={history}></Login>;
+              }}
+            />
+            {isAdmin && adminPage.map((e) => e)}
+            {isSeller && sellerPage.map((e) => e)}
+            <Route
+              component={() => {
+                let history = useHistory();
+                return <NotFound history={history}></NotFound>;
+              }}
+            />
+          </Switch>
+        </Router>
+      </Container>
     );
   }
 }

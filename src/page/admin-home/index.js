@@ -38,32 +38,8 @@ class AdminHome extends Component {
         active: 0,
         inactive: 0,
       },
-      expensiveProd: [
-        {
-          productCode: "",
-          productName: "",
-          price: 0,
-          stock: 0,
-          description: "",
-          seller: {
-            userCode: "",
-            userName: "",
-          },
-        },
-      ],
-      cheapestProd: [
-        {
-          productCode: "",
-          productName: "",
-          price: 0,
-          stock: 0,
-          description: "",
-          seller: {
-            userCode: "",
-            userName: "",
-          },
-        },
-      ],
+      expensiveProd: [],
+      cheapestProd: [],
       isExpesive: false,
     };
   }
@@ -150,14 +126,14 @@ class AdminHome extends Component {
     } = this.state;
     const { history, classes } = this.props;
     return (
-      <Grid container direction="row" justify="space-between">
-        <Grid container item xs={12}>
+      <Grid container>
+        <Grid item xs={12} className="bottom-spacing">
           <Menu history={history}></Menu>
         </Grid>
 
         <Grid container item xs={12} spacing={3}>
           <Grid container item xs={6} spacing={3}>
-            <Grid container item xs={12} className={classes.label}>
+            <Grid container item xs={12} className={classes.label} fullwidth>
               <DasboardTitle
                 fullwidth
                 color={"info"}
@@ -233,7 +209,8 @@ class AdminHome extends Component {
               />
             </Grid>
             {isExpesive
-              ? expensiveProd.map((product, i) => (
+              ? expensiveProd.length > 0 &&
+                expensiveProd.map((product, i) => (
                   <Grid item key={i}>
                     <ProductDasboard
                       title={product.productName}
@@ -241,7 +218,8 @@ class AdminHome extends Component {
                     />
                   </Grid>
                 ))
-              : cheapestProd.map((product, i) => (
+              : cheapestProd.length > 0 &&
+                cheapestProd.map((product, i) => (
                   <Grid item key={i}>
                     <ProductDasboard
                       title={product.productName}

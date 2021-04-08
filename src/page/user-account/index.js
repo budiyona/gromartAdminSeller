@@ -21,23 +21,23 @@ import ErrorOutlineIcon from "@material-ui/icons/ErrorOutline";
 
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
+import { blue } from "@material-ui/core/colors";
 const useStyles = (theme) => ({
-  paper: {
-    marginTop: theme.spacing(8),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-  },
   form: {
     width: "100%",
     margin: "auto",
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
+  },
+  buttonBlue: {
+    backgroundColor: blue[500],
+    color: "white",
+  },
+  buttonDisabled: {
+    color: "rgba(0, 0, 0, 0.26)",
+    boxShadow: "none",
+    backgroundColor: "rgba(0, 0, 0, 0.12)",
   },
 });
 class UserInfo extends Component {
@@ -285,13 +285,8 @@ class UserInfo extends Component {
     } = this.state;
     console.log(this.state);
     return (
-      <Grid
-        container
-        direction="row"
-        justify="space-between"
-        alignItems="center"
-      >
-        <Grid container item xs={12}>
+      <Grid container justify="center" alignItems="center">
+        <Grid item xs={12} className="bottom-spacing">
           <Menu history={history}></Menu>
         </Grid>
         <Grid container item xs={12}>
@@ -314,7 +309,12 @@ class UserInfo extends Component {
                   type="submit"
                   size="small"
                   variant="contained"
-                  color="secondary"
+                  color="primary"
+                  className={
+                    !(editPassword || edit)
+                      ? classes.buttonBlue
+                      : classes.buttonDisabled
+                  }
                   onClick={this.toogleEditPassword}
                 >
                   change password

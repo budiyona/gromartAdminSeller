@@ -47,6 +47,8 @@ const useStyles = (theme) => ({
   },
   flexContainer: {
     display: "flex",
+    width: "inherit",
+    height: "inherit",
   },
 });
 
@@ -212,11 +214,11 @@ class Register extends Component {
     return (
       <div
         className={classes.flexContainer}
-        style={{
-          backgroundImage: `url('${productImg}')`,
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
-        }}
+        // style={{
+        //   backgroundImage: `url('${productImg}')`,
+        //   backgroundRepeat: "no-repeat",
+        //   backgroundSize: "cover",
+        // }}
       >
         <Container component="main" maxWidth="sm" style={{ margin: "auto" }}>
           <Paper

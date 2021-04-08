@@ -1,8 +1,4 @@
 import React, { Component } from "react";
-import { Copyright } from "../../component";
-import { withStyles } from "@material-ui/core/styles";
-import Recaptcha from "react-recaptcha";
-import { Redirect } from "react-router-dom";
 import {
   Avatar,
   Box,
@@ -18,15 +14,17 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
+import { Copyright } from "../../component";
+import { withStyles } from "@material-ui/core/styles";
+import Recaptcha from "react-recaptcha";
+import { Redirect } from "react-router-dom";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import axios from "axios";
-import { connect } from "react-redux";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
-import productImg from "../../static/bg.jpg";
+import { connect } from "react-redux";
+import axios from "axios";
 const useStyles = (theme) => ({
   paper: {
-    // marginTop: theme.spacing(8),
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -36,7 +34,7 @@ const useStyles = (theme) => ({
     backgroundColor: theme.palette.secondary.main,
   },
   form: {
-    width: "100%", // Fix IE 11 issue.
+    width: "100%",
     marginTop: theme.spacing(1),
   },
   submit: {
@@ -44,6 +42,8 @@ const useStyles = (theme) => ({
   },
   flexContainer: {
     display: "flex",
+    width: "inherit",
+    height: "inherit",
   },
 });
 
@@ -125,16 +125,9 @@ class Login extends Component {
       }
     }
     return (
-      <div
-        className={classes.flexContainer}
-        style={{
-          backgroundImage: `url('${productImg}')`,
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
-        }}
-      >
+      <div className={classes.flexContainer}>
         <Container
-          component="main"
+          // component="main"
           maxWidth="xs"
           style={{
             margin: "auto",

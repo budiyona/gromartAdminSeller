@@ -27,9 +27,9 @@ const useStyles = (theme) => ({
   menu: {
     color: green[500],
   },
-  root: {
-    flexGrow: 1,
-  },
+  // root: {
+  //   flexGrow: 1,
+  // },
   menuButton: {
     marginRight: theme.spacing(2),
   },
@@ -91,7 +91,7 @@ class Menu extends Component {
           style={{
             color: red[500],
             backgroundColor: "white",
-            marginBottom: 20,
+            // marginBottom: 20,
           }}
         >
           <Toolbar variant="dense">

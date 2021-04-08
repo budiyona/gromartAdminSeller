@@ -36,7 +36,12 @@ class PaginationControlled extends Component {
           </Typography>
         </div>
         <div className={classes.center}>
-          <Pagination count={count} page={page} onChange={onChange} />
+          <Pagination
+            color="primary"
+            count={count}
+            page={page}
+            onChange={onChange}
+          />
         </div>
       </div>
     );
