@@ -40,7 +40,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Map<String, Object> filterProduct(Map<String, String> paramsFilter) {
         Map<String, Object> map = new HashMap<>();
-        String condition = "where p.status != 'disabled' and ";
+        String condition = "where p.status != 'disabled' ";
         String limit = " limit 6 offset ";
         if (paramsFilter.containsKey("offset")) {
             limit += paramsFilter.get("offset");
@@ -52,7 +52,7 @@ public class ProductServiceImpl implements ProductService {
             switch ((String) paramsFilter.get("status")) {
                 case "active":
                 case "inactive":
-                    condition += "p.status='" + paramsFilter.get("status") + "'";
+                    condition += "and p.status='" + paramsFilter.get("status") + "'";
                     break;
                 default:
                     break;
@@ -60,14 +60,14 @@ public class ProductServiceImpl implements ProductService {
         }
 
         if (paramsFilter.containsKey("productName")) {
-            condition += " productName like '%" + paramsFilter.get("productName") + "%'";
+            condition += "and  productName like '%" + paramsFilter.get("productName") + "%'";
         }
         if (paramsFilter.containsKey("productCode")) {
-            condition += " productCode like '%" + paramsFilter.get("productCode") + "%'";
+            condition += "and  productCode like '%" + paramsFilter.get("productCode") + "%'";
 
         }
         if (paramsFilter.containsKey("fromDate") && paramsFilter.containsKey("toDate")) {
-            condition += " date(p.createdDate) between '" + paramsFilter.get("fromDate") + "'" +
+            condition += "and  date(p.createdDate) between '" + paramsFilter.get("fromDate") + "'" +
                     " and '" + paramsFilter.get("toDate") + "'";
 
         }
@@ -182,16 +182,13 @@ public class ProductServiceImpl implements ProductService {
         }
         if (paramsFilter.containsKey("productCode")) {
             arrayCondition.add("productCode like '%" + paramsFilter.get("productCode") + "%'");
-
         }
         if (paramsFilter.containsKey("fromDate") && paramsFilter.containsKey("toDate")) {
             arrayCondition.add("date(p.createdDate) between '" + paramsFilter.get("fromDate") + "'" +
                     " and '" + paramsFilter.get("toDate") + "'");
-
         }
         if (arrayCondition.size() >= 1) {
             condition += " and  " + String.join(" and ", arrayCondition);
-
         } else {
             condition += String.join(" and ", arrayCondition);
         }
