@@ -1,25 +1,10 @@
-import { Grid, withStyles } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 import React, { Component } from "react";
 import { DasboardTitle, Menu, ProductDasboardSeller } from "../../component";
 import GradeIcon from "@material-ui/icons/Grade";
 import axios from "axios";
 import { connect } from "react-redux";
 
-const useStyles = () => ({
-  fullwidth: {
-    width: "100%",
-  },
-  cardCount: {
-    minWidth: 250,
-    height: "120px",
-  },
-  cardProduct: {
-    minWidth: 250,
-  },
-  label: {
-    height: "25px",
-  },
-});
 class SellerHome extends Component {
   constructor(props) {
     super(props);
@@ -77,7 +62,7 @@ class SellerHome extends Component {
 
   render() {
     const { expensiveProd, cheapestProd, summary } = this.state;
-    const { history, classes } = this.props;
+    const { history } = this.props;
     return (
       <Grid container>
         <Grid container item xs={12} className="bottom-spacing">
@@ -179,4 +164,4 @@ const mapStatToProps = (state) => {
     user,
   };
 };
-export default connect(mapStatToProps)(withStyles(useStyles)(SellerHome));
+export default connect(mapStatToProps)(SellerHome);

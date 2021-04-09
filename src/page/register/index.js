@@ -24,7 +24,6 @@ import { Copyright } from "../../component";
 import axios from "axios";
 import { Redirect } from "react-router";
 import { connect } from "react-redux";
-import productImg from "../../static/bg.jpg";
 const useStyles = (theme) => ({
   paper: {
     marginTop: theme.spacing(1),

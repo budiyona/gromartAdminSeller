@@ -13,15 +13,10 @@ import {
 import axios from "axios";
 import React, { Component } from "react";
 import { Menu, PaginationControlled, ProductCard } from "../../component";
-import { red } from "@material-ui/core/colors";
 
 const useStyles = (theme) => ({
   margin: {
-    marginBottom: theme.spacing(1),
-  },
-  buttonRed: {
-    backgroundColor: red[500],
-    color: "white",
+    marginBottom: theme.spacing(2),
   },
 });
 class AdminSellerDetail extends Component {
@@ -89,7 +84,7 @@ class AdminSellerDetail extends Component {
       currentPage: 1,
     });
   };
-  changePage = (page) => {
+  changePage = (event, page) => {
     console.log("changePage");
     const { querySearch } = this.state;
     let offset = (page - 1) * 6;
@@ -133,14 +128,16 @@ class AdminSellerDetail extends Component {
     } = this.state;
 
     let buttonGo = (
-      <Button
-        size="small"
-        variant="contained"
-        color="secondary"
-        onClick={this.doSearch}
-      >
-        Go
-      </Button>
+      <Grid item xs={3}>
+        <Button
+          size="small"
+          variant="contained"
+          color="primary"
+          onClick={this.doSearch}
+        >
+          Go
+        </Button>
+      </Grid>
     );
     let formFilter;
     if (filterBy === "productName" || filterBy === "productCode") {
@@ -182,20 +179,28 @@ class AdminSellerDetail extends Component {
     } else if (filterBy === "date") {
       formFilter = (
         <>
-          <TextField
-            type="date"
-            name="fromDate"
-            onChange={(e) => this.setFilterValue(e)}
-          ></TextField>
-          <Box ml={2} mr={2}>
-            to
-          </Box>
-          <TextField
-            type="date"
-            name="toDate"
-            onChange={(e) => this.setFilterValue(e)}
-            style={{ marginRight: "12px" }}
-          ></TextField>
+          <Grid item>
+            <TextField
+              type="date"
+              name="fromDate"
+              size="small"
+              onChange={(e) => this.setFilterValue(e)}
+            />
+          </Grid>
+          <Grid item>
+            <Box ml={2} mr={2}>
+              to
+            </Box>
+          </Grid>
+          <Grid item>
+            <TextField
+              type="date"
+              name="toDate"
+              size="small"
+              onChange={(e) => this.setFilterValue(e)}
+              style={{ marginRight: "12px" }}
+            ></TextField>
+          </Grid>
           {buttonGo}
         </>
       );
@@ -203,13 +208,8 @@ class AdminSellerDetail extends Component {
       formFilter = <Grid item xs={3}></Grid>;
     }
     return (
-      <Grid
-        container
-        direction="row"
-        justify="space-between"
-        alignItems="center"
-      >
-        <Grid container item xs={12}>
+      <Grid container justify="center">
+        <Grid item xs={12} className="bottom-spacing">
           <Menu history={history}></Menu>
         </Grid>
         <Grid
@@ -217,57 +217,67 @@ class AdminSellerDetail extends Component {
           item
           xs={12}
           justify="flex-start"
-          alignItems="center"
-          className={classes.margin}
-          spacing={3}
+          className="bottom-spacing"
         >
           <Grid item xs={1}>
             <Button
               variant="contained"
-              color="primary"
+              color="secondary"
               size="small"
               onClick={() => history.push("/admin/seller")}
             >
               Back
             </Button>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={3}>
             <ButtonGroup>
               <Button
                 size="small"
                 color="primary"
-                style={{ width: "150px", cursor: "default" }}
+                style={{ width: "120px", cursor: "default" }}
               >
                 {userName}
               </Button>
               <Button
                 size="small"
-                style={{ width: "200px", cursor: "default" }}
+                style={{ width: "170px", cursor: "default" }}
               >
                 {email}
               </Button>
             </ButtonGroup>
           </Grid>
-
-          <Grid item xs={2}>
-            <FormControl className={classes.formControl} size="small" fullWidth>
-              <Select
+          <Grid
+            container
+            item
+            xs={8}
+            justify="flex-start"
+            spacing={3}
+            alignItems="center"
+          >
+            <Grid item xs={2}>
+              <FormControl
+                className={classes.formControl}
                 size="small"
-                value={filterBy}
-                name="filterBy"
-                onChange={(e) => this.setFilterValue(e)}
+                fullWidth
               >
-                <MenuItem value="all">Filter</MenuItem>
-                <MenuItem value="productName">Name</MenuItem>
-                <MenuItem value="productCode">Code</MenuItem>
-                <MenuItem value="status">Status</MenuItem>
-                <MenuItem value="date">Date</MenuItem>
-              </Select>
-            </FormControl>
+                <Select
+                  size="small"
+                  value={filterBy}
+                  name="filterBy"
+                  onChange={(e) => this.setFilterValue(e)}
+                >
+                  <MenuItem value="all">Filter</MenuItem>
+                  <MenuItem value="productName">Name</MenuItem>
+                  <MenuItem value="productCode">Code</MenuItem>
+                  <MenuItem value="status">Status</MenuItem>
+                  <MenuItem value="date">Date</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            {formFilter}
           </Grid>
-          {formFilter}
         </Grid>
-        <Grid container item xs={12} style={{ minHeight: "71vh" }}>
+        <Grid container item xs={12} style={{ minHeight: "73vh" }}>
           {products.length > 0 &&
             products.map((product, i) => (
               <Grid item xs={4} key={i} className={classes.margin}>
@@ -279,7 +289,7 @@ class AdminSellerDetail extends Component {
           <PaginationControlled
             count={page}
             page={currentPage}
-            onClick={this.changePage}
+            onChange={this.changePage}
           />
         </Grid>
       </Grid>

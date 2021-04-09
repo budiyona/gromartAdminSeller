@@ -19,6 +19,7 @@ const useStyles = () => ({
   root: {
     maxWidth: 248,
     fontSize: 1,
+    margin: "auto",
   },
   media: {
     height: 0,

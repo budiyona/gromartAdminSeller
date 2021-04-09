@@ -5,12 +5,10 @@ import {
   FormControl,
   Grid,
   GridList,
-  GridListTile,
   Input,
   MenuItem,
   Select,
   TextField,
-  Typography,
   withStyles,
 } from "@material-ui/core";
 import axios from "axios";
@@ -20,7 +18,6 @@ import { Menu, TableProduct } from "../../component";
 import { blue, red } from "@material-ui/core/colors";
 import { connect } from "react-redux";
 import { CSVLink } from "react-csv";
-import Pagination from "@material-ui/lab/Pagination";
 import { scroller } from "react-scroll";
 
 const useStyles = (theme) => ({
@@ -148,14 +145,7 @@ class SellerReport extends Component {
   };
   render() {
     const { history, classes, user } = this.props;
-    const {
-      listProduct,
-      status,
-      filterBy,
-      currentPage,
-      page,
-      searchField,
-    } = this.state;
+    const { listProduct, status, filterBy, searchField } = this.state;
     const header = [
       { label: "Product Code", key: "productCode" },
       { label: "Product Name", key: "productName" },
@@ -318,7 +308,14 @@ class SellerReport extends Component {
             </Button>
           </Grid>
 
-          <Grid container item xs={8} justify="flex-start" spacing={3}>
+          <Grid
+            container
+            item
+            xs={8}
+            justify="flex-start"
+            spacing={3}
+            alignItems="center"
+          >
             <Grid item xs={3}>
               <FormControl className={classes.formControl} size="small">
                 <Select

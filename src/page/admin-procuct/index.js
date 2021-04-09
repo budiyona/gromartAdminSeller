@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  ButtonGroup,
   FormControl,
   Grid,
   Input,
@@ -13,25 +12,13 @@ import {
 import axios from "axios";
 import React, { Component } from "react";
 import { Menu, PaginationControlled, ProductCard } from "../../component";
-import { red } from "@material-ui/core/colors";
 
 const useStyles = (theme) => ({
   margin: {
     marginBottom: theme.spacing(2),
   },
-  redOff: {
-    color: red[500],
-  },
-  redOn: {
-    color: red[200],
-  },
-  buttonRed: {
-    backgroundColor: red[500],
-    color: "white",
-  },
   formControl: {
     width: "100%",
-    // height: "24px",
   },
 });
 class AdminProduct extends Component {
@@ -180,6 +167,7 @@ class AdminProduct extends Component {
             <TextField
               type="date"
               name="fromDate"
+              size="small"
               onChange={(e) => this.setFilterValue(e)}
             />
           </Grid>
@@ -192,6 +180,7 @@ class AdminProduct extends Component {
             <TextField
               type="date"
               name="toDate"
+              size="small"
               onChange={(e) => this.setFilterValue(e)}
               style={{ marginRight: "12px" }}
             ></TextField>
@@ -215,7 +204,14 @@ class AdminProduct extends Component {
           justify="flex-start"
           className="bottom-spacing"
         >
-          <Grid container item xs={10} spacing={3} style={{ height: "54px" }}>
+          <Grid
+            container
+            item
+            xs={10}
+            spacing={3}
+            style={{ height: "54px" }}
+            alignItems="center"
+          >
             <Grid item xs={3}>
               <FormControl className={classes.formControl} size="small">
                 <Select

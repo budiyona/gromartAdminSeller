@@ -27,10 +27,11 @@ const useStyles = () => ({
   root: {
     maxWidth: 275,
     fontSize: 1,
+    margin: "auto",
   },
   media: {
     height: 0,
-    paddingTop: "45.25%", // 16:9
+    paddingTop: "40.25%", // 16:9
   },
   avatar: {
     backgroundColor: red[500],

@@ -13,17 +13,12 @@ import axios from "axios";
 import React, { Component } from "react";
 import { Menu, PaginationControlled, SellerCard } from "../../component";
 import { connect } from "react-redux";
-import { red } from "@material-ui/core/colors";
-const useStyles = () => ({
-  margin: {
-    marginBottom: "5px",
-  },
+const useStyles = (theme) => ({
   formControl: {
     width: "100%",
   },
-  buttonRed: {
-    backgroundColor: red[500],
-    color: "white",
+  margin: {
+    marginBottom: theme.spacing(2),
   },
 });
 class AdminSeller extends Component {
@@ -213,14 +208,16 @@ class AdminSeller extends Component {
     const { classes, history } = this.props;
     const { listSeller, page, currentPage, filterBy, status } = this.state;
     let buttonGo = (
-      <Button
-        size="small"
-        variant="contained"
-        color="secondary"
-        onClick={this.doSearch}
-      >
-        Go
-      </Button>
+      <Grid item xs={3}>
+        <Button
+          size="small"
+          variant="contained"
+          color="primary"
+          onClick={this.doSearch}
+        >
+          Go
+        </Button>
+      </Grid>
     );
     let formFilter;
     if (filterBy === "userName" || filterBy === "userCode") {
@@ -262,20 +259,26 @@ class AdminSeller extends Component {
     } else if (filterBy === "date") {
       formFilter = (
         <>
-          <TextField
-            type="date"
-            name="fromDate"
-            onChange={(e) => this.setFilterValue(e)}
-          ></TextField>
-          <Box ml={2} mr={2}>
-            to
-          </Box>
-          <TextField
-            type="date"
-            name="toDate"
-            onChange={(e) => this.setFilterValue(e)}
-            style={{ marginRight: "12px" }}
-          ></TextField>
+          <Grid item>
+            <TextField
+              type="date"
+              name="fromDate"
+              onChange={(e) => this.setFilterValue(e)}
+            />
+          </Grid>
+          <Grid item>
+            <Box ml={2} mr={2}>
+              to
+            </Box>
+          </Grid>
+          <Grid item>
+            <TextField
+              type="date"
+              name="toDate"
+              onChange={(e) => this.setFilterValue(e)}
+              style={{ marginRight: "12px" }}
+            ></TextField>
+          </Grid>
           {buttonGo}
         </>
       );
@@ -283,48 +286,56 @@ class AdminSeller extends Component {
       formFilter = <Grid item xs={3}></Grid>;
     }
     return (
-      <Grid
-        container
-        direction="row"
-        justify="space-between"
-        alignItems="center"
-      >
-        <Grid container item xs={12}>
-          <Menu history={history} />
+      <Grid container justify="center">
+        <Grid item xs={12} className="bottom-spacing">
+          <Menu history={history}></Menu>
         </Grid>
         <Grid
           container
           item
           xs={12}
           justify="flex-start"
-          alignItems="center"
-          className={classes.margin}
-          spacing={3}
+          className="bottom-spacing"
         >
-          <Grid item xs={3}>
-            <FormControl className={classes.formControl} size="small" fullWidth>
-              <Select
-                size="small"
-                value={filterBy}
-                name="filterBy"
-                onChange={(e) => this.setFilterValue(e)}
-              >
-                <MenuItem value="all">Filter</MenuItem>
-                <MenuItem value="userName">Name</MenuItem>
-                <MenuItem value="userCode">Code</MenuItem>
-                <MenuItem value="status">Status</MenuItem>
-                <MenuItem value="date">Date</MenuItem>
-              </Select>
-            </FormControl>
+          <Grid
+            container
+            item
+            xs={10}
+            spacing={3}
+            style={{ height: "54px" }}
+            alignItems="center"
+          >
+            <Grid item xs={3}>
+              <FormControl className={classes.formControl} size="small">
+                <Select
+                  size="small"
+                  value={filterBy}
+                  name="filterBy"
+                  onChange={(e) => this.setFilterValue(e)}
+                >
+                  <MenuItem value="all">Filter</MenuItem>
+                  <MenuItem value="userName">Name</MenuItem>
+                  <MenuItem value="userCode">Code</MenuItem>
+                  <MenuItem value="status">Status</MenuItem>
+                  <MenuItem value="date">Date</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            {formFilter}
           </Grid>
-          {formFilter}
         </Grid>
 
         <Grid container item xs={12} style={{ minHeight: "73vh" }}>
           {listSeller.length > 0 &&
             listSeller.map((user, i) => {
               return (
-                <Grid item xs={4} className={classes.margin} key={i}>
+                <Grid
+                  item
+                  xs={4}
+                  className={classes.margin}
+                  key={i}
+                  justify="center"
+                >
                   <SellerCard
                     idx={i}
                     user={user}
@@ -337,7 +348,6 @@ class AdminSeller extends Component {
               );
             })}
         </Grid>
-
         <Grid container item xs={12}>
           <PaginationControlled
             count={page}
