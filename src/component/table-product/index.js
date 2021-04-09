@@ -1,13 +1,8 @@
-import { withStyles } from "@material-ui/core";
 import moment from "moment";
 import React, { Component } from "react";
 import "./style.css";
 import { formatToRupiah } from "../../util";
-const useStyles = () => ({
-  table: {
-    // border: "1px solid black",
-  },
-});
+
 class TableProduct extends Component {
   constructor(props) {
     super(props);
@@ -69,4 +64,4 @@ class TableProduct extends Component {
   }
 }
 
-export default withStyles(useStyles)(TableProduct);
+export default TableProduct;

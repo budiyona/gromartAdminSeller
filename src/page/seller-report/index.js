@@ -15,30 +15,40 @@ import axios from "axios";
 import ReactToPrint from "react-to-print";
 import React, { Component } from "react";
 import { Menu, TableProduct } from "../../component";
-import { blue, red } from "@material-ui/core/colors";
+import { blue } from "@material-ui/core/colors";
 import { connect } from "react-redux";
 import { CSVLink } from "react-csv";
-import { scroller } from "react-scroll";
 
 const useStyles = (theme) => ({
   margin: {
     marginBottom: theme.spacing(1),
   },
-  redOff: {
-    color: red[500],
-  },
-  redOn: {
-    color: red[200],
-  },
   formControl: {
     width: "100%",
   },
-  buttonRed: {
-    backgroundColor: red[500],
-    color: "white",
-  },
   pagebreak: {
     display: "none",
+  },
+  paperToPrint: {
+    width: "821px",
+    height: "1063px",
+    marginTop: "0px",
+    boxSizing: "border-box",
+    backgroundColor: "white",
+  },
+  marginProductTable: {
+    margin: "20px 20px 10px 20px",
+  },
+  buttonExportCSV: {
+    borderRadius: "0px 5px 5px 0px",
+    backgroundColor: blue[500],
+    color: "white",
+  },
+  containerPaper: {
+    display: "flex",
+    justifyContent: "space-around",
+    overflow: "hidden",
+    padding: "10px",
   },
 });
 class SellerReport extends Component {
@@ -68,24 +78,6 @@ class SellerReport extends Component {
         "?"
     );
   }
-  changePage = (event, page) => {
-    console.log("changePage " + page);
-    scroller.scrollTo("page" + page, {
-      duration: 1000,
-      delay: 100,
-      smooth: true,
-      containerId: "ContainerElementID",
-    });
-    this.setState({
-      currentPage: page,
-    });
-  };
-  toogleFilter = (buttonName) => {
-    console.log(buttonName);
-    this.setState({
-      [buttonName]: !this.state[buttonName],
-    });
-  };
   setFilterValue = (e) => {
     console.log(e.target.value);
     const { name, value } = e.target;
@@ -113,25 +105,28 @@ class SellerReport extends Component {
     const { fromDate, toDate, filterBy, searchField, status } = this.state;
     let endpoint =
       "http://localhost:8080/api/product/report/" + user.userCode + "?";
-    if (filterBy === "productName") {
-      endpoint += "productName=" + searchField;
-    } else if (filterBy === "productCode") {
-      endpoint += "productCode=" + searchField;
-    } else if (filterBy === "status") {
-      endpoint += "status=" + status;
-    } else if (filterBy === "date") {
-      endpoint += "fromDate=" + fromDate + "&toDate=" + toDate;
+
+    switch (filterBy) {
+      case "productName":
+        endpoint += "productName=" + searchField;
+        break;
+      case "productCode":
+        endpoint += "productCode=" + searchField;
+        break;
+      case "status":
+        endpoint += "status=" + status;
+        break;
+      case "date":
+        endpoint += "fromDate=" + fromDate + "&toDate=" + toDate;
+        break;
+      default:
+        break;
     }
+
     console.log(endpoint);
     this.getProductWithFilter(endpoint);
     this.setState({
       currentPage: 1,
-    });
-    scroller.scrollTo("page1", {
-      duration: 500,
-      delay: 100,
-      smooth: true,
-      containerId: "ContainerElementID",
     });
   };
   getProductWithFilter = (query) => {
@@ -250,37 +245,20 @@ class SellerReport extends Component {
       formFilter = <Grid item xs={3}></Grid>;
     }
 
-    let maxPaper = Math.ceil(listProduct.length / 5);
+    let maxPaper = Math.ceil(listProduct.length / 10);
     let dataToDisplay = [];
     let i = 0;
     while (i < maxPaper) {
       dataToDisplay.push(
-        <Box
-          name={"page" + (i + 1)}
-          border={1}
-          style={{
-            width: "821px",
-            height: "1065px",
-            marginTop: "0px",
-            boxSizing: "border-box",
-            backgroundColor: "white",
-          }}
-        >
-          <div
-            style={{
-              marginLeft: "20px",
-              marginRight: "20px",
-              marginTop: "20px",
-              marginBottom: "10px",
-            }}
-          >
+        <Box key={i} border={1} className={classes.paperToPrint}>
+          <div className={classes.marginProductTable}>
             <TableProduct
               user={user}
               page={{
                 pageTotal: maxPaper,
                 pageNow: i + 1,
               }}
-              listProduct={listProduct.slice(i * 5, i * 5 + 5)}
+              listProduct={listProduct.slice(i * 10, i * 10 + 10)}
             />
             <div className={classes.pageBreak} />
           </div>
@@ -357,11 +335,7 @@ class SellerReport extends Component {
                 <Button
                   size="small"
                   variant="contained"
-                  style={{
-                    borderRadius: "0px 5px 5px 0px",
-                    backgroundColor: blue[500],
-                    color: "white",
-                  }}
+                  className={classes.buttonExportCSV}
                 >
                   Export CSV
                 </Button>
@@ -371,14 +345,7 @@ class SellerReport extends Component {
         </Grid>
         <Grid container item xs={12} justify="center" alignItems="center">
           <Grid item xs={8} style={{ backgroundColor: "white" }}>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-around",
-                overflow: "hidden",
-                padding: "10px",
-              }}
-            >
+            <div className={classes.containerPaper}>
               <GridList
                 id="ContainerElementID"
                 style={{

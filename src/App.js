@@ -6,7 +6,6 @@ import {
   useHistory,
   useParams,
 } from "react-router-dom";
-import { Container } from "@material-ui/core";
 import {
   AdminProduct,
   AdminSeller,
@@ -21,6 +20,7 @@ import {
   NotFound,
   UserInfo,
 } from "./page";
+import { Container } from "@material-ui/core";
 import { connect } from "react-redux";
 import "./App.css";
 

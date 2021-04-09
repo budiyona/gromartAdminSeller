@@ -1,12 +1,10 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
-import Typography from "@material-ui/core/Typography";
+import { Card, CardContent, CardMedia, Typography } from "@material-ui/core";
 import product from "../../static/product.jpg";
+import { formatToRupiah } from "../../util";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     display: "flex",
     width: "500px",
@@ -14,10 +12,10 @@ const useStyles = makeStyles((theme) => ({
   details: {
     display: "flex",
     flexDirection: "column",
-    width: "55%",
+    width: "60%",
   },
   cover: {
-    width: "45%",
+    width: "40%",
   },
 }));
 
@@ -30,15 +28,11 @@ export default function ProductDasboard(props) {
         <CardContent>
           <Typography variant="h6">{props.title}</Typography>
           <Typography variant="caption" color="textSecondary">
-            Rp.{props.price}
+            {formatToRupiah(props.price)}
           </Typography>
         </CardContent>
       </div>
-      <CardMedia
-        className={classes.cover}
-        image={product}
-        title="Live from space album cover"
-      />
+      <CardMedia className={classes.cover} image={product} />
     </Card>
   );
 }

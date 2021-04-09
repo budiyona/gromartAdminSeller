@@ -1,17 +1,11 @@
-import React, { Component } from "react";
-import { withStyles } from "@material-ui/core/styles";
-import Card from "@material-ui/core/Card";
-import CardHeader from "@material-ui/core/CardHeader";
-import CardMedia from "@material-ui/core/CardMedia";
-import CardActions from "@material-ui/core/CardActions";
-import IconButton from "@material-ui/core/IconButton";
-import Typography from "@material-ui/core/Typography";
-import { blue, green, red } from "@material-ui/core/colors";
-import DoneIcon from "@material-ui/icons/Done";
-import person from "../../static/person.jpg";
-import moment from "moment";
 import {
+  Card,
   Button,
+  CardHeader,
+  CardMedia,
+  CardActions,
+  IconButton,
+  Typography,
   Dialog,
   DialogActions,
   DialogContent,
@@ -20,6 +14,12 @@ import {
   Grid,
   TextField,
 } from "@material-ui/core";
+import React, { Component } from "react";
+import { withStyles } from "@material-ui/core/styles";
+import { blue, green, red } from "@material-ui/core/colors";
+import DoneIcon from "@material-ui/icons/Done";
+import person from "../../static/person.jpg";
+import moment from "moment";
 import InboxIcon from "@material-ui/icons/Inbox";
 import axios from "axios";
 
@@ -31,7 +31,7 @@ const useStyles = () => ({
   },
   media: {
     height: 0,
-    paddingTop: "40.25%", // 16:9
+    paddingTop: "40.25%",
   },
   avatar: {
     backgroundColor: red[500],
@@ -100,7 +100,6 @@ class SellerCard extends Component {
     });
   };
   render() {
-    // console.log(this.state);
     const {
       classes,
       toggleStatus,
@@ -205,7 +204,6 @@ class SellerCard extends Component {
                 <TextField
                   disabled
                   value={summary.active}
-                  autoFocus
                   size="small"
                   margin="dense"
                   label="Active"
@@ -220,7 +218,6 @@ class SellerCard extends Component {
                 <TextField
                   disabled
                   value={summary.inactive}
-                  autoFocus
                   size="small"
                   margin="dense"
                   label="Inactive"
@@ -235,7 +232,6 @@ class SellerCard extends Component {
                 <TextField
                   disabled
                   value={summary.limit}
-                  autoFocus
                   size="small"
                   margin="dense"
                   label="current limit"

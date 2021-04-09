@@ -4,11 +4,11 @@ import {
   Tooltip,
   Typography,
   withStyles,
+  IconButton,
 } from "@material-ui/core";
 import React, { Component } from "react";
 import { green, red } from "@material-ui/core/colors";
 import MenuIcon from "@material-ui/icons/Menu";
-import IconButton from "@material-ui/core/IconButton";
 import HomeIcon from "@material-ui/icons/Home";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
@@ -27,16 +27,12 @@ const useStyles = (theme) => ({
   menu: {
     color: green[500],
   },
-  // root: {
-  //   flexGrow: 1,
-  // },
   menuButton: {
     marginRight: theme.spacing(2),
   },
   title: {
     flexGrow: 1,
   },
-
   red: {
     color: red[200],
   },
@@ -91,7 +87,6 @@ class Menu extends Component {
           style={{
             color: red[500],
             backgroundColor: "white",
-            // marginBottom: 20,
           }}
         >
           <Toolbar variant="dense">

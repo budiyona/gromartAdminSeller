@@ -7,7 +7,6 @@ import ProductDasboard from "./product-dasboard-admin";
 import ProductDasboardSeller from "./product-dasboard-seller";
 import CountCard from "./card-count";
 import DasboardTitle from "./title-dasboard";
-import SearchField from "./search-field";
 import TableProduct from "./table-product";
 
 export {
@@ -19,7 +18,6 @@ export {
   ProductCard,
   SellerCard,
   DasboardTitle,
-  SearchField,
   ProductDasboardSeller,
   TableProduct,
 };

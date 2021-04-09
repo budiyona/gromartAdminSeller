@@ -9,12 +9,13 @@ import {
   IconButton,
   Tooltip,
 } from "@material-ui/core";
-import { blue, green, red } from "@material-ui/core/colors";
+import { red } from "@material-ui/core/colors";
 import productImg from "../../static/product.jpg";
 import { connect } from "react-redux";
 import "./style.css";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
+import { formatToRupiah } from "../../util";
 const useStyles = () => ({
   root: {
     maxWidth: 248,
@@ -23,19 +24,7 @@ const useStyles = () => ({
   },
   media: {
     height: 0,
-    paddingTop: "41.25%", // 16:9
-  },
-  avatar: {
-    backgroundColor: red[500],
-  },
-  green: {
-    color: green[500],
-  },
-  red: {
-    color: red[500],
-  },
-  blue: {
-    color: blue[500],
+    paddingTop: "41.25%",
   },
   pointer: {
     cursor: "pointer",
@@ -94,7 +83,7 @@ class ProductCard extends Component {
 
         <CardActions disableSpacing>
           <div style={{ width: "50%" }}>
-            <Typography>Rp. {product.price},00</Typography>
+            <Typography>{formatToRupiah(product.price)}</Typography>
           </div>
           {!user.userCode.includes("ADMIN") && (
             <div
