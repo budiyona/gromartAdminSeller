@@ -10,6 +10,7 @@ import axios from "axios";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import GradeIcon from "@material-ui/icons/Grade";
 import InboxIcon from "@material-ui/icons/Inbox";
+import clsx from "clsx";
 
 const useStyles = () => ({
   fullwidth: {
@@ -24,6 +25,10 @@ const useStyles = () => ({
   },
   label: {
     height: "25px",
+    width: "100%",
+  },
+  paddingRightLabel: {
+    paddingRight: "10px",
   },
 });
 class AdminHome extends Component {
@@ -131,9 +136,18 @@ class AdminHome extends Component {
           <Menu history={history}></Menu>
         </Grid>
 
-        <Grid container item xs={12} spacing={3}>
-          <Grid container item xs={6} spacing={3}>
-            <Grid container item xs={12} className={classes.label} fullwidth>
+        <Grid container item xs={12} spacing={0}>
+          <Grid container item xs={6}>
+            <Grid
+              container
+              item
+              xs={12}
+              className={clsx(
+                classes.label,
+                classes.paddingRightLabel,
+                "bottom-spacing"
+              )}
+            >
               <DasboardTitle
                 fullwidth
                 color={"info"}
@@ -146,7 +160,7 @@ class AdminHome extends Component {
               container
               xs={12}
               spacing={3}
-              className={classes.cardCount}
+              className={clsx(classes.cardCount, "bottom-spacing")}
             >
               <Grid item>
                 <CountCard
@@ -163,7 +177,16 @@ class AdminHome extends Component {
                 />
               </Grid>
             </Grid>
-            <Grid item container xs={12} className={classes.label}>
+            <Grid
+              item
+              container
+              xs={12}
+              className={clsx(
+                classes.label,
+                classes.paddingRightLabel,
+                "bottom-spacing"
+              )}
+            >
               <DasboardTitle
                 fullwidth
                 color={"info"}
@@ -176,7 +199,7 @@ class AdminHome extends Component {
               container
               xs={12}
               spacing={3}
-              className={classes.cardCount}
+              className={clsx(classes.cardCount, "bottom-spacing")}
             >
               <Grid item>
                 <CountCard
@@ -194,8 +217,8 @@ class AdminHome extends Component {
               </Grid>
             </Grid>
           </Grid>
-          <Grid container item xs={6} spacing={3}>
-            <Grid item xs={12}>
+          <Grid container item xs={6} spacing={0}>
+            <Grid item xs={12} className="bottom-spacing">
               <DasboardTitle
                 pointer
                 fullwidth
@@ -211,7 +234,7 @@ class AdminHome extends Component {
             {isExpesive
               ? expensiveProd.length > 0 &&
                 expensiveProd.map((product, i) => (
-                  <Grid item key={i}>
+                  <Grid item key={i} className="bottom-spacing">
                     <ProductDasboard
                       title={product.productName}
                       price={product.price}
@@ -220,7 +243,7 @@ class AdminHome extends Component {
                 ))
               : cheapestProd.length > 0 &&
                 cheapestProd.map((product, i) => (
-                  <Grid item key={i}>
+                  <Grid item key={i} className="bottom-spacing">
                     <ProductDasboard
                       title={product.productName}
                       price={product.price}
