@@ -41,7 +41,6 @@ public class ProductController {
     public ResponseEntity<?> getNumberOfProductByStatus(@RequestParam String status) {
         return new ResponseEntity<>(
                 productService.countProductByStatus(status), HttpStatus.OK);
-
     }
 
     @GetMapping("/product/seller/most-expensive/{id}")
